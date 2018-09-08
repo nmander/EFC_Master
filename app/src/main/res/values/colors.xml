@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#0d4aad</color>
+
+    <color name="colorNavIcon">#000000</color>
+    <color name="colorNavText">#000000</color>
+    <color name="colorNavBackground">#ffffff</color>
+
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#ffffff</color>
+
+    <color name="colorSelectedNav">#0d4aad</color>
+    <color name="colorMaterialLight">#FFFAFAFA</color>
+
+    <color name="colorToolbar">#000000</color>
+</resources>

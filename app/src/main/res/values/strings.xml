@@ -1,0 +1,15 @@
+<resources>
+
+    <!-- Strings for Startup -->
+    <string name="app_name">EFC Master</string>
+    <string name="efc_connect"><b>EFC Connect</b></string>
+    <string name="walbro_llc">Walbro LLC</string>
+    <string name="btn_scan">Scan</string>
+
+    <!-- Strings for Bottom Navigation Menus -->
+    <string name="nav_light_trim"><b>LIGHT TRIM</b></string>
+    <string name="nav_start_instructions"><b>START</b></string>
+    <string name="nav_stats"><b>STATS</b></string>
+    <string name="nav_dash"><b>DASH</b></string>
+    <string name="nav_kill"><b>KILL</b></string>
+</resources>
