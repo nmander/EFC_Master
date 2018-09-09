@@ -5,13 +5,42 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static String device_address;
+    public static final String EXTRA_DEVICE_ADDRESS = "mAddress";
+    boolean foundGattService = false;
+    private BluetoothManager mBluetoothManager;
+    private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothGatt mBluetoothGatt;
+    private boolean mna = false;
+ //   private BluetoothGattCallback mGattCallback = new BluetoothGattCallback()
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        device_address = getIntent().getStringExtra(EXTRA_DEVICE_ADDRESS);
+        Log.i(TAG, "MainActivity onCreate: " + device_address);
+//        //Get bluetooth radio, need to do it again in this class
+//        mBluetoothManager = (BluetoothManager) context.getSystemService(BLUETOOTH_SERVICE);
+//        mBluetoothAdapter = mBluetoothManager.getAdapter();
+//        //Now setup radio to communicate with WBLE using address found from scanning and passed as parameter to this class
+//        BluetoothDevice bluetoothDevice = mBluetoothAdapter.getRemoteDevice(device_address);
+//        mBluetoothGatt = bluetoothDevice.connectGatt(mContext, false, mGattCallback,2);
+
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setTitle(R.string.app_name); // set the top title

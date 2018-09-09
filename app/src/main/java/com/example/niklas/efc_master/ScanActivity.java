@@ -81,8 +81,8 @@ public class ScanActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 btnScan.setVisibility(View.INVISIBLE);
+                Log.w(TAG, "setOnClickListener");
                 prepareForScan();
-                //startLeScan();
                 Toast.makeText(getApplicationContext(), "Scanning for WBLE Modules...", Toast.LENGTH_LONG).show();
             }
         });
@@ -100,12 +100,13 @@ public class ScanActivity extends AppCompatActivity
         @Override
         public void onBatchScanResults(List<ScanResult> results) {
             Log.i(TAG, "onBatchScanResults: " + results.toString());
-            int closestTrimmer;
 
             if (!results.isEmpty()) {
                 ScanResult result = results.get(0);
+                Log.i(TAG, "found BLE: " + results.toString());
                 stopLeScan();
-                Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_LONG).show();
+
                 startMainActivity(result.getDevice());
             }
         }
@@ -129,6 +130,7 @@ public class ScanActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        Log.w(TAG, "onResume");
         prepareForScan();
     }
 
@@ -140,6 +142,7 @@ public class ScanActivity extends AppCompatActivity
 
     private void stopLeScan() {
         if (mScanning) {
+            Log.w(TAG, "Stopping Scan");
             mScanning = false;
             scanning_wheel.setVisibility(View.INVISIBLE);
             mScanner.stopScan(mScanCallback);
@@ -151,6 +154,7 @@ public class ScanActivity extends AppCompatActivity
     }
 
     private void startLeScan() {
+        Log.w(TAG, "Starting Scan");
         mScanning = true;
         scanning_wheel.setVisibility(View.VISIBLE);
         btnScan.setVisibility(View.INVISIBLE);
@@ -161,6 +165,7 @@ public class ScanActivity extends AppCompatActivity
                 .build();
         List<ScanFilter> filters = new ArrayList<>();
         filters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(SERVICE_UUID)).build());
+
         mScanner.startScan(filters, settings, mScanCallback);
 
         // Stops scanning after a pre-defined scan period.
@@ -197,8 +202,8 @@ public class ScanActivity extends AppCompatActivity
 
     private void startMainActivity(BluetoothDevice device)
     {
-        Intent intent = new Intent(this, ScanActivity.class);
-        intent.putExtra(ScanActivity.EXTRA_DEVICE_ADDRESS, device.getAddress());
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.EXTRA_DEVICE_ADDRESS, device.getAddress());
         startActivity(intent);
         finish();
     }
