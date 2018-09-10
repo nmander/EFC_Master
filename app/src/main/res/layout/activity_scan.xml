@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ScanActivity">
 
     <ImageView
@@ -37,8 +37,9 @@
         android:id="@+id/scanning_wheel"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginTop="15sp"
         android:layout_centerHorizontal="true"
-        android:theme="@style/AppThemeNoBar"
+        android:indeterminateDrawable="@drawable/custom_scanning_wheel"
         android:layout_below="@+id/walbro_llc"/>
 
     <Button
@@ -47,11 +48,11 @@
         android:layout_height="50dp"
         android:textSize="24sp"
         android:layout_below="@id/walbro_llc"
-        android:layout_marginTop="20sp"
+        android:layout_marginTop="40sp"
         android:layout_centerHorizontal="true"
         android:text="@string/btn_scan"
         android:background="@drawable/button_scan"
         android:elevation="20dp"
-        android:textColor="@color/colorMaterialLight"/>
+        android:textColor="@color/colorBlack"/>
 
 </RelativeLayout>

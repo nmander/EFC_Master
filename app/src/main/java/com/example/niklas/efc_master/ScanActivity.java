@@ -8,6 +8,8 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
@@ -15,7 +17,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -46,6 +47,7 @@ public class ScanActivity extends AppCompatActivity
     private final BluetoothLeScannerCompat mScanner = BluetoothLeScannerCompat.getScanner();
     private final Handler mStopScanHandler = new Handler();
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
@@ -71,7 +73,7 @@ public class ScanActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         scanning_wheel = (ProgressBar)findViewById(R.id.scanning_wheel);
-        scanning_wheel.setVisibility(View.INVISIBLE);
+        //scanning_wheel.setVisibility(View.INVISIBLE);
 
         btnScan = (Button)findViewById(R.id.btn_scan);
         btnScan.setVisibility(View.INVISIBLE);
@@ -83,10 +85,10 @@ public class ScanActivity extends AppCompatActivity
                 btnScan.setVisibility(View.INVISIBLE);
                 Log.w(TAG, "setOnClickListener");
                 prepareForScan();
+
                 Toast.makeText(getApplicationContext(), "Scanning for WBLE Modules...", Toast.LENGTH_LONG).show();
             }
         });
-
         Toast.makeText(getApplicationContext(), "Scanning for WBLE Modules...", Toast.LENGTH_SHORT).show();
     }
 
@@ -131,6 +133,7 @@ public class ScanActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.w(TAG, "onResume");
+        btnScan.setVisibility(View.INVISIBLE);
         prepareForScan();
     }
 
@@ -145,10 +148,9 @@ public class ScanActivity extends AppCompatActivity
             Log.w(TAG, "Stopping Scan");
             mScanning = false;
             scanning_wheel.setVisibility(View.INVISIBLE);
+            btnScan.setVisibility(View.VISIBLE);
             mScanner.stopScan(mScanCallback);
             mStopScanHandler.removeCallbacks(mStopScanRunnable);
-
-
             invalidateOptionsMenu();
         }
     }
@@ -156,9 +158,6 @@ public class ScanActivity extends AppCompatActivity
     private void startLeScan() {
         Log.w(TAG, "Starting Scan");
         mScanning = true;
-        scanning_wheel.setVisibility(View.VISIBLE);
-        btnScan.setVisibility(View.INVISIBLE);
-
         ScanSettings settings = new ScanSettings.Builder()
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .setReportDelay(1000)
@@ -170,7 +169,6 @@ public class ScanActivity extends AppCompatActivity
 
         // Stops scanning after a pre-defined scan period.
         mStopScanHandler.postDelayed(mStopScanRunnable, SCAN_TIMEOUT_MS);
-        //btnScan.setVisibility(View.VISIBLE);
         invalidateOptionsMenu();
     }
 
@@ -179,7 +177,9 @@ public class ScanActivity extends AppCompatActivity
     }
 
     private void prepareForScan() {
-        if (isBleSupported()) {
+        if (isBleSupported())
+        {
+            scanning_wheel.setVisibility(View.VISIBLE);
             // Ensures Bluetooth is enabled on the device
             BluetoothManager btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             BluetoothAdapter btAdapter = btManager.getAdapter();
@@ -207,5 +207,4 @@ public class ScanActivity extends AppCompatActivity
         startActivity(intent);
         finish();
     }
-
 }
