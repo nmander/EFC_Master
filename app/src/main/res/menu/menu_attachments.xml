@@ -1,0 +1,43 @@
+<!-- Menu file for `activity_movies.xml` is located in a file
+     such as `res/menu/menu_movies.xml`  -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/miAttachments"
+        android:icon="@drawable/ic_change_attachment"
+        app:showAsAction="always"
+        android:title="@string/menu_item_change_attachment">
+        <menu>
+            <item
+                android:id="@+id/action_menu1"
+                android:icon="@drawable/ic_blade"
+                android:title="@string/attach_blade" />
+
+            <item
+                android:id="@+id/action_menu2"
+                android:icon="@drawable/ic_blower"
+                android:title="@string/attach_blower" />
+
+            <item
+                android:id="@+id/action_menu3"
+                android:icon="@drawable/ic_edger"
+                android:title="@string/attach_edger" />
+
+            <item
+                android:id="@+id/action_menu4"
+                android:icon="@drawable/ic_pole_saw"
+                android:title="@string/attach_pole_saw" />
+
+            <item
+                android:id="@+id/action_menu5"
+                android:icon="@drawable/ic_tiller"
+                android:title="@string/attach_tiller" />
+
+            <item
+                android:id="@+id/action_menu6"
+                android:icon="@drawable/ic_string"
+                android:title="@string/attach_string" />
+        </menu>
+    </item>
+</menu>

@@ -26,6 +26,7 @@ android {
             path "CMakeLists.txt"
         }
     }
+
 }
 
 dependencies {
@@ -41,4 +42,5 @@ dependencies {
     implementation 'devlight.io:navigationtabbar:1.2.5'
     implementation 'no.nordicsemi.android.support.v18:scanner:1.0.0'
     implementation 'com.android.support:design:28.0.0-rc01'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 }

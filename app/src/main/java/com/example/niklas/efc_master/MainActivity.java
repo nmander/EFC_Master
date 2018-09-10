@@ -3,9 +3,11 @@ package com.example.niklas.efc_master;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -16,6 +18,9 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import static com.example.niklas.efc_master.NordicProfile.CHARACTERISTIC_TX;
 import static com.example.niklas.efc_master.NordicProfile.DESCRIPTOR_CONFIG;
@@ -34,12 +39,16 @@ public class MainActivity extends AppCompatActivity {
     private static final byte ENGINE_RUNNING = 1;
     private static final byte ENGINE_NOT_RUNNING = 2;
     private boolean engine_running = false;
-    private int module_temperature = 20;
+    public int module_temperature = 0;
     private int rpm = 0;
     private int run_time = 0;
     private int attachment_nbr_status = 0; //[String, Blade, Edger, Tiller, Blower, Pole Saw]
     private int trim_mode_status = 0;   //0 = normal, lite = 1
     private int stop_status = 0; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
+
+	private Menu menu;
+	private BottomNavigationView navigation;
+	private Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +70,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.mipmap.ic_walbro_w);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
-        final BottomNavigationView navigation = findViewById(R.id.navigation_main);
+        navigation = findViewById(R.id.navigation_main);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        loadFragment(new StartFragment());
+	    //btnPrimeBulb = (Button) StartFragment.getView().findViewById(R.id.instruction_prime_bulb);
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -74,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId())
             {
                 case R.id.navigation_start_instructions:
+                	fragment = new StartFragment();
+                	loadFragment(fragment);
+
                     return true;
 
                 case R.id.navigation_stats:
@@ -83,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_dash:
+	                fragment = new DashboardTabFragment();
+	                loadFragment(fragment);
                     return true;
 
                 case R.id.navigation_kill:
@@ -91,6 +109,63 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_attachments, menu);
+	    this.menu = menu;
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        // Handle presses on the action bar items
+        switch (item.getItemId())
+        {
+            case R.id.action_menu1:
+                Toast.makeText(getApplicationContext(), "BLADE ATTACHMENT", Toast.LENGTH_LONG).show();
+				menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_blade_white));
+                return true;
+
+	        case R.id.action_menu2:
+                Toast.makeText(getApplicationContext(), "BLOWER ATTACHMENT", Toast.LENGTH_LONG).show();
+		        menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_blower_white));
+                return true;
+
+            case R.id.action_menu3:
+                Toast.makeText(getApplicationContext(), "EDGER ATTACHMENT", Toast.LENGTH_LONG).show();
+	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_edger_white));
+                return true;
+
+            case R.id.action_menu4:
+                Toast.makeText(getApplicationContext(), "POLE SAW ATTACHMENT", Toast.LENGTH_LONG).show();
+	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_pole_saw_white));
+                return true;
+
+            case R.id.action_menu5:
+                Toast.makeText(getApplicationContext(), "TILLER ATTACHMENT", Toast.LENGTH_LONG).show();
+	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_tiller_white));
+                return true;
+
+            case R.id.action_menu6:
+                Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_LONG).show();
+	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_string_white));
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+	@Override
+	public void onResume(){
+		super.onResume();
+
+
+	}
 
     private boolean loadFragment(Fragment fragment)
     {
@@ -192,6 +267,14 @@ public class MainActivity extends AppCompatActivity {
                     engine_running = false;
                     module_temperature = data[2];
                     attachment_nbr_status = data[3];
+
+/*	                navigation = findViewById(R.id.navigation_main);
+                    navigation.findViewById(R.id.navigation_start_instructions).setVisibility(View.VISIBLE);
+	                navigation.findViewById(R.id.navigation_stats).setVisibility(View.VISIBLE);
+                    navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
+	                navigation.findViewById(R.id.navigation_dash).setVisibility(View.GONE);
+	                navigation.findViewById(R.id.navigation_kill).setVisibility(View.GONE);*/
+
                     Log.i(TAG, "ENGINE_NOT_RUNNING!: " + module_temperature + "," + attachment_nbr_status);
                 }
                 else if (data[0] == ENGINE_RUNNING && data.length == data[1])
@@ -203,6 +286,12 @@ public class MainActivity extends AppCompatActivity {
                     attachment_nbr_status = data[7];
                     trim_mode_status = data[8];
                     stop_status = data[9];
+/*	                navigation.findViewById(R.id.navigation_start_instructions).setVisibility(View.GONE);
+	                navigation.findViewById(R.id.navigation_stats).setVisibility(View.GONE);
+	                navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
+	                navigation.findViewById(R.id.navigation_dash).setVisibility(View.VISIBLE);
+	                navigation.findViewById(R.id.navigation_kill).setVisibility(View.VISIBLE);*/
+
                     Log.i(TAG, "ENGINE_RUNNING!: " + rpm + "," + run_time + "," + attachment_nbr_status + "," + trim_mode_status + "," + stop_status);
                 }
                 else

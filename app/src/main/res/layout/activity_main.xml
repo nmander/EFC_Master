@@ -27,7 +27,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation_main" />
+        app:menu="@menu/navigation_main"
+        app:labelVisibilityMode="labeled"/>
 
     <!--app:itemIconTint : for defining the Item Icon color.-->
     <!--app:itemTextColor : for defining the Item Text Color.-->

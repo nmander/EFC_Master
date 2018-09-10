@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <com.example.niklas.efc_master.Speedometer
+        android:id="@+id/Speedometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="145sp"
+        android:layout_marginRight="320sp"
+        android:background="@color/colorMaterialLight"
+        custom:currentSpeed="0"
+        custom:maxSpeed="12000" />
+
+<!--    <Button android:id="@+id/IncreaseSpeed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Increase"
+        android:layout_below="@id/Speedometer"
+        android:layout_toRightOf="@+id/MiddleView"
+        android:layout_alignParentRight="true"/>
+    <View
+        android:id="@+id/MiddleView"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_centerHorizontal="true" />
+    <Button android:id="@+id/DecreaseSpeed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Decrease"
+        android:layout_toLeftOf="@id/MiddleView"
+        android:layout_below="@id/Speedometer"
+        android:layout_alignParentLeft="true"/>-->
+</RelativeLayout>

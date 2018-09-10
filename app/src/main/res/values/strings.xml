@@ -7,9 +7,25 @@
     <string name="btn_scan">Scan</string>
 
     <!-- Strings for Bottom Navigation Menus -->
-    <string name="nav_light_trim"><b>LIGHT TRIM</b></string>
+    <string name="nav_light_trim"><b>TRIM</b></string>
     <string name="nav_start_instructions"><b>START</b></string>
     <string name="nav_stats"><b>STATS</b></string>
     <string name="nav_dash"><b>DASH</b></string>
     <string name="nav_kill"><b>KILL</b></string>
+
+    <!-- Strings for Attachment Options Menu -->
+    <string name="menu_item_change_attachment"><b>Change Attachment</b></string>
+    <!-- String, blade, blower, edger, tiller, pole saw -->
+    <string name="attach_string"><b>STRING</b></string>
+    <string name="attach_blade"><b>BLADE</b></string>
+    <string name="attach_blower"><b>BLOWER</b></string>
+    <string name="attach_edger"><b>EDGER</b></string>
+    <string name="attach_tiller"><b>TILLER</b></string>
+    <string name="attach_pole_saw"><b>POLE SAW</b></string>
+
+
+    <!-- Strings for Starting Instructions -->
+    <string name="instructions_prime_bulb"><b>PUSH PRIMER BULB N TIMES</b></string>
+    <string name="instructions_squeeze_throttle"><b>SQUEEZE AND HOLD THROTTLE TRIGGER</b></string>
+    <string name="instructions_pull_string"><b>PULL ROPE UNTIL ENGINE STARTS</b></string>
 </resources>

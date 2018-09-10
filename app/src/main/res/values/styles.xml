@@ -20,4 +20,8 @@
         <item name="android:itemBackground">@color/colorWhite</item>
         <item name="android:colorBackground">@color/colorMaterialLight</item>
     </style>
+
+    <style name="TabLayoutTextSize" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>
