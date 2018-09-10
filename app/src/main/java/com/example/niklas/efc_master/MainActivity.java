@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         device_address = getIntent().getStringExtra(EXTRA_DEVICE_ADDRESS);
         Log.i(TAG, "MainActivity onCreate: " + device_address);
-//        //Get bluetooth radio, need to do it again in this class
+//        //Get bluetooth radio, need to do it again init this class
 //        mBluetoothManager = (BluetoothManager) context.getSystemService(BLUETOOTH_SERVICE);
 //        mBluetoothAdapter = mBluetoothManager.getAdapter();
 //        //Now setup radio to communicate with WBLE using address found from scanning and passed as parameter to this class
