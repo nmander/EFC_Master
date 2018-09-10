@@ -36,15 +36,15 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
     //Variables used to interpret data coming in and out
-    private static final byte ENGINE_RUNNING = 1;
-    private static final byte ENGINE_NOT_RUNNING = 2;
+    public static final byte ENGINE_RUNNING = 1;
+    public static final byte ENGINE_NOT_RUNNING = 2;
     private boolean engine_running = false;
     public int module_temperature = 0;
-    private int rpm = 0;
-    private int run_time = 0;
-    private int attachment_nbr_status = 0; //[String, Blade, Edger, Tiller, Blower, Pole Saw]
-    private int trim_mode_status = 0;   //0 = normal, lite = 1
-    private int stop_status = 0; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
+    public int rpm = 0;
+    public int run_time = 0;
+    public int attachment_nbr_status = 0; //[String, Blade, Edger, Tiller, Blower, Pole Saw]
+    public int trim_mode_status = 0;   //0 = normal, lite = 1
+    public int stop_status = 0; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
 
 	private Menu menu;
 	private BottomNavigationView navigation;
