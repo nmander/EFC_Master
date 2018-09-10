@@ -10,10 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/logo"
-        android:src="@drawable/walbro_logo"
+        android:src="@drawable/walbro_logo_w"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="125dp"/>
+        android:layout_marginTop="125dp"
+        android:layout_marginBottom="35dp"/>
 
     <TextView
         android:id="@+id/efc_connect"
@@ -54,5 +55,4 @@
         android:background="@drawable/button_scan"
         android:elevation="20dp"
         android:textColor="@color/colorBlack"/>
-
 </RelativeLayout>
