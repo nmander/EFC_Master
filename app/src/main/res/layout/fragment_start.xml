@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="igndata"
+            type="com.example.niklas.efc_master.Igndata"/>
+    </data>
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -13,7 +19,7 @@
         android:padding="10sp"
         android:layout_marginBottom="10sp"
         android:background="@color/colorMaterialLight"
-        android:text="@string/instructions_prime_bulb"
+        android:text="@{igndata.primerBulb}"
         android:textColor="@color/colorBlack"
         android:textSize="26sp" />
 
@@ -75,3 +81,4 @@
         android:scaleType="fitXY"
         />
 </RelativeLayout>
+</layout>

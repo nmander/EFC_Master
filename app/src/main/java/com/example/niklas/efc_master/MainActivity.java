@@ -39,23 +39,25 @@ public class MainActivity extends AppCompatActivity {
     public static final byte ENGINE_RUNNING = 1;
     public static final byte ENGINE_NOT_RUNNING = 2;
     private boolean engine_running = false;
-    public int module_temperature = 0;
-    public int rpm = 0;
-    public int run_time = 0;
-    public int attachment_nbr_status = 0; //[String, Blade, Edger, Tiller, Blower, Pole Saw]
-    public int trim_mode_status = 0;   //0 = normal, lite = 1
-    public int stop_status = 0; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
+//    public int module_temperature = 0;
+//    public int rpm = 0;
+//    public int run_time = 0;
+//    public int attachment_nbr_status = 0; //[String, Blade, Edger, Tiller, Blower, Pole Saw]
+//    public int trim_mode_status = 0;   //0 = normal, lite = 1
+//    public int stop_status = 0; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
 
 	private Menu menu;
 	private BottomNavigationView navigation;
 	private Fragment fragment;
+    Igndata live_data = new Igndata();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         device_address = getIntent().getStringExtra(EXTRA_DEVICE_ADDRESS);
         Log.i(TAG, "MainActivity onCreate: " + device_address);
-        //Get bluetooth radio, need to do it again in this class
+
+         //Get bluetooth radio, need to do it again in this class
         mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         //Now setup radio to communicate with WBLE using address found from scanning and passed as parameter to this class
@@ -265,34 +267,20 @@ public class MainActivity extends AppCompatActivity {
                 if (data[0] == ENGINE_NOT_RUNNING && data.length == data[1])
                 {
                     engine_running = false;
-                    module_temperature = data[2];
-                    attachment_nbr_status = data[3];
-
-/*	                navigation = findViewById(R.id.navigation_main);
-                    navigation.findViewById(R.id.navigation_start_instructions).setVisibility(View.VISIBLE);
-	                navigation.findViewById(R.id.navigation_stats).setVisibility(View.VISIBLE);
-                    navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
-	                navigation.findViewById(R.id.navigation_dash).setVisibility(View.GONE);
-	                navigation.findViewById(R.id.navigation_kill).setVisibility(View.GONE);*/
-
-                    Log.i(TAG, "ENGINE_NOT_RUNNING!: " + module_temperature + "," + attachment_nbr_status);
+                    live_data.setTemperature(data[2]);
+                    live_data.setAttachment_nbr_status(data[3]);
+                    Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status());
                 }
                 else if (data[0] == ENGINE_RUNNING && data.length == data[1])
                 {
                     engine_running = true;
-                    rpm = (data[3]<< 8)&0x0000ff00|(data[2]&0x000000ff);
-                    run_time = (data[5]<< 8)&0x0000ff00|(data[4]&0x000000ff);
-                    module_temperature = data[6];
-                    attachment_nbr_status = data[7];
-                    trim_mode_status = data[8];
-                    stop_status = data[9];
-/*	                navigation.findViewById(R.id.navigation_start_instructions).setVisibility(View.GONE);
-	                navigation.findViewById(R.id.navigation_stats).setVisibility(View.GONE);
-	                navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
-	                navigation.findViewById(R.id.navigation_dash).setVisibility(View.VISIBLE);
-	                navigation.findViewById(R.id.navigation_kill).setVisibility(View.VISIBLE);*/
-
-                    Log.i(TAG, "ENGINE_RUNNING!: " + rpm + "," + run_time + "," + attachment_nbr_status + "," + trim_mode_status + "," + stop_status);
+//                    rpm = (data[3]<< 8)&0x0000ff00|(data[2]&0x000000ff);
+//                    run_time = (data[5]<< 8)&0x0000ff00|(data[4]&0x000000ff);
+//                    module_temperature = data[6];
+//                    attachment_nbr_status = data[7];
+//                    trim_mode_status = data[8];
+//                    stop_status = data[9];
+//                    Log.i(TAG, "ENGINE_RUNNING!: " + rpm + "," + run_time + "," + attachment_nbr_status + "," + trim_mode_status + "," + stop_status);
                 }
                 else
                 {

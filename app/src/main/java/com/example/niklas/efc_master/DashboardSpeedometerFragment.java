@@ -31,14 +31,15 @@ public class DashboardSpeedometerFragment extends Fragment
 		//below is where you get a variable from the main activity
 		//mainActivity.module_temperature = myTemperature;
 
-		myRPM = mainActivity.rpm;
+		//myRPM = mainActivity.rpm;
+		myRPM = mainActivity.live_data.getRpm();
 		mySpeedometer = rootView.findViewById(R.id.Speedometer);
 
 		//just change the fragment_dashboard
 		//with the fragment you want to inflate
 		//like if the class is HomeFragment it should have R.layout.home_fragment
 		//if it is DashboardFragment it should have R.layout.fragment_dashboard
-		myRPM = mainActivity.rpm;
+		//myRPM = mainActivity.rpm;
 		/*Timer timer = new Timer();
 
 		timer.scheduleAtFixedRate(new TimerTask() {
