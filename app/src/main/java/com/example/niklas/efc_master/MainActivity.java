@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 	private BottomNavigationView navigation;
 	private Fragment fragment;
     private StartFragment startFragment = new StartFragment();
+    private DashboardTabFragment dbTabFragment = new DashboardTabFragment();
 	private DashboardSpeedometerFragment dbSpeedometerFragment = new DashboardSpeedometerFragment();
 
     @Override
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_start_instructions:
                 	fragment = new StartFragment();
                 	loadFragment(fragment);
-
                     return true;
 
                 case R.id.navigation_stats:
@@ -254,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
                 byte[] data = characteristic.getValue();
                 if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
                 {
+
                     engine_running = false;
                     live_data.setTemperature(data[2]);
                     live_data.setAttachment_nbr_status(data[3]);
@@ -275,11 +276,14 @@ public class MainActivity extends AppCompatActivity {
                     live_data.setAttachment_nbr_status(data[7]);
                     live_data.setTrim_mode_status(data[8]);
                     live_data.setStop_status(data[9]);
+                    loadFragment(dbSpeedometerFragment);
+
 
                     runOnUiThread(new Runnable() {
 	                    @Override
 	                    public void run() {
 		                    dbSpeedometerFragment.updateSpeedometer(live_data.getRpm());
+		                    //navigation.setSelectedItemId(R.id.navigation_dash);
 	                    }
                     });
                     Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm());

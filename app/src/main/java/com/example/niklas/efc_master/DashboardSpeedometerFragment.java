@@ -33,11 +33,6 @@ public class DashboardSpeedometerFragment extends Fragment
 
 	public void updateSpeedometer(int rpm)
 	{
-/*		DashboardSpeedometerFragment fragment = (DashboardSpeedometerFragment) getFragmentManager().findFragmentById(R.id.fragment_container);
-		mySpeedometer = fragment
-		mySpeedometer.setCurrentSpeed(rpm);
-		this.mySpeedometer.onSpeedChanged(rpm);*/
-
 		mySpeedometer.setCurrentSpeed(rpm);
 		mySpeedometer.onSpeedChanged(rpm);
 	}
