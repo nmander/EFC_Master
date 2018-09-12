@@ -31,39 +31,26 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static String device_address;
     public static final String EXTRA_DEVICE_ADDRESS = "mAddress";
-    boolean foundGattService = false;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
     //Variables used to interpret data coming in and out
-    public static final byte ENGINE_RUNNING = 1;
-    public static final byte ENGINE_NOT_RUNNING = 2;
+    Igndata live_data = new Igndata();
     private boolean engine_running = false;
-//    public int module_temperature = 0;
-//    public int rpm = 0;
-//    public int run_time = 0;
-//    public int attachment_nbr_status = 0; //[String, Blade, Edger, Tiller, Blower, Pole Saw]
-//    public int trim_mode_status = 0;   //0 = normal, lite = 1
-//    public int stop_status = 0; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
-
+    //
 	private Menu menu;
 	private BottomNavigationView navigation;
 	private Fragment fragment;
-    Igndata live_data = new Igndata();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        device_address = getIntent().getStringExtra(EXTRA_DEVICE_ADDRESS);
         Log.i(TAG, "MainActivity onCreate: " + device_address);
+        //Try to connect to Gatt Server
+        device_address = getIntent().getStringExtra(EXTRA_DEVICE_ADDRESS);
+        connectToGattServer();
 
-         //Get bluetooth radio, need to do it again in this class
-        mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
-        mBluetoothAdapter = mBluetoothManager.getAdapter();
-        //Now setup radio to communicate with WBLE using address found from scanning and passed as parameter to this class
-        GattClientCallback mGattCallback = new GattClientCallback();
-        BluetoothDevice bluetoothDevice = mBluetoothAdapter.getRemoteDevice(device_address);
-        mBluetoothGatt = bluetoothDevice.connectGatt(this, false, mGattCallback,2);
         //Setup interface views
         setContentView(R.layout.activity_main);
 
@@ -264,23 +251,23 @@ public class MainActivity extends AppCompatActivity {
             if (CHARACTERISTIC_TX.equals(characteristic.getUuid()))
             {
                 byte[] data = characteristic.getValue();
-                if (data[0] == ENGINE_NOT_RUNNING && data.length == data[1])
+                if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
                 {
                     engine_running = false;
                     live_data.setTemperature(data[2]);
                     live_data.setAttachment_nbr_status(data[3]);
                     Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status());
                 }
-                else if (data[0] == ENGINE_RUNNING && data.length == data[1])
+                else if (data[0] == live_data.ENGINE_RUNNING && data.length == data[1])
                 {
                     engine_running = true;
-//                    rpm = (data[3]<< 8)&0x0000ff00|(data[2]&0x000000ff);
-//                    run_time = (data[5]<< 8)&0x0000ff00|(data[4]&0x000000ff);
-//                    module_temperature = data[6];
-//                    attachment_nbr_status = data[7];
-//                    trim_mode_status = data[8];
-//                    stop_status = data[9];
-//                    Log.i(TAG, "ENGINE_RUNNING!: " + rpm + "," + run_time + "," + attachment_nbr_status + "," + trim_mode_status + "," + stop_status);
+                    live_data.setRpm((data[3]<< 8)&0x0000ff00|(data[2]&0x000000ff));
+                    live_data.setRun_time((data[5]<< 8)&0x0000ff00|(data[4]&0x000000ff));
+                    live_data.setTemperature(data[6]);
+                    live_data.setAttachment_nbr_status(data[7]);
+                    live_data.setTrim_mode_status(data[8]);
+                    live_data.setStop_status(data[9]);
+                    Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm());
                 }
                 else
                 {
@@ -288,6 +275,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void connectToGattServer()
+    {
+        //Get bluetooth radio, need to do it again in this class
+        mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
+        mBluetoothAdapter = mBluetoothManager.getAdapter();
+        //Now setup radio to communicate with WBLE using address found from scanning and passed as parameter to this class
+        GattClientCallback mGattCallback = new GattClientCallback();
+        BluetoothDevice bluetoothDevice = mBluetoothAdapter.getRemoteDevice(device_address);
+        mBluetoothGatt = bluetoothDevice.connectGatt(this, false, mGattCallback,2);
     }
 
     public void disconnectGattServer()

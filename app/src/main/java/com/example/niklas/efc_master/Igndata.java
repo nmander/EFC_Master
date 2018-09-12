@@ -1,17 +1,18 @@
 package com.example.niklas.efc_master;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
-public class Igndata
+public class Igndata extends BaseObservable
 {
+    public final byte ENGINE_RUNNING = 1;
+    public final byte ENGINE_NOT_RUNNING = 2;
     private String primerBulb;
-
-
-
     private int temperature;
     private int rpm;
     private int run_time;
-    private int attachment_nbr_status = 0; //[String, Blade, Edger, Tiller, Blower, Pole Saw]
-    private int trim_mode_status = 0;   //0 = normal, lite = 1
-    private int stop_status = 0; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
+    private int attachment_nbr_status; //[String, Blade, Edger, Tiller, Blower, Pole Saw]
+    private int trim_mode_status;   //0 = normal, lite = 1
+    private int stop_status; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
 
     public Igndata() {
         this.primerBulb = "PUSH PRIMER BULB N TIMES";
@@ -69,9 +70,11 @@ public class Igndata
     public void setPrimerBulb(String primerBulb) {
         this.primerBulb = primerBulb;
     }
+    @Bindable
     public int getTemperature() {
         return temperature;
     }
+    @Bindable
     public void setTemperature(int temperature) {
         this.temperature = temperature;
     }
