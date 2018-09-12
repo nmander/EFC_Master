@@ -26,7 +26,6 @@ public class Igndata extends BaseObservable
     public int getAttachment_nbr_status() {
         return attachment_nbr_status;
     }
-
     public void setAttachment_nbr_status(int attachment_nbr_status) {
         this.attachment_nbr_status = attachment_nbr_status;
     }
@@ -34,7 +33,6 @@ public class Igndata extends BaseObservable
     public int getTrim_mode_status() {
         return trim_mode_status;
     }
-
     public void setTrim_mode_status(int trim_mode_status) {
         this.trim_mode_status = trim_mode_status;
     }
@@ -42,34 +40,34 @@ public class Igndata extends BaseObservable
     public int getStop_status() {
         return stop_status;
     }
-
     public void setStop_status(int stop_status) {
         this.stop_status = stop_status;
     }
 
+    @Bindable
     public int getRpm() {
         return rpm;
     }
-
     public void setRpm(int rpm) {
         this.rpm = rpm;
+        notifyPropertyChanged(BR.rpm);
     }
 
     public int getRun_time() {
         return run_time;
     }
+    public void setRun_time(int run_time) { this.run_time = run_time; }
 
-    public void setRun_time(int run_time) {
-        this.run_time = run_time;
-    }
-
+    @Bindable
     public String getPrimerBulb() {
         return primerBulb;
     }
-
+    @Bindable
     public void setPrimerBulb(String primerBulb) {
         this.primerBulb = primerBulb;
+        notifyPropertyChanged(BR.primerBulb);
     }
+
     @Bindable
     public int getTemperature() {
         return temperature;
@@ -77,5 +75,6 @@ public class Igndata extends BaseObservable
     @Bindable
     public void setTemperature(int temperature) {
         this.temperature = temperature;
+        notifyPropertyChanged(BR.temperature);
     }
 }

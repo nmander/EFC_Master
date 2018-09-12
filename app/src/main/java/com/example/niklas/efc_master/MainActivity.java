@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 	private Menu menu;
 	private BottomNavigationView navigation;
 	private Fragment fragment;
-
+    private StartFragment startFragment = new StartFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         navigation = findViewById(R.id.navigation_main);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        loadFragment(new StartFragment());
+        loadFragment(startFragment);
 	    //btnPrimeBulb = (Button) StartFragment.getView().findViewById(R.id.instruction_prime_bulb);
 
     }
@@ -256,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
                     engine_running = false;
                     live_data.setTemperature(data[2]);
                     live_data.setAttachment_nbr_status(data[3]);
+                    startFragment.updatePrimerBulb(live_data.getTemperature());
                     Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status());
                 }
                 else if (data[0] == live_data.ENGINE_RUNNING && data.length == data[1])

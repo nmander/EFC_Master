@@ -1,5 +1,6 @@
 package com.example.niklas.efc_master;
 
+import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,18 +23,21 @@ public class StartFragment extends Fragment {
 		//here data must be an instance of the class MarsDataProvider
 		mainActivity = (MainActivity) getActivity();
 		binding.setIgndata(mainActivity.live_data);
+		updatePrimerBulb(mainActivity.live_data.getTemperature());
 
+ 		return view;
+	}
 
-		//below is where you get a variable from the main activity
-    	int presses = TempToPress.myNumOfPress(mainActivity.live_data.getTemperature());
+	public void updatePrimerBulb(int temperature)
+	{
+		int presses = TempToPress.myNumOfPress(temperature);
 		if (presses == 1)
 		{
 			mainActivity.live_data.setPrimerBulb("PUSH PRIMER BULB " + presses + " TIME");
 		}
 		else
 		{
-	    	mainActivity.live_data.setPrimerBulb("PUSH PRIMER BULB " + presses + " TIMES");
+			mainActivity.live_data.setPrimerBulb("PUSH PRIMER BULB " + presses + " TIMES");
 		}
-		return view;
 	}
 }
