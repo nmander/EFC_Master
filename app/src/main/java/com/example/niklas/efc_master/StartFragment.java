@@ -23,7 +23,7 @@ public class StartFragment extends Fragment {
 		//here data must be an instance of the class MarsDataProvider
 		mainActivity = (MainActivity) getActivity();
 		binding.setIgndata(mainActivity.live_data);
-		updatePrimerBulb(mainActivity.live_data.getTemperature());
+		//updatePrimerBulb(mainActivity.live_data.getTemperature());
 
  		return view;
 	}

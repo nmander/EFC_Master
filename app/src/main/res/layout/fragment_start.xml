@@ -5,80 +5,80 @@
             name="igndata"
             type="com.example.niklas.efc_master.Igndata"/>
     </data>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/instruction_prime_bulb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20sp"
-        android:padding="10sp"
-        android:layout_marginBottom="10sp"
-        android:background="@color/colorMaterialLight"
-        android:text="@{igndata.primerBulb}"
-        android:textColor="@color/colorBlack"
-        android:textSize="26sp" />
+        <Button
+            android:id="@+id/instruction_prime_bulb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20sp"
+            android:padding="10sp"
+            android:layout_marginBottom="10sp"
+            android:background="@color/colorMaterialLight"
+            android:text="@{igndata.primerBulb}"
+            android:textColor="@color/colorBlack"
+            android:textSize="26sp" />
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_toStartOf="@id/instruction_prime_bulb"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10sp"
-        android:background="@drawable/ic_prime_bulb"
-        android:scaleType="fitXY"
-        />
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toStartOf="@id/instruction_prime_bulb"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10sp"
+            android:background="@drawable/ic_prime_bulb"
+            android:scaleType="fitXY"
+            />
 
-    <Button
-        android:id="@+id/instruction_squeeze_throttle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="75dp"
-        android:layout_below="@id/instruction_prime_bulb"
-        android:padding="10sp"
-        android:layout_marginBottom="10sp"
-        android:background="@color/colorMaterialLight"
-        android:text="@string/instructions_squeeze_throttle"
-        android:textColor="@color/colorBlack"
-        android:textSize="26sp"/>
+        <Button
+            android:id="@+id/instruction_squeeze_throttle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="75dp"
+            android:layout_below="@id/instruction_prime_bulb"
+            android:padding="10sp"
+            android:layout_marginBottom="10sp"
+            android:background="@color/colorMaterialLight"
+            android:text="@string/instructions_squeeze_throttle"
+            android:textColor="@color/colorBlack"
+            android:textSize="26sp"/>
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_toStartOf="@id/instruction_squeeze_throttle"
-        android:layout_marginEnd="10sp"
-        android:background="@drawable/ic_trigger"
-        android:layout_centerVertical="true"
-        android:scaleType="fitXY"
-        />
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toStartOf="@id/instruction_squeeze_throttle"
+            android:layout_marginEnd="10sp"
+            android:background="@drawable/ic_trigger"
+            android:layout_centerVertical="true"
+            android:scaleType="fitXY"
+            />
 
-    <Button
-        android:id="@+id/instructions_pull_string"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/instruction_squeeze_throttle"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="130sp"
-        android:padding="10sp"
-        android:layout_marginBottom="10sp"
-        android:background="@color/colorMaterialLight"
-        android:text="@string/instructions_pull_string"
-        android:textColor="@color/colorBlack"
-        android:textSize="26sp"/>
+        <Button
+            android:id="@+id/instructions_pull_string"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/instruction_squeeze_throttle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="130sp"
+            android:padding="10sp"
+            android:layout_marginBottom="10sp"
+            android:background="@color/colorMaterialLight"
+            android:text="@string/instructions_pull_string"
+            android:textColor="@color/colorBlack"
+            android:textSize="26sp"/>
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_toStartOf="@id/instructions_pull_string"
-        android:layout_below="@id/instruction_squeeze_throttle"
-        android:layout_marginEnd="10sp"
-        android:background="@drawable/ic_pull_cord"
-        android:scaleType="fitXY"
-        />
-</RelativeLayout>
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toStartOf="@id/instructions_pull_string"
+            android:layout_below="@id/instruction_squeeze_throttle"
+            android:layout_marginEnd="10sp"
+            android:background="@drawable/ic_pull_cord"
+            android:scaleType="fitXY"
+            />
+    </RelativeLayout>
 </layout>

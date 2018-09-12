@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 	private BottomNavigationView navigation;
 	private Fragment fragment;
     private StartFragment startFragment = new StartFragment();
+	private DashboardSpeedometerFragment dbSpeedometerFragment = new DashboardSpeedometerFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,6 +269,13 @@ public class MainActivity extends AppCompatActivity {
                     live_data.setAttachment_nbr_status(data[7]);
                     live_data.setTrim_mode_status(data[8]);
                     live_data.setStop_status(data[9]);
+
+                    runOnUiThread(new Runnable() {
+	                    @Override
+	                    public void run() {
+		                    dbSpeedometerFragment.updateSpeedometer(live_data.getRpm());
+	                    }
+                    });
                     Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm());
                 }
                 else
