@@ -19,7 +19,6 @@ public class DashboardSpeedometerFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_dashboard_speedometer, container, false);
-
 		mainActivity = (MainActivity) getActivity();
 		//below is where you get a variable from the main activity
 		//mainActivity.module_temperature = myTemperature;

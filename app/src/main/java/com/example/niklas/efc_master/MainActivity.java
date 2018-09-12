@@ -257,7 +257,13 @@ public class MainActivity extends AppCompatActivity {
                     engine_running = false;
                     live_data.setTemperature(data[2]);
                     live_data.setAttachment_nbr_status(data[3]);
-                    startFragment.updatePrimerBulb(live_data.getTemperature());
+	                runOnUiThread(new Runnable() {
+		                @Override
+		                public void run() {
+			                startFragment.updatePrimerBulb(live_data.getTemperature());
+		                }
+	                });
+
                     Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status());
                 }
                 else if (data[0] == live_data.ENGINE_RUNNING && data.length == data[1])
