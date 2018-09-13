@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     //Variables used to interpret data coming in and out
     Igndata live_data = new Igndata();
     private boolean engine_running = false;
+    private boolean engine_first_run = true;
     //
 	private Menu menu;
 	private BottomNavigationView navigation;
@@ -264,7 +265,6 @@ public class MainActivity extends AppCompatActivity {
                     //hide navigational features:
                     hideRunningFeatures();
 
-
                     live_data.setTemperature(data[2]);
                     live_data.setAttachment_nbr_status(data[3]);
 	                runOnUiThread(new Runnable() {
@@ -283,8 +283,13 @@ public class MainActivity extends AppCompatActivity {
                 else if (data[0] == live_data.ENGINE_RUNNING && data.length == data[1])
                 {
                     engine_running = true;
+                    if (engine_first_run) {
+	                    loadFragment(dashboardFragment);
+	                    setDashboardFragment();
+	                    engine_first_run = false;
+                    }
                     //hide navigational features:
-                    hideStartingFeatures();
+	                hideStartingFeatures();
 
                     live_data.setRpm((data[3]<< 8)&0x0000ff00|(data[2]&0x000000ff));
                     live_data.setRun_time((data[5]<< 8)&0x0000ff00|(data[4]&0x000000ff));
@@ -341,6 +346,8 @@ public class MainActivity extends AppCompatActivity {
         new Handler(getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                navigation.findViewById(R.id.navigation_start_instructions).setVisibility(View.VISIBLE);
+                navigation.findViewById(R.id.navigation_stats).setVisibility(View.VISIBLE);
                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
                 navigation.findViewById(R.id.navigation_dash).setVisibility(View.GONE);
                 navigation.findViewById(R.id.navigation_kill).setVisibility(View.GONE);
@@ -361,5 +368,15 @@ public class MainActivity extends AppCompatActivity {
                 navigation.findViewById(R.id.navigation_kill).setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    public void setDashboardFragment()
+    {
+	    new Handler(getMainLooper()).post(new Runnable() {
+		    @Override
+		    public void run() {
+			    navigation.setSelectedItemId(R.id.navigation_dash);
+		    }
+	    });
     }
 }

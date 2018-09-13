@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Strings for Startup -->
-    <string name="app_name">EFC Master</string>
+    <string name="app_name">EFC Connect</string>
     <string name="efc_connect"><b>EFC Connect</b></string>
     <string name="walbro_llc">Walbro LLC</string>
     <string name="btn_scan">Scan</string>
