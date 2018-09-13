@@ -100,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_kill:
-                    hideStartingFeatures();
+					engine_running = false;
+					hideStartingFeatures();
                     return true;
             }
             return false;
@@ -299,18 +300,17 @@ public class MainActivity extends AppCompatActivity {
                     live_data.setStop_status(data[9]);
 
                     //load the dashboard: speedometer and runtime clock
-                    loadFragment(dashboardFragment);
+                    //loadFragment(dashboardFragment);
 
                     runOnUiThread(new Runnable() {
 	                    @Override
 	                    public void run() {
 	                        //if selected nav item is Dash:
 		                    dashboardFragment.updateSpeedometer(live_data.getRpm());
-
 		                    //else detect if light trim or kill
 	                    }
                     });
-                    Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm());
+                    Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm() + " - " + live_data.getRun_time());
                 }
                 else
                 {
@@ -379,4 +379,14 @@ public class MainActivity extends AppCompatActivity {
 		    }
 	    });
     }
+
+	public void setStartFragment()
+	{
+		new Handler(getMainLooper()).post(new Runnable() {
+			@Override
+			public void run() {
+				navigation.setSelectedItemId(R.id.navigation_start_instructions);
+			}
+		});
+	}
 }

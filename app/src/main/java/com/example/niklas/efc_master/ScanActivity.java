@@ -48,11 +48,10 @@ public class ScanActivity extends AppCompatActivity
     private final BluetoothLeScannerCompat mScanner = BluetoothLeScannerCompat.getScanner();
     private final Handler mStopScanHandler = new Handler();
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
-            Toast.makeText(getApplicationContext(), "Requires Bluetooth", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Enable Bluetooth", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -64,7 +63,7 @@ public class ScanActivity extends AppCompatActivity
         if (requestCode == REQUEST_PERMISSION_LOCATION && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.i(TAG, "Permission accepted");
         } else {
-            Toast.makeText(getApplicationContext(), "Requires Location Permission", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Enable Location", Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -109,7 +108,7 @@ public class ScanActivity extends AppCompatActivity
                 Log.i(TAG, "found BLE: " + results.toString());
                 stopLeScan();
                 btnScan.setVisibility(View.INVISIBLE);
-                //Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_SHORT).show();
 
                 startMainActivity(result.getDevice());
             }
@@ -125,7 +124,7 @@ public class ScanActivity extends AppCompatActivity
     private final Runnable mStopScanRunnable = new Runnable() {
         @Override
         public void run() {
-            Toast.makeText(getApplicationContext(), "No WBLE Modules Found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "No compatible WBLE modules found", Toast.LENGTH_SHORT).show();
             btnScan.setVisibility(View.VISIBLE);
             stopLeScan();
         }
