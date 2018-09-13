@@ -9,6 +9,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 public class Speedometer extends View implements SpeedChangeListener {
@@ -35,7 +36,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 	private int SCALE_COLOR = Color.BLACK;
 
 	//scale number text size
-	private float SCALE_SIZE = 40f;
+	private float SCALE_SIZE = 35f;
 	private float READING_SIZE = 80f;   //unknown
 
 	// Scale configuration
@@ -86,6 +87,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 
 		scalePaint = new Paint(offMarkPaint);
 		scalePaint.setStrokeWidth(2f);
+		scalePaint.setLetterSpacing(0f);
 		scalePaint.setTextSize(SCALE_SIZE);
 		scalePaint.setShadowLayer(5f, 0f, 0f, Color.RED);
 		scalePaint.setColor(SCALE_COLOR);
@@ -226,6 +228,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 		String message = String.format("%d", (int)this.mCurrentSpeed);
 		float[] widths = new float[message.length()];
 		readingPaint.getTextWidths(message, widths);
+		readingPaint.setStrokeWidth(5f);
 		float advance = 0;
 		for(double width:widths)
 			advance += width;
@@ -233,6 +236,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 		path.lineTo(centerX + advance/2, centerY);
 		canvas.rotate(180, centerX, centerY);
 		canvas.drawTextOnPath(message, path, 0f, 0f, readingPaint);
+
 		//canvas.rotate(180);
 	}
 

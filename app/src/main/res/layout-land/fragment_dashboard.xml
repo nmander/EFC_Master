@@ -1,19 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <com.example.niklas.efc_master.Speedometer
-        android:id="@+id/Speedometer"
+        <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="145sp"
-        android:layout_marginRight="320sp"
-        android:background="@color/colorMaterialLight"
-        custom:currentSpeed="0"
-        custom:maxSpeed="12000" />
+        android:layout_height="wrap_content">
+
+            <com.example.niklas.efc_master.Speedometer
+                android:id="@+id/Speedometer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="-70dp"
+                android:layout_marginTop="-60dp"
+                android:background="@color/colorMaterialLight"
+                custom:currentSpeed="0"
+                custom:maxSpeed="12000" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="370dp"
+            android:layout_marginTop="20dp"
+            android:format12Hour="hh:mm a"
+            android:textColor="#000000"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Chronometer
+            android:id="@+id/runtime_clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="415dp"
+            android:layout_marginTop="140dp"
+            android:textColor="#000000"
+            android:textSize="48sp"
+            android:background="@color/colorMaterialLight"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 <!--    <Button android:id="@+id/IncreaseSpeed"
         android:layout_width="match_parent"
@@ -34,4 +72,4 @@
         android:layout_toLeftOf="@id/MiddleView"
         android:layout_below="@id/Speedometer"
         android:layout_alignParentLeft="true"/>-->
-</RelativeLayout>
+</FrameLayout>

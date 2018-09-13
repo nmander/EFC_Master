@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
         {
             if (CHARACTERISTIC_TX.equals(characteristic.getUuid()))
             {
-                byte[] data = characteristic.getValue();
+                final byte[] data = characteristic.getValue();
                 //if engine not running
                 if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
                 {
@@ -307,6 +307,7 @@ public class MainActivity extends AppCompatActivity {
 	                    public void run() {
 	                        //if selected nav item is Dash:
 		                    dashboardFragment.updateSpeedometer(live_data.getRpm());
+		                    dashboardFragment.startRuntime(live_data.getRun_time());
 		                    //else detect if light trim or kill
 	                    }
                     });
