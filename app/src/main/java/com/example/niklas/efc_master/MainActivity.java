@@ -67,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         loadFragment(startFragment);
-/*        navigation.getMenu().removeItem(R.id.navigation_kill);
-        navigation.getMenu().removeItem(R.id.navigation_dash);
-        navigation.getMenu().removeItem(R.id.navigation_light_trim);*/
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -299,15 +296,12 @@ public class MainActivity extends AppCompatActivity {
                     live_data.setTrim_mode_status(data[8]);
                     live_data.setStop_status(data[9]);
 
-                    //load the dashboard: speedometer and runtime clock
-                    //loadFragment(dashboardFragment);
-
                     runOnUiThread(new Runnable() {
 	                    @Override
 	                    public void run() {
 	                        //if selected nav item is Dash:
 		                    dashboardFragment.updateSpeedometer(live_data.getRpm());
-		                    dashboardFragment.startRuntime(live_data.getRun_time());
+		                    dashboardFragment.updateRunTimer(live_data.getRun_time());
 		                    //else detect if light trim or kill
 	                    }
                     });
