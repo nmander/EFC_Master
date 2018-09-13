@@ -1,7 +1,5 @@
 package com.example.niklas.efc_master;
 
-import android.app.Activity;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;

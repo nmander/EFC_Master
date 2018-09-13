@@ -11,11 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class DashboardTabFragment extends Fragment {
+public class StatsTabsFragment extends Fragment {
 
 	public static TabLayout tabLayout;
 	public static ViewPager viewPager;
-	public static int int_items = 1;
+	public static int int_items = 4;
 
 	@Nullable
 	@Override
@@ -23,7 +23,7 @@ public class DashboardTabFragment extends Fragment {
 		/**
 		 *Inflate tab_layout and setup Views.
 		 */
-		View v = inflater.inflate(R.layout.fragment_dashboard_tab, container, false);
+		View v = inflater.inflate(R.layout.fragment_stats_tabs, container, false);
 		tabLayout = (TabLayout) v.findViewById(R.id.tabs);
 		viewPager = (ViewPager) v.findViewById(R.id.viewpager);
 
@@ -63,9 +63,13 @@ public class DashboardTabFragment extends Fragment {
 		public Fragment getItem(int position) {
 			switch (position) {
 				case 0:
-					return new DashboardSpeedometerFragment();
-				//case 1:
-					//return new StatsFragment();
+					return new StatsTab1Fragment();
+				case 1:
+                    return new StatsTab2Fragment();
+				case 2:
+                    return new StatsTab3Fragment();
+				case 3:
+                    return new StatsTab4Fragment();
 			}
 			return null;
 		}
@@ -86,11 +90,17 @@ public class DashboardTabFragment extends Fragment {
 
 			switch (position) {
 				case 0:
-					String recent_news = "Speedometer";
-					return recent_news;
+					String graph_1 = "Graph 1";
+					return graph_1;
 				case 1:
-					String category = "Graph 1";
-					return category;
+					String graph_2 = "Graph 2";
+					return graph_2;
+				case 2:
+					String graph_3 = "Graph 3";
+					return graph_3;
+				case 3:
+					String graph_4 = "Graph 4";
+					return graph_4;
 			}
 			return null;
 		}

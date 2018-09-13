@@ -25,7 +25,7 @@
 
 
     <!-- Strings for Starting Instructions -->
-    <string name="instructions_prime_bulb"><b>res/string/old text</b></string>
+    <string name="instructions_prime_bulb"><b>spacer</b></string>
     <string name="instructions_squeeze_throttle"><b>SQUEEZE AND HOLD THROTTLE TRIGGER</b></string>
     <string name="instructions_pull_string"><b>PULL ROPE UNTIL ENGINE STARTS</b></string>
 </resources>

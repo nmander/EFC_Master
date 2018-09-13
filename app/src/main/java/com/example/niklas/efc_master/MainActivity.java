@@ -1,5 +1,7 @@
 package com.example.niklas.efc_master;
 
+import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -19,7 +21,6 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import static com.example.niklas.efc_master.NordicProfile.CHARACTERISTIC_TX;
@@ -42,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 	private BottomNavigationView navigation;
 	private Fragment fragment;
     private StartFragment startFragment = new StartFragment();
-    private DashboardTabFragment dbTabFragment = new DashboardTabFragment();
-	private DashboardSpeedometerFragment dbSpeedometerFragment = new DashboardSpeedometerFragment();
+    private StatsTabsFragment statsTabsFragment = new StatsTabsFragment();
+	private DashboardFragment dashboardFragment = new DashboardFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +66,9 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         loadFragment(startFragment);
-	    //btnPrimeBulb = (Button) StartFragment.getView().findViewById(R.id.instruction_prime_bulb);
-
+/*        navigation.getMenu().removeItem(R.id.navigation_kill);
+        navigation.getMenu().removeItem(R.id.navigation_dash);
+        navigation.getMenu().removeItem(R.id.navigation_light_trim);*/
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -78,22 +80,26 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId())
             {
                 case R.id.navigation_start_instructions:
-                	fragment = new StartFragment();
-                	loadFragment(fragment);
+                    loadFragment(startFragment);
+                    hideRunningFeatures();
                     return true;
 
                 case R.id.navigation_stats:
+                    loadFragment(statsTabsFragment);
+                    hideRunningFeatures();
                     return true;
 
                 case R.id.navigation_light_trim:
+                    hideStartingFeatures();
                     return true;
 
                 case R.id.navigation_dash:
-	                fragment = new DashboardTabFragment();
-	                loadFragment(fragment);
+	                loadFragment(dashboardFragment);
+	                hideStartingFeatures();
                     return true;
 
                 case R.id.navigation_kill:
+                    hideStartingFeatures();
                     return true;
             }
             return false;
@@ -153,8 +159,6 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public void onResume(){
 		super.onResume();
-
-
 	}
 
     private boolean loadFragment(Fragment fragment)
@@ -193,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 disconnectGattServer();
             }
         }
+
         //Discovering Gatt Services callback
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status)
@@ -252,38 +257,52 @@ public class MainActivity extends AppCompatActivity {
             if (CHARACTERISTIC_TX.equals(characteristic.getUuid()))
             {
                 byte[] data = characteristic.getValue();
+                //if engine not running
                 if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
                 {
-
                     engine_running = false;
+                    //hide navigational features:
+                    hideRunningFeatures();
+
+
                     live_data.setTemperature(data[2]);
                     live_data.setAttachment_nbr_status(data[3]);
 	                runOnUiThread(new Runnable() {
 		                @Override
 		                public void run() {
+		                    //if selected nav item is Start:
 			                startFragment.updatePrimerBulb(live_data.getTemperature());
+			                //else: statstab graph logic:
 		                }
 	                });
 
                     Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status());
                 }
+
+                //if engine running
                 else if (data[0] == live_data.ENGINE_RUNNING && data.length == data[1])
                 {
                     engine_running = true;
+                    //hide navigational features:
+                    hideStartingFeatures();
+
                     live_data.setRpm((data[3]<< 8)&0x0000ff00|(data[2]&0x000000ff));
                     live_data.setRun_time((data[5]<< 8)&0x0000ff00|(data[4]&0x000000ff));
                     live_data.setTemperature(data[6]);
                     live_data.setAttachment_nbr_status(data[7]);
                     live_data.setTrim_mode_status(data[8]);
                     live_data.setStop_status(data[9]);
-                    loadFragment(dbSpeedometerFragment);
 
+                    //load the dashboard: speedometer and runtime clock
+                    loadFragment(dashboardFragment);
 
                     runOnUiThread(new Runnable() {
 	                    @Override
 	                    public void run() {
-		                    dbSpeedometerFragment.updateSpeedometer(live_data.getRpm());
-		                    //navigation.setSelectedItemId(R.id.navigation_dash);
+	                        //if selected nav item is Dash:
+		                    dashboardFragment.updateSpeedometer(live_data.getRpm());
+
+		                    //else detect if light trim or kill
 	                    }
                     });
                     Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm());
@@ -315,5 +334,32 @@ public class MainActivity extends AppCompatActivity {
             mBluetoothGatt.disconnect();
             mBluetoothGatt.close();
         }
+    }
+
+    public void hideRunningFeatures()
+    {
+        new Handler(getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
+                navigation.findViewById(R.id.navigation_dash).setVisibility(View.GONE);
+                navigation.findViewById(R.id.navigation_kill).setVisibility(View.GONE);
+            }
+        });
+    }
+
+    public void hideStartingFeatures()
+    {
+        //navigation.invalidate();
+        new Handler(getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                navigation.findViewById(R.id.navigation_start_instructions).setVisibility(View.GONE);
+                navigation.findViewById(R.id.navigation_stats).setVisibility(View.GONE);
+                navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
+                navigation.findViewById(R.id.navigation_dash).setVisibility(View.VISIBLE);
+                navigation.findViewById(R.id.navigation_kill).setVisibility(View.VISIBLE);
+            }
+        });
     }
 }

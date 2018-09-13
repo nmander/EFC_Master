@@ -108,6 +108,7 @@ public class ScanActivity extends AppCompatActivity
                 ScanResult result = results.get(0);
                 Log.i(TAG, "found BLE: " + results.toString());
                 stopLeScan();
+                btnScan.setVisibility(View.INVISIBLE);
                 //Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_LONG).show();
 
                 startMainActivity(result.getDevice());
