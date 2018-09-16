@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,9 @@ import android.bluetooth.BluetoothProfile;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.List;
+
+import static com.example.niklas.efc_master.NordicProfile.CHARACTERISTIC_RX;
 import static com.example.niklas.efc_master.NordicProfile.CHARACTERISTIC_TX;
 import static com.example.niklas.efc_master.NordicProfile.DESCRIPTOR_CONFIG;
 import static com.example.niklas.efc_master.NordicProfile.SERVICE_UUID;
@@ -38,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
     //Variables used to interpret data coming in and out
     Igndata live_data = new Igndata();
     private boolean engine_running = false;
-    private boolean engine_first_run = true;
+    private boolean dashboard_fragment_loaded = false;
+    private boolean start_fragment_loaded = false;
+    private boolean lite_trim_on = false;
     //
 	private Menu menu;
 	private BottomNavigationView navigation;
@@ -66,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
         navigation = findViewById(R.id.navigation_main);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        loadFragment(startFragment);
+      //  loadFragment(startFragment);
+        hideRunningFeatures();
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -75,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item)
         {
+            if (engine_running && live_data.getAt_idle_status()==0)
+                return false;
             switch (item.getItemId())
             {
                 case R.id.navigation_start_instructions:
@@ -89,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
 
                 case R.id.navigation_light_trim:
                     hideStartingFeatures();
+                    lite_trim_on = !lite_trim_on; //change state of lite trim mode
+                    if (lite_trim_on)
+                        writeToIgnitionModule(protocol.BTN_TRIM_MODE, protocol.LITE_TRIM);
+                    else
+                        writeToIgnitionModule(protocol.BTN_TRIM_MODE, protocol.NORMAL_TRIM);
                     return true;
 
                 case R.id.navigation_dash:
@@ -97,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_kill:
-					engine_running = false;
 					hideStartingFeatures();
+			        writeToIgnitionModule(protocol.BTN_STOP, protocol.STOP_ON);
                     return true;
             }
             return false;
@@ -123,32 +138,38 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_menu1:
                 Toast.makeText(getApplicationContext(), "BLADE ATTACHMENT", Toast.LENGTH_LONG).show();
 				menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_blade_white));
-                return true;
+                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLADE);
+				return true;
 
 	        case R.id.action_menu2:
                 Toast.makeText(getApplicationContext(), "BLOWER ATTACHMENT", Toast.LENGTH_LONG).show();
 		        menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_blower_white));
-                return true;
+                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLOWER);
+		        return true;
 
             case R.id.action_menu3:
                 Toast.makeText(getApplicationContext(), "EDGER ATTACHMENT", Toast.LENGTH_LONG).show();
 	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_edger_white));
-                return true;
+                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_EDGER);
+	            return true;
 
             case R.id.action_menu4:
                 Toast.makeText(getApplicationContext(), "POLE SAW ATTACHMENT", Toast.LENGTH_LONG).show();
 	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_pole_saw_white));
-                return true;
+                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_POLE_SAW);
+	            return true;
 
             case R.id.action_menu5:
                 Toast.makeText(getApplicationContext(), "TILLER ATTACHMENT", Toast.LENGTH_LONG).show();
 	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_tiller_white));
-                return true;
+                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_TILLER);
+	            return true;
 
             case R.id.action_menu6:
                 Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_LONG).show();
 	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_string_white));
-                return true;
+                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_STRING);
+	            return true;
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -265,6 +286,14 @@ public class MainActivity extends AppCompatActivity {
 
                     live_data.setTemperature(data[2]);
                     live_data.setAttachment_nbr_status(data[3]);
+                    if (!start_fragment_loaded)
+                    {
+                        setStartFragment();
+                        loadFragment(startFragment);
+
+                        start_fragment_loaded = true;
+                        dashboard_fragment_loaded = false;
+                    }
 	                runOnUiThread(new Runnable() {
 		                @Override
 		                public void run() {
@@ -281,10 +310,11 @@ public class MainActivity extends AppCompatActivity {
                 else if (data[0] == live_data.ENGINE_RUNNING && data.length == data[1])
                 {
                     engine_running = true;
-                    if (engine_first_run) {
+                    if (!dashboard_fragment_loaded) {
 	                    loadFragment(dashboardFragment);
 	                    setDashboardFragment();
-	                    engine_first_run = false;
+                        dashboard_fragment_loaded = true;
+	                    start_fragment_loaded = false;
                     }
                     //hide navigational features:
 	                hideStartingFeatures();
@@ -295,15 +325,14 @@ public class MainActivity extends AppCompatActivity {
                     live_data.setAttachment_nbr_status(data[7]);
                     live_data.setTrim_mode_status(data[8]);
                     live_data.setStop_status(data[9]);
-
+                    live_data.setAt_idle_status(data[10]);
                     runOnUiThread(new Runnable() {
 	                    @Override
 	                    public void run() {
 	                        //if selected nav item is Dash:
 		                    dashboardFragment.updateSpeedometer(live_data.getRpm());
 		                    dashboardFragment.updateRunTimer(live_data.getRun_time());
-		                    //else detect if light trim or kill
-	                    }
+		                     }
                     });
                     Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm() + " - " + live_data.getRun_time());
                 }
@@ -313,6 +342,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void writeToIgnitionModule(byte btn_id, byte btn_state)
+    {
+         BluetoothGattCharacteristic interactor = mBluetoothGatt
+                .getService(SERVICE_UUID)
+                .getCharacteristic(CHARACTERISTIC_RX);
+        //Prepare protocol packet
+         byte[] sendBytes = new byte[4];
+         sendBytes[0] = protocol.PHONE_PROTOCOL_NBR;
+         sendBytes[1] = protocol.PHONE_PROTOCOL_BYTES;
+         sendBytes[2] = btn_id;
+         sendBytes[3] = btn_state;
+
+         interactor.setValue(sendBytes); //packet must go trough this xxx.setValue before being sent out
+         mBluetoothGatt.writeCharacteristic(interactor);
     }
 
     public void connectToGattServer()
@@ -384,4 +429,5 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 	}
+
 }

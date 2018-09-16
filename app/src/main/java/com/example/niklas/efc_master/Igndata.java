@@ -13,6 +13,7 @@ public class Igndata extends BaseObservable
     private int attachment_nbr_status; //[String, Blade, Edger, Tiller, Blower, Pole Saw]
     private int trim_mode_status;   //0 = normal, lite = 1
     private int stop_status; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
+    private int at_idle_status; // 0= NOT at idle, 1 = at idle position
 
     public Igndata() {
         this.primerBulb = "PUSH PRIMER BULB N TIMES";
@@ -76,5 +77,12 @@ public class Igndata extends BaseObservable
     public void setTemperature(int temperature) {
         this.temperature = temperature;
         notifyPropertyChanged(BR.temperature);
+    }
+    public int getAt_idle_status() {
+        return at_idle_status;
+    }
+
+    public void setAt_idle_status(int at_idle_status) {
+        this.at_idle_status = at_idle_status;
     }
 }
