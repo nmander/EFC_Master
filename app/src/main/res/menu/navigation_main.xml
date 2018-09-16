@@ -20,12 +20,6 @@
         />
 
     <item
-        android:id="@+id/navigation_dash"
-        android:icon="@drawable/ic_dashboard"
-        android:title="@string/nav_dash"
-        />
-
-    <item
         android:id="@+id/navigation_kill"
         android:icon="@drawable/ic_kill"
         android:title="@string/nav_kill"

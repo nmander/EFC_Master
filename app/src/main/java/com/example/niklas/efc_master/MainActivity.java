@@ -22,6 +22,7 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.List;
@@ -44,12 +45,13 @@ public class MainActivity extends AppCompatActivity {
     private boolean engine_running = false;
     private boolean dashboard_fragment_loaded = false;
     private boolean start_fragment_loaded = false;
+    private boolean start_high_temp_fragment_loaded = false;
     private boolean lite_trim_on = false;
     //
 	private Menu menu;
 	private BottomNavigationView navigation;
-	private Fragment fragment;
     private StartFragment startFragment = new StartFragment();
+    private StartHighTempFragment startHighTempFragment = new StartHighTempFragment();
     private StatsTabsFragment statsTabsFragment = new StatsTabsFragment();
 	private DashboardFragment dashboardFragment = new DashboardFragment();
 
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId())
             {
                 case R.id.navigation_start_instructions:
-                    loadFragment(startFragment);
+                    setConditionalStartingFragment();
                     hideRunningFeatures();
                     return true;
 
@@ -100,20 +102,22 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_light_trim:
                     hideStartingFeatures();
                     lite_trim_on = !lite_trim_on; //change state of lite trim mode
-                    if (lite_trim_on)
+                    if (lite_trim_on) {
                         writeToIgnitionModule(protocol.BTN_TRIM_MODE, protocol.LITE_TRIM);
-                    else
-                        writeToIgnitionModule(protocol.BTN_TRIM_MODE, protocol.NORMAL_TRIM);
-                    return true;
+                        setCheckable(navigation, true);
+                    }
 
-                case R.id.navigation_dash:
-	                loadFragment(dashboardFragment);
-	                hideStartingFeatures();
+                    else {
+                        writeToIgnitionModule(protocol.BTN_TRIM_MODE, protocol.NORMAL_TRIM);
+                        setCheckable(navigation, false);
+                    }
+
                     return true;
 
                 case R.id.navigation_kill:
 					hideStartingFeatures();
 			        writeToIgnitionModule(protocol.BTN_STOP, protocol.STOP_ON);
+                    setCheckable(navigation, true);
                     return true;
             }
             return false;
@@ -288,17 +292,22 @@ public class MainActivity extends AppCompatActivity {
                     live_data.setAttachment_nbr_status(data[3]);
                     if (!start_fragment_loaded)
                     {
-                        setStartFragment();
-                        loadFragment(startFragment);
+                        //live_data.setTemperature(50);
+                        setConditionalStartingFragment();
+                        navigation.setSelectedItemId(R.id.navigation_start_instructions);
+                        //loadFragment(startFragment);
 
-                        start_fragment_loaded = true;
+                        //start_fragment_loaded = true;
                         dashboard_fragment_loaded = false;
                     }
 	                runOnUiThread(new Runnable() {
 		                @Override
 		                public void run() {
 		                    //if selected nav item is Start:
-			                startFragment.updatePrimerBulb(live_data.getTemperature());
+                            if (live_data.getTemperature() < 50 && !start_high_temp_fragment_loaded)
+                            {
+                                startFragment.updatePrimerBulb(live_data.getTemperature());
+                            }
 			                //else: statstab graph logic:
 		                }
 	                });
@@ -312,9 +321,9 @@ public class MainActivity extends AppCompatActivity {
                     engine_running = true;
                     if (!dashboard_fragment_loaded) {
 	                    loadFragment(dashboardFragment);
-	                    setDashboardFragment();
                         dashboard_fragment_loaded = true;
 	                    start_fragment_loaded = false;
+	                    start_high_temp_fragment_loaded = false;
                     }
                     //hide navigational features:
 	                hideStartingFeatures();
@@ -389,7 +398,6 @@ public class MainActivity extends AppCompatActivity {
                 navigation.findViewById(R.id.navigation_start_instructions).setVisibility(View.VISIBLE);
                 navigation.findViewById(R.id.navigation_stats).setVisibility(View.VISIBLE);
                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
-                navigation.findViewById(R.id.navigation_dash).setVisibility(View.GONE);
                 navigation.findViewById(R.id.navigation_kill).setVisibility(View.GONE);
             }
         });
@@ -404,20 +412,9 @@ public class MainActivity extends AppCompatActivity {
                 navigation.findViewById(R.id.navigation_start_instructions).setVisibility(View.GONE);
                 navigation.findViewById(R.id.navigation_stats).setVisibility(View.GONE);
                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
-                navigation.findViewById(R.id.navigation_dash).setVisibility(View.VISIBLE);
                 navigation.findViewById(R.id.navigation_kill).setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    public void setDashboardFragment()
-    {
-	    new Handler(getMainLooper()).post(new Runnable() {
-		    @Override
-		    public void run() {
-			    navigation.setSelectedItemId(R.id.navigation_dash);
-		    }
-	    });
     }
 
 	public void setStartFragment()
@@ -429,5 +426,29 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 	}
+
+	public void setConditionalStartingFragment()
+    {
+        if (live_data.getTemperature() >= 50)
+        {
+            loadFragment(startHighTempFragment);
+            start_high_temp_fragment_loaded = true;
+            start_fragment_loaded = false;
+        }
+        else
+        {
+            loadFragment(startFragment);
+            start_fragment_loaded = true;
+            start_high_temp_fragment_loaded = false;
+        }
+
+    }
+
+    public static void setCheckable(BottomNavigationView view, boolean checkable) {
+        final Menu menu = view.getMenu();
+        for(int i = 0; i < menu.size(); i++) {
+            menu.getItem(i).setCheckable(checkable);
+        }
+    }
 
 }
