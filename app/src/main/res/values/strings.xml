@@ -7,11 +7,12 @@
     <string name="btn_scan">Scan</string>
 
     <!-- Strings for Bottom Navigation Menus -->
-    <string name="nav_light_trim"><b>TRIM</b></string>
+    <string name="nav_light_trim"><b>LITE TRIM</b></string>
     <string name="nav_start_instructions"><b>START</b></string>
     <string name="nav_stats"><b>STATS</b></string>
     <string name="nav_dash"><b>DASH</b></string>
-    <string name="nav_kill"><b>KILL</b></string>
+    <string name="nav_kill"><b>STOP</b></string>
+    <string name="nav_tool"><b>TOOL</b></string>
 
     <!-- Strings for Attachment Options Menu -->
     <string name="menu_item_change_attachment"><b>Change Attachment</b></string>

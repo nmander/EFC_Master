@@ -24,4 +24,9 @@
         android:icon="@drawable/ic_kill"
         android:title="@string/nav_kill"
         />
+    <item
+        android:id="@+id/navigation_tool"
+        android:icon="@drawable/ic_kill"
+        android:title="@string/nav_tool"
+        />
 </menu>

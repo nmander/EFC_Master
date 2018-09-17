@@ -85,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item)
         {
-            if (engine_running && live_data.getAt_idle_status()==0)
-                return false;
             switch (item.getItemId())
             {
                 case R.id.navigation_start_instructions:
@@ -294,10 +292,8 @@ public class MainActivity extends AppCompatActivity {
                     {
                         //live_data.setTemperature(50);
                         setConditionalStartingFragment();
-                        navigation.setSelectedItemId(R.id.navigation_start_instructions);
-                        //loadFragment(startFragment);
-
-                        //start_fragment_loaded = true;
+                        setStartFragment();
+                        start_fragment_loaded = true;
                         dashboard_fragment_loaded = false;
                     }
 	                runOnUiThread(new Runnable() {
@@ -341,7 +337,22 @@ public class MainActivity extends AppCompatActivity {
 	                        //if selected nav item is Dash:
 		                    dashboardFragment.updateSpeedometer(live_data.getRpm());
 		                    dashboardFragment.updateRunTimer(live_data.getRun_time());
-		                     }
+                            if (engine_running && live_data.getAt_idle_status()==0)
+                            {
+                                menu.findItem(R.id.miAttachments).setVisible(false);
+                                menu.findItem(R.id.miAttachments).setEnabled(false);
+                                navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
+                                navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
+
+                            }
+                            else
+                            {
+                                menu.findItem(R.id.miAttachments).setVisible(true);
+                                menu.findItem(R.id.miAttachments).setEnabled(true);
+                                navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
+                                navigation.findViewById(R.id.navigation_tool).setVisibility(View.VISIBLE);
+                            }
+                        }
                     });
                     Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm() + " - " + live_data.getRun_time());
                 }
@@ -399,6 +410,7 @@ public class MainActivity extends AppCompatActivity {
                 navigation.findViewById(R.id.navigation_stats).setVisibility(View.VISIBLE);
                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
                 navigation.findViewById(R.id.navigation_kill).setVisibility(View.GONE);
+                //navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
             }
         });
     }
@@ -413,6 +425,7 @@ public class MainActivity extends AppCompatActivity {
                 navigation.findViewById(R.id.navigation_stats).setVisibility(View.GONE);
                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
                 navigation.findViewById(R.id.navigation_kill).setVisibility(View.VISIBLE);
+                //navigation.findViewById(R.id.navigation_tool).setVisibility(View.VISIBLE);
             }
         });
     }
@@ -433,12 +446,10 @@ public class MainActivity extends AppCompatActivity {
         {
             loadFragment(startHighTempFragment);
             start_high_temp_fragment_loaded = true;
-            start_fragment_loaded = false;
-        }
+         }
         else
         {
             loadFragment(startFragment);
-            start_fragment_loaded = true;
             start_high_temp_fragment_loaded = false;
         }
 
