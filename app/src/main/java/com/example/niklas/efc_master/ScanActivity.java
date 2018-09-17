@@ -208,4 +208,9 @@ public class ScanActivity extends AppCompatActivity
         startActivity(intent);
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        // Simply Do noting!
+    }
 }

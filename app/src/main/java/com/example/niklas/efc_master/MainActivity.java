@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         navigation = findViewById(R.id.navigation_main);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-      //  loadFragment(startFragment);
+        setConditionalStartingFragment();
         hideRunningFeatures();
 
     }
@@ -122,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_tool:
                     final Intent intent = new Intent(getApplicationContext(), ToolSelectionActivity.class);
                     startActivityForResult(intent, 1);
+                    //navigation.getMenu().getItem(3).setChecked(true);
+                    //setCheckable(navigation, true);
+                    //return true;
             }
             return false;
         }
@@ -476,4 +479,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        // Simply Do noting!
+    }
 }

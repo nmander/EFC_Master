@@ -10,6 +10,16 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toStartOf="@id/instruction_prime_bulb"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10sp"
+            android:background="@drawable/ic_prime_bulb"
+            android:scaleType="fitXY"
+            />
+
         <Button
             android:id="@+id/instruction_prime_bulb"
             android:layout_width="wrap_content"
@@ -26,10 +36,10 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_toStartOf="@id/instruction_prime_bulb"
-            android:layout_marginTop="20dp"
+            android:layout_toStartOf="@id/instruction_squeeze_throttle"
             android:layout_marginEnd="10sp"
-            android:background="@drawable/ic_prime_bulb"
+            android:background="@drawable/ic_trigger"
+            android:layout_centerVertical="true"
             android:scaleType="fitXY"
             />
 
@@ -50,10 +60,10 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_toStartOf="@id/instruction_squeeze_throttle"
+            android:layout_toStartOf="@id/instructions_pull_string"
+            android:layout_below="@id/instruction_squeeze_throttle"
             android:layout_marginEnd="10sp"
-            android:background="@drawable/ic_trigger"
-            android:layout_centerVertical="true"
+            android:background="@drawable/ic_pull_cord"
             android:scaleType="fitXY"
             />
 
@@ -70,15 +80,5 @@
             android:text="@string/instructions_pull_string"
             android:textColor="@color/colorBlack"
             android:textSize="26sp"/>
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_toStartOf="@id/instructions_pull_string"
-            android:layout_below="@id/instruction_squeeze_throttle"
-            android:layout_marginEnd="10sp"
-            android:background="@drawable/ic_pull_cord"
-            android:scaleType="fitXY"
-            />
     </RelativeLayout>
 </layout>

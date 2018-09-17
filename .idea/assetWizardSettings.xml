@@ -138,11 +138,11 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="fffafa" />
-                            <entry key="height" value="1282" />
-                            <entry key="outputName" value="ic_pull_cord" />
+                            <entry key="height" value="475" />
+                            <entry key="outputName" value="ic_prime_bulb" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\nanderss\Downloads\pull_cord (1).svg" />
-                            <entry key="width" value="1078" />
+                            <entry key="sourceFile" value="C:\Users\nanderss\AndroidStudioProjects\EFC_Connect_Icons\purge (1).svg" />
+                            <entry key="width" value="821" />
                           </map>
                         </option>
                       </PersistentState>
