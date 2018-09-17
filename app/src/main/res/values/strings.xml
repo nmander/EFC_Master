@@ -29,4 +29,33 @@
     <string name="instructions_prime_bulb"><b>spacer</b></string>
     <string name="instructions_squeeze_throttle"><b>SQUEEZE AND HOLD THROTTLE TRIGGER</b></string>
     <string name="instructions_pull_string"><b>PULL ROPE UNTIL ENGINE STARTS</b></string>
+
+    <!-- Order is important here: -->
+    <string-array name="tool_names">
+        <item><b>BLADE</b></item>
+        <item><b>BLOWER</b></item>
+        <item><b>EDGER</b></item>
+        <item>TILLER</item>
+        <item><b>POLE SAW</b></item>
+        <item><b>STRING</b></item>
+    </string-array>
+
+    <string-array name="tool_codes">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="tool_icons">
+        <item>@drawable/ic_blade</item>
+        <item>@drawable/ic_blower</item>
+        <item>@drawable/ic_edger</item>
+        <item>@drawable/ic_tiller</item>
+        <item>@drawable/ic_pole_saw</item>
+        <item>@drawable/ic_string</item>
+    </string-array>
+
 </resources>

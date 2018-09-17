@@ -1,5 +1,6 @@
 package com.example.niklas.efc_master;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -117,10 +118,23 @@ public class MainActivity extends AppCompatActivity {
 			        writeToIgnitionModule(protocol.BTN_STOP, protocol.STOP_ON);
                     setCheckable(navigation, true);
                     return true;
+
+                case R.id.navigation_tool:
+                    final Intent intent = new Intent(getApplicationContext(), ToolSelectionActivity.class);
+                    startActivityForResult(intent, 1);
             }
             return false;
         }
     };
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+            String countryCode = data.getStringExtra(ToolSelectionActivity.RESULT_TOOL);
+            Toast.makeText(this, "You selected code:" + countryCode, Toast.LENGTH_LONG).show();
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)

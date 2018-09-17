@@ -30,6 +30,12 @@
             android:theme="@style/AppThemeWithBar"
             android:screenOrientation="landscape">
         </activity>
+        <activity android:name=".ToolSelectionActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog.NoActionBar.MinWidth"
+            android:screenOrientation="landscape"
+            android:noHistory="true"
+            android:label="SELECT YOUR TOOL">
+        </activity>
     </application>
 
 </manifest>
