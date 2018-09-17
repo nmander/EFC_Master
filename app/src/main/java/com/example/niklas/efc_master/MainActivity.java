@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         navigation = findViewById(R.id.navigation_main);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        //
         setConditionalStartingFragment();
         hideRunningFeatures();
 
