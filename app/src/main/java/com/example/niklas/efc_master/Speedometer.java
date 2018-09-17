@@ -36,7 +36,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 	private int SCALE_COLOR = Color.BLACK;
 
 	//scale number text size
-	private float SCALE_SIZE = 35f;
+	private float SCALE_SIZE = 45f;
 	private float READING_SIZE = 80f;   //unknown
 
 	// Scale configuration
@@ -184,7 +184,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 	private void drawScaleBackground(Canvas canvas){
 		offPath.reset();
 		//adjusts spacing of each tick   adjust i+=4
-		for(int i = -180; i < 0; i+=4){
+		for(int i = -205; i < 25; i+=4){
 			//adjusts sweepAngle tick thickness
 			offPath.addArc(oval, i, 2f);
 		}
@@ -196,7 +196,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 
 		//changes scale arc circumference
 		//adjusts current speed spacing of each tick
-		for(int i = -180; i < ((mCurrentSpeed/mMaxSpeed)*180 - 180); i+=4){
+		for(int i = -205; i < ((mCurrentSpeed/mMaxSpeed)*205 - 194); i+=4){
 			//adjusts current speed tick thickness
 			onPath.addArc(oval, i, 2f);
 		}
@@ -206,9 +206,9 @@ public class Speedometer extends View implements SpeedChangeListener {
 	private void drawLegend(Canvas canvas){
 		//canvas.save(Canvas);
 		//rotates the scale number increments
-		canvas.rotate(-180, centerX,centerY);
+		canvas.rotate(-205, centerX,centerY);
 		Path circle = new Path();
-		double halfCircumference = ((radius-30) * Math.PI);
+		double halfCircumference = ((radius+75) * Math.PI);
 		double increments = 8000;
 		for(int i = 0; i <= this.mMaxSpeed; i += increments / 4){
 			circle.addCircle(centerX, centerY, radius, Path.Direction.CW);
@@ -234,7 +234,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 			advance += width;
 		path.moveTo(centerX - advance/2, centerY);
 		path.lineTo(centerX + advance/2, centerY);
-		canvas.rotate(180, centerX, centerY);
+		canvas.rotate(205, centerX, centerY);
 		canvas.drawTextOnPath(message, path, 0f, 0f, readingPaint);
 
 		//canvas.rotate(180);

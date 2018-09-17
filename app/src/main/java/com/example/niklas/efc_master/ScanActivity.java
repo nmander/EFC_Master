@@ -37,7 +37,7 @@ import static com.example.niklas.efc_master.NordicProfile.SERVICE_UUID;
 public class ScanActivity extends AppCompatActivity
 {
     private static final String TAG = ScanActivity.class.getSimpleName();
-    private static final long SCAN_TIMEOUT_MS = 5_000;
+    private static final long SCAN_TIMEOUT_MS = 7_000;
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_PERMISSION_LOCATION = 1;
     public static final String EXTRA_DEVICE_ADDRESS = "mAddress";
@@ -86,7 +86,7 @@ public class ScanActivity extends AppCompatActivity
                 Log.w(TAG, "setOnClickListener");
                 prepareForScan();
 
-                Toast.makeText(getApplicationContext(), "Scanning for WBLE Modules...", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Scanning for WBLE Modules...", Toast.LENGTH_SHORT).show();
             }
         });
         Toast.makeText(getApplicationContext(), "Scanning for WBLE Modules...", Toast.LENGTH_SHORT).show();

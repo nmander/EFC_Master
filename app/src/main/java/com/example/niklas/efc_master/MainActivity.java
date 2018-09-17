@@ -24,6 +24,7 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -33,7 +34,7 @@ import static com.example.niklas.efc_master.NordicProfile.CHARACTERISTIC_TX;
 import static com.example.niklas.efc_master.NordicProfile.DESCRIPTOR_CONFIG;
 import static com.example.niklas.efc_master.NordicProfile.SERVICE_UUID;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static String device_address;
@@ -48,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean start_fragment_loaded = false;
     private boolean start_high_temp_fragment_loaded = false;
     private boolean lite_trim_on = false;
-    //
+
 	private Menu menu;
+	private ImageView imgTool;
 	private BottomNavigationView navigation;
     private StartFragment startFragment = new StartFragment();
     private StartHighTempFragment startHighTempFragment = new StartHighTempFragment();
@@ -67,18 +69,11 @@ public class MainActivity extends AppCompatActivity {
         //Setup interface views
         setContentView(R.layout.activity_main);
 
-        getSupportActionBar().setTitle(R.string.app_name); // set the top title
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.ic_walbro_w);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-
         navigation = findViewById(R.id.navigation_main);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
         //
         setConditionalStartingFragment();
         hideRunningFeatures();
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -123,78 +118,72 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_tool:
                     final Intent intent = new Intent(getApplicationContext(), ToolSelectionActivity.class);
                     startActivityForResult(intent, 1);
-                    //navigation.getMenu().getItem(3).setChecked(true);
-                    //setCheckable(navigation, true);
-                    //return true;
             }
             return false;
         }
     };
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
-            String countryCode = data.getStringExtra(ToolSelectionActivity.RESULT_TOOL);
-            Toast.makeText(this, "You selected code:" + countryCode, Toast.LENGTH_LONG).show();
-        }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_attachments, menu);
-	    this.menu = menu;
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        // Handle presses on the action bar items
-        switch (item.getItemId())
+        if(requestCode == 1 && resultCode == Activity.RESULT_OK)
         {
-            case R.id.action_menu1:
-                Toast.makeText(getApplicationContext(), "BLADE ATTACHMENT", Toast.LENGTH_LONG).show();
-				menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_blade_white));
-                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLADE);
-				return true;
+            String toolCode = data.getStringExtra(ToolSelectionActivity.RESULT_TOOL);
+            Integer myTool = Integer.valueOf(toolCode);
 
-	        case R.id.action_menu2:
-                Toast.makeText(getApplicationContext(), "BLOWER ATTACHMENT", Toast.LENGTH_LONG).show();
-		        menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_blower_white));
-                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLOWER);
-		        return true;
 
-            case R.id.action_menu3:
-                Toast.makeText(getApplicationContext(), "EDGER ATTACHMENT", Toast.LENGTH_LONG).show();
-	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_edger_white));
-                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_EDGER);
-	            return true;
+            //TODO: pass tool selection to dashboardFragment
+            if (myTool == 0) {
+	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLADE);
+	            if (dashboard_fragment_loaded)
+		            dashboardFragment.updateToolView(0);
+	            else
+		            Toast.makeText(getApplicationContext(), "BLADE ATTACHMENT", Toast.LENGTH_SHORT).show();
+            }
 
-            case R.id.action_menu4:
-                Toast.makeText(getApplicationContext(), "POLE SAW ATTACHMENT", Toast.LENGTH_LONG).show();
-	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_pole_saw_white));
-                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_POLE_SAW);
-	            return true;
+            if (myTool == 1) {
+	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLOWER);
+	            if (dashboard_fragment_loaded)
+		            dashboardFragment.updateToolView(myTool);
+	            else
+		            Toast.makeText(getApplicationContext(), "BLOWER ATTACHMENT", Toast.LENGTH_SHORT).show();
+            }
 
-            case R.id.action_menu5:
-                Toast.makeText(getApplicationContext(), "TILLER ATTACHMENT", Toast.LENGTH_LONG).show();
-	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_tiller_white));
-                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_TILLER);
-	            return true;
+            if (myTool == 2) {
+	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_EDGER);
+	            if (dashboard_fragment_loaded)
+		            dashboardFragment.updateToolView(myTool);
+	            else
+		            Toast.makeText(getApplicationContext(), "EDGER ATTACHMENT", Toast.LENGTH_SHORT).show();
+            }
 
-            case R.id.action_menu6:
-                Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_LONG).show();
-	            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_string_white));
-                writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_STRING);
-	            return true;
+            if (myTool == 3) {
+	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_POLE_SAW);
+	            if (dashboard_fragment_loaded)
+		            dashboardFragment.updateToolView(myTool);
+	            else
+		            Toast.makeText(getApplicationContext(), "POLE SAW ATTACHMENT", Toast.LENGTH_SHORT).show();
+            }
 
-            default:
-                return super.onOptionsItemSelected(item);
+            if (myTool == 4)
+            {
+	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_TILLER);
+	            if (dashboard_fragment_loaded)
+		            dashboardFragment.updateToolView(myTool);
+	            else
+		            Toast.makeText(getApplicationContext(), "TILLER ATTACHMENT", Toast.LENGTH_SHORT).show();
+            }
+
+            if (myTool == 5) {
+	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_STRING);
+	            if (dashboard_fragment_loaded)
+		            dashboardFragment.updateToolView(myTool);
+	            else
+		            Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_SHORT).show();
+            }
         }
-    }
+	}
 
 	@Override
 	public void onResume(){
@@ -259,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                         {
                             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                             connected = gatt.writeDescriptor(descriptor);
-                            Log.w(TAG, "Trying to subsribe to notifications: " + connected);
+                            Log.w(TAG, "Trying to subscribe to notifications: " + connected);
                         }
                     }
                 }
@@ -357,16 +346,12 @@ public class MainActivity extends AppCompatActivity {
 		                    dashboardFragment.updateRunTimer(live_data.getRun_time());
                             if (engine_running && live_data.getAt_idle_status()==0)
                             {
-                                menu.findItem(R.id.miAttachments).setVisible(false);
-                                menu.findItem(R.id.miAttachments).setEnabled(false);
                                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
                                 navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
 
                             }
                             else
                             {
-                                menu.findItem(R.id.miAttachments).setVisible(true);
-                                menu.findItem(R.id.miAttachments).setEnabled(true);
                                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
                                 navigation.findViewById(R.id.navigation_tool).setVisibility(View.VISIBLE);
                             }

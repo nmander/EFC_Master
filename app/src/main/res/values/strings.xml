@@ -14,17 +14,6 @@
     <string name="nav_kill"><b>STOP</b></string>
     <string name="nav_tool"><b>TOOL</b></string>
 
-    <!-- Strings for Attachment Options Menu -->
-    <string name="menu_item_change_attachment"><b>Change Attachment</b></string>
-    <!-- String, blade, blower, edger, tiller, pole saw -->
-    <string name="attach_string"><b>STRING</b></string>
-    <string name="attach_blade"><b>BLADE</b></string>
-    <string name="attach_blower"><b>BLOWER</b></string>
-    <string name="attach_edger"><b>EDGER</b></string>
-    <string name="attach_tiller"><b>TILLER</b></string>
-    <string name="attach_pole_saw"><b>POLE SAW</b></string>
-
-
     <!-- Strings for Starting Instructions -->
     <string name="instructions_prime_bulb"><b>spacer</b></string>
     <string name="instructions_squeeze_throttle"><b>SQUEEZE AND HOLD THROTTLE TRIGGER</b></string>
@@ -35,8 +24,8 @@
         <item><b>BLADE</b></item>
         <item><b>BLOWER</b></item>
         <item><b>EDGER</b></item>
-        <item>TILLER</item>
         <item><b>POLE SAW</b></item>
+        <item><b>TILLER</b></item>
         <item><b>STRING</b></item>
     </string-array>
 
@@ -53,8 +42,8 @@
         <item>@drawable/ic_blade</item>
         <item>@drawable/ic_blower</item>
         <item>@drawable/ic_edger</item>
-        <item>@drawable/ic_tiller</item>
         <item>@drawable/ic_pole_saw</item>
+        <item>@drawable/ic_tiller</item>
         <item>@drawable/ic_string</item>
     </string-array>
 

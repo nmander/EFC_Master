@@ -10,6 +10,16 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_toStartOf="@id/instructions_pull_string"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10sp"
+            android:background="@drawable/ic_pull_cord"
+            android:scaleType="fitXY"
+            />
+
         <Button
             android:id="@+id/instructions_pull_string"
             android:layout_width="wrap_content"
@@ -19,16 +29,7 @@
             android:background="@color/colorMaterialLight"
             android:text="@string/instructions_pull_string"
             android:textColor="@color/colorBlack"
-            android:textSize="26sp"/>
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_toStartOf="@id/instructions_pull_string"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10sp"
-            android:background="@drawable/ic_pull_cord"
-            android:scaleType="fitXY"
-            />
+            android:textSize="26sp"
+            style="?android:attr/borderlessButtonStyle"/>
     </RelativeLayout>
 </layout>

@@ -11,10 +11,10 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_toStartOf="@id/instruction_prime_bulb"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="10sp"
             android:background="@drawable/ic_prime_bulb"
             android:scaleType="fitXY"
@@ -24,18 +24,20 @@
             android:id="@+id/instruction_prime_bulb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20sp"
-            android:padding="10sp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="170sp"
+            android:layout_marginTop="30sp"
+            android:padding="15sp"
             android:layout_marginBottom="10sp"
             android:background="@color/colorMaterialLight"
             android:text="@{igndata.primerBulb}"
             android:textColor="@color/colorBlack"
-            android:textSize="26sp" />
+            android:textSize="26sp"
+            style="?android:attr/borderlessButtonStyle"/>
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_toStartOf="@id/instruction_squeeze_throttle"
             android:layout_marginEnd="10sp"
             android:background="@drawable/ic_trigger"
@@ -47,19 +49,20 @@
             android:id="@+id/instruction_squeeze_throttle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="75dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="25sp"
             android:layout_below="@id/instruction_prime_bulb"
-            android:padding="10sp"
+            android:padding="15sp"
             android:layout_marginBottom="10sp"
             android:background="@color/colorMaterialLight"
             android:text="@string/instructions_squeeze_throttle"
             android:textColor="@color/colorBlack"
-            android:textSize="26sp"/>
+            android:textSize="26sp"
+            style="?android:attr/borderlessButtonStyle"/>
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_toStartOf="@id/instructions_pull_string"
             android:layout_below="@id/instruction_squeeze_throttle"
             android:layout_marginEnd="10sp"
@@ -72,13 +75,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/instruction_squeeze_throttle"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="130sp"
-            android:padding="10sp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="105sp"
+            android:padding="15sp"
             android:layout_marginBottom="10sp"
             android:background="@color/colorMaterialLight"
             android:text="@string/instructions_pull_string"
             android:textColor="@color/colorBlack"
-            android:textSize="26sp"/>
+            android:textSize="26sp"
+            style="?android:attr/borderlessButtonStyle"/>
     </RelativeLayout>
 </layout>

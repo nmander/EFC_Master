@@ -14,7 +14,7 @@
                 android:id="@+id/Speedometer"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="-70dp"
+                android:layout_marginStart="70dp"
                 android:layout_marginTop="-60dp"
                 android:background="@color/colorMaterialLight"
                 custom:currentSpeed="0"
@@ -28,11 +28,11 @@
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="370dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="425dp"
+            android:layout_marginTop="5dp"
             android:format12Hour="hh:mm a"
             android:textColor="#000000"
-            android:textSize="48sp"
+            android:textSize="44sp"
             android:textStyle="bold"
             />
     </LinearLayout>
@@ -45,47 +45,54 @@
             android:id="@+id/runtime_clock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="380dp"
-            android:layout_marginTop="140dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:textColor="#000000"
-            android:textSize="48sp"
+            android:textSize="44sp"
             android:background="@color/colorMaterialLight"
             android:textStyle="bold" />
     </LinearLayout>
 
-<!--    <LinearLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <Chronometer
-            android:id="@+id/runtime_clock"
+        <ImageView
+            android:id="@+id/dashboard_tool"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="415dp"
-            android:layout_marginTop="140dp"
-            android:textColor="#000000"
-            android:textSize="48sp"
-            android:background="@color/colorMaterialLight"
-            android:textStyle="bold" />
-    </LinearLayout>-->
+            android:src="@drawable/string"
+            android:layout_marginTop="155sp"
+            android:layout_marginStart="500dp"/>
+    </LinearLayout>
 
-<!--    <Button android:id="@+id/IncreaseSpeed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Increase"
-        android:layout_below="@id/Speedometer"
-        android:layout_toRightOf="@+id/MiddleView"
-        android:layout_alignParentRight="true"/>
-    <View
-        android:id="@+id/MiddleView"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_centerHorizontal="true" />
-    <Button android:id="@+id/DecreaseSpeed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Decrease"
-        android:layout_toLeftOf="@id/MiddleView"
-        android:layout_below="@id/Speedometer"
-        android:layout_alignParentLeft="true"/>-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/dashboard_oil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/oil"
+
+            android:layout_marginTop="155sp"
+            android:layout_marginStart="25sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/dashboard_oil_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="215sp"
+            android:layout_marginStart="20sp"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:text="100%"
+            />
+    </LinearLayout>
 </FrameLayout>

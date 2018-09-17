@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
+import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ public class DashboardFragment extends Fragment
 	public MainActivity mainActivity;
 	public static Speedometer mySpeedometer;
 	public TextView myRunTimer;
+	public ImageView myToolSelection;
 	public int myRPM;
 	public int myRUNTIME;
 
@@ -38,6 +40,8 @@ public class DashboardFragment extends Fragment
 
 		String myFoundModRunTime = getModuleRunTimeFormat(mainActivity.live_data.getRun_time());
 		myRunTimer.setText(myFoundModRunTime);
+
+		myToolSelection = rootView.findViewById(R.id.dashboard_tool);
 		return rootView;
 	}
 
@@ -51,6 +55,32 @@ public class DashboardFragment extends Fragment
 	{
 		String temp = getModuleRunTimeFormat(time);
 		myRunTimer.setText(temp);
+	}
+
+	public boolean updateToolView(int toolCode)
+	{
+		switch (toolCode)
+		{
+			case 0:
+				myToolSelection.setImageResource(R.drawable.blade);
+				return true;
+			case 1:
+				myToolSelection.setImageResource(R.drawable.blower);
+				return true;
+			case 2:
+				myToolSelection.setImageResource(R.drawable.edger);
+				return true;
+			case 3:
+				myToolSelection.setImageResource(R.drawable.polesaw);
+				return true;
+			case 4:
+				myToolSelection.setImageResource(R.drawable.tiller);
+				return true;
+			case 5:
+				myToolSelection.setImageResource(R.drawable.string);
+				return true;
+		}
+		return false;
 	}
 
 	public String getModuleRunTimeFormat(int timeSeconds)
