@@ -196,7 +196,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 
 		//changes scale arc circumference
 		//adjusts current speed spacing of each tick
-		for(int i = -205; i < ((mCurrentSpeed/mMaxSpeed)*205 - 193); i+=4){
+		for(int i = -205; i < ((mCurrentSpeed/mMaxSpeed)*205 - 194); i+=4){
 			//adjusts current speed tick thickness
 			onPath.addArc(oval, i, 2f);
 		}

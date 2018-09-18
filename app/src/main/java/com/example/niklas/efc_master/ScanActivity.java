@@ -196,7 +196,7 @@ public class ScanActivity extends AppCompatActivity
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
         } else {
-            Toast.makeText(this, "BLE is Not Supported", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "BLE is not supported", Toast.LENGTH_LONG).show();
             finish();
         }
     }
