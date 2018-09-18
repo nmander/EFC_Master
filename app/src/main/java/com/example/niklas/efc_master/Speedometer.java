@@ -208,7 +208,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 		//rotates the scale number increments
 		canvas.rotate(-205, centerX,centerY);
 		Path circle = new Path();
-		double halfCircumference = ((radius+74) * Math.PI);
+		double halfCircumference = ((radius+75) * Math.PI);
 		double increments = 8000;
 		for(int i = 0; i <= this.mMaxSpeed; i += increments / 4){
 			circle.addCircle(centerX, centerY, radius, Path.Direction.CW);
