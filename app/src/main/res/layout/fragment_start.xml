@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="170sp"
+            android:layout_marginEnd="171sp"
             android:layout_marginTop="30sp"
             android:padding="15sp"
             android:layout_marginBottom="10sp"
