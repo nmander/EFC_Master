@@ -196,7 +196,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 
 		//changes scale arc circumference
 		//adjusts current speed spacing of each tick
-		for(int i = -205; i < ((mCurrentSpeed/mMaxSpeed)*205 - 194); i+=4){
+		for(int i = -205; i < ((mCurrentSpeed/mMaxSpeed)*205 - 193); i+=4){
 			//adjusts current speed tick thickness
 			onPath.addArc(oval, i, 2f);
 		}
@@ -208,7 +208,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 		//rotates the scale number increments
 		canvas.rotate(-205, centerX,centerY);
 		Path circle = new Path();
-		double halfCircumference = ((radius+72) * Math.PI);
+		double halfCircumference = ((radius+74) * Math.PI);
 		double increments = 8000;
 		for(int i = 0; i <= this.mMaxSpeed; i += increments / 4){
 			circle.addCircle(centerX, centerY, radius, Path.Direction.CW);

@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:layout_width="match_parent">
+
+    <FrameLayout
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
 
         <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <com.example.niklas.efc_master.Speedometer
                 android:id="@+id/Speedometer"
@@ -21,78 +26,79 @@
                 custom:maxSpeed="12000" />
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <TextClock
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="425dp"
-            android:layout_marginTop="5dp"
-            android:format12Hour="hh:mm a"
-            android:textColor="#000000"
-            android:textSize="44sp"
-            android:textStyle="bold"
-            />
-    </LinearLayout>
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+            <TextClock
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="425dp"
+                android:layout_marginTop="5dp"
+                android:format12Hour="hh:mm a"
+                android:textColor="#000000"
+                android:textSize="44sp"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/runtime_clock"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="5dp"
-            android:textColor="#000000"
-            android:textSize="44sp"
-            android:background="@color/colorMaterialLight"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/runtime_clock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:textColor="#000000"
+                android:textSize="44sp"
+                android:background="@color/colorMaterialLight"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/dashboard_tool"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/string"
-            android:layout_marginTop="155sp"
-            android:layout_marginStart="500dp"/>
-    </LinearLayout>
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/dashboard_tool"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/string"
+                android:layout_marginTop="155sp"
+                android:layout_marginStart="500dp"/>
+        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/dashboard_oil"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/oil"
+            android:layout_height="wrap_content">
 
-            android:layout_marginTop="155sp"
-            android:layout_marginStart="25sp"/>
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/dashboard_oil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/oil"
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+                android:layout_marginTop="155sp"
+                android:layout_marginStart="25sp"/>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/dashboard_oil_value"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="215sp"
-            android:layout_marginStart="20sp"
-            android:textSize="40sp"
-            android:textStyle="bold"
-            android:text="100%"
-            />
-    </LinearLayout>
-</FrameLayout>
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/dashboard_oil_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="215sp"
+                android:layout_marginStart="20sp"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                android:text="100%"
+                />
+        </LinearLayout>
+    </FrameLayout>
+</android.support.constraint.ConstraintLayout>
