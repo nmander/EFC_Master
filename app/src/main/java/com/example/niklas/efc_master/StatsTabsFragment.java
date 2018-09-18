@@ -90,7 +90,7 @@ public class StatsTabsFragment extends Fragment {
 
 			switch (position) {
 				case 0:
-					String graph_1 = "Speed Bins";
+					String graph_1 = "RPM Bins";
 					return graph_1;
 				case 1:
 					String graph_2 = "Start Temp";

@@ -41,8 +41,10 @@ public class StatsTab1Fragment extends Fragment {
 		chart.setDescription("");
 		chart.setDrawBorders(true);
 		chart.getXAxis().setDrawGridLines(false);
-		//chart.getAxisLeft().setDrawGridLines(false);
-		//chart.getAxisRight().setDrawGridLines(false);
+		chart.getAxisLeft().setSpaceBottom(0);
+		chart.getAxisRight().setSpaceBottom(0);
+		chart.setDescription("Total run-time in minutes at different rpm interval");
+		chart.setDescriptionPosition(1800,100);
 		chart.setFitBars(true); // make the x-axis fit exactly all bars
 		chart.invalidate();
 
@@ -51,17 +53,27 @@ public class StatsTab1Fragment extends Fragment {
 
 	private BarData getData() {
 		List<BarEntry> entries = new ArrayList<>();
-		entries.add(new BarEntry(1000f, 0f));
+		entries.add(new BarEntry(1500f, 1f));
 		entries.add(new BarEntry(2000f, 2f));
+		entries.add(new BarEntry(2500f, 2f));
 		entries.add(new BarEntry(3000f, 85f));
-		entries.add(new BarEntry(4000f, 21f));
-		entries.add(new BarEntry(5000f, 60f));
-		entries.add(new BarEntry(6000f, 43f));
+		entries.add(new BarEntry(3500f, 12f));
+		entries.add(new BarEntry(4000f, 8f));
+		entries.add(new BarEntry(4500f, 2));
+		entries.add(new BarEntry(5000f, 8f));
+		entries.add(new BarEntry(5500f, 20f));
+		entries.add(new BarEntry(6000f, 18f));
+		entries.add(new BarEntry(6500f, 32f));
 		entries.add(new BarEntry(7000f, 55f));
+		entries.add(new BarEntry(7500f, 72f));
 		entries.add(new BarEntry(8000f, 62f));
+		entries.add(new BarEntry(8500f, 60f));
 		entries.add(new BarEntry(9000f, 42f));
+		entries.add(new BarEntry(9500f, 32f));
 		entries.add(new BarEntry(10000f, 35f));
+		entries.add(new BarEntry(10500f, 22f));
 		entries.add(new BarEntry(11000f, 33f));
+		entries.add(new BarEntry(11500f, 17f));
 		entries.add(new BarEntry(12000f, 12f));
 
 		BarDataSet set = new BarDataSet(entries, "BarDataSet");
@@ -70,7 +82,8 @@ public class StatsTab1Fragment extends Fragment {
 
 
 		BarData data = new BarData(set);
-		data.setBarWidth(950f); // set custom bar width
+		data.setValueTextSize(10);
+		data.setBarWidth(450f); // set custom bar width
 
 
 		return data;
