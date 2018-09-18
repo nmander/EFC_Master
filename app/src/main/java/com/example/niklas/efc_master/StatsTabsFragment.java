@@ -15,7 +15,7 @@ public class StatsTabsFragment extends Fragment {
 
 	public static TabLayout tabLayout;
 	public static ViewPager viewPager;
-	public static int int_items = 4;
+	public static int int_items = 5;
 
 	@Nullable
 	@Override
@@ -63,13 +63,15 @@ public class StatsTabsFragment extends Fragment {
 		public Fragment getItem(int position) {
 			switch (position) {
 				case 0:
-					return new StatsTab1Fragment();
+					return new StatsTab0Fragment();
 				case 1:
-                    return new StatsTab2Fragment();
+                    return new StatsTab1Fragment();
 				case 2:
-                    return new StatsTab3Fragment();
+                    return new StatsTab2Fragment();
 				case 3:
-                    return new StatsTab4Fragment();
+                    return new StatsTab3Fragment();
+				case 4:
+					return new StatsTab4Fragment();
 			}
 			return null;
 		}
@@ -90,15 +92,18 @@ public class StatsTabsFragment extends Fragment {
 
 			switch (position) {
 				case 0:
+					String graph_0 = "About";
+					return graph_0;
+				case 1:
 					String graph_1 = "RPM Bins";
 					return graph_1;
-				case 1:
+				case 2:
 					String graph_2 = "Start Temp";
 					return graph_2;
-				case 2:
+				case 3:
 					String graph_3 = "Usage";
 					return graph_3;
-				case 3:
+				case 4:
 					String graph_4 = "Graph 4";
 					return graph_4;
 			}

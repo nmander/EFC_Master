@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <TableRow
+        android:id="@+id/table"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </TableRow>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <TableLayout
+        android:id="@+id/table_about"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="1">
+
+        <TableRow
+            android:id="@+id/row_device"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/cell_device_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="Device Name:"
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/cell_device_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="Trimmer_1"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+
+            </TextView>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/row_model"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/cell_model_number_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="Model Number:"
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/cell_model_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="EX-5782"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+
+            </TextView>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/row_hardware"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/cell_hardware_revision_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="Hardware Revision:"
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/cell_hardware_revision"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="99-1078"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+            </TextView>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/row_firmware"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/cell_firmware_revision_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="Firmware Revision:"
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/cell_firmware_revision"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="25.0.0"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+            </TextView>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/row_total_runtime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/cell_total_runtime_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="Total Runtime:"
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/cell_total_runtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="185.0 hrs"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+            </TextView>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/row_last_runtime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/cell_last_runtime_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="Last Runtime:"
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/cell_last_runtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="0.30 hrs"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+            </TextView>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/row_avg_start_temp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/cell_avg_start_temp_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="AVG Starting Temperature:"
+                android:textStyle="bold"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/cell_avg_start_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_shape"
+                android:padding="5dp"
+                android:text="13 C"
+                android:textAppearance="?android:attr/textAppearanceMedium">
+            </TextView>
+        </TableRow>
+    </TableLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
