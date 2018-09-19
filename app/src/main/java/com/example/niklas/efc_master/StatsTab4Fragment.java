@@ -14,14 +14,9 @@ public class StatsTab4Fragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-/*		FragmentStartBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_start, container, false);
-		View view = binding.getRoot();
+		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_stats_tab_usage, container, false);
 		mainActivity = (MainActivity) getActivity();
-		binding.setIgndata(mainActivity.live_data);*/
 
-		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_stats_tab_3, container, false);
-		mainActivity = (MainActivity) getActivity();
-		//updatePrimerBulb(myTemp);
  		return rootView;
 	}
 }

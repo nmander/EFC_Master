@@ -63,13 +63,13 @@ public class StatsTabsFragment extends Fragment {
 		public Fragment getItem(int position) {
 			switch (position) {
 				case 0:
-					return new StatsTab0Fragment();
+					return new StatsTabDetailsFragment();
 				case 1:
-                    return new StatsTab1Fragment();
+                    return new StatsTabUsageFragment();
 				case 2:
-                    return new StatsTab2Fragment();
+                    return new StatsTabStartTempFragment();
 				case 3:
-                    return new StatsTab3Fragment();
+                    return new StatsTabRPMBinsFragment();
 				case 4:
 					return new StatsTab4Fragment();
 			}
@@ -92,17 +92,18 @@ public class StatsTabsFragment extends Fragment {
 
 			switch (position) {
 				case 0:
-					String graph_0 = "Details";
-					return graph_0;
+					String details = "Details";
+					return details;
 				case 1:
-					String graph_1 = "RPM Bins";
-					return graph_1;
+					String usage = "Usage";
+					return usage;
 				case 2:
-					String graph_2 = "Start Temp";
-					return graph_2;
+					String start_temp = "Start Temp";
+					return start_temp;
 				case 3:
-					String graph_3 = "Usage";
-					return graph_3;
+					String rpm_bins = "RPM Bins";
+					return rpm_bins;
+
 				case 4:
 					String graph_4 = "Graph 4";
 					return graph_4;
