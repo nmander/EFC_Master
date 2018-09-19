@@ -11,7 +11,7 @@
     </style>
 
     <style name="TabLayoutTextSize" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="myDialog" parent="@android:style/Theme.DeviceDefault.Light.Dialog.NoActionBar.MinWidth">
