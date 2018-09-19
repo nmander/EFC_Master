@@ -11,20 +11,20 @@
         android:layout_height="match_parent"
         android:gravity="center">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="-40sp">
 
             <com.example.niklas.efc_master.Speedometer
                 android:id="@+id/Speedometer"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="70sp"
-                android:layout_marginTop="-60sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@color/colorMaterialLight"
                 custom:currentSpeed="0"
                 custom:maxSpeed="12000" />
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
         <!--    <LinearLayout
                 android:layout_width="wrap_content"

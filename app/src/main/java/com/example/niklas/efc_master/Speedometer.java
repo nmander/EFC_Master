@@ -36,7 +36,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 	private int SCALE_COLOR = Color.BLACK;
 
 	//scale number text size
-	private float SCALE_SIZE = 45f;
+	private float SCALE_SIZE = 43f;
 	private float READING_SIZE = 80f;   //unknown
 
 	// Scale configuration
@@ -87,7 +87,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 
 		scalePaint = new Paint(offMarkPaint);
 		scalePaint.setStrokeWidth(2f);
-		scalePaint.setLetterSpacing(0f);
+		scalePaint.setLetterSpacing(-0.1f);
 		scalePaint.setTextSize(SCALE_SIZE);
 		scalePaint.setShadowLayer(5f, 0f, 0f, Color.RED);
 		scalePaint.setColor(SCALE_COLOR);
@@ -98,6 +98,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 
 		//changes current speed text size - reading
 		readingPaint.setTextSize(200f);
+		readingPaint.setLetterSpacing(0f);
 		readingPaint.setTypeface(Typeface.SANS_SERIF);
 		readingPaint.setColor(Color.BLACK);
 
@@ -207,7 +208,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 	private void drawLegend(Canvas canvas){
 		//canvas.save(Canvas);
 		//rotates the scale number increments
-		canvas.rotate(-205, centerX,centerY);
+		canvas.rotate(-204, centerX,centerY);
 		Path circle = new Path();
 		double halfCircumference = ((radius+75) * Math.PI);
 		double increments = 8000;

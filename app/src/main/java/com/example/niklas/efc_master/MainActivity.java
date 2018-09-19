@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity{
                     loadFragment(statsTabsFragment);
                     //loadFragment(dashboardFragment);
                     hideRunningFeatures();
-                    //dashboardFragment.updateSpeedometer(12000);
+                    //dashboardFragment.updateSpeedometer(6000);
                     return true;
 
                 case R.id.navigation_light_trim:
