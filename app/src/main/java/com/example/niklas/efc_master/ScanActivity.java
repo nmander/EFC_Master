@@ -44,6 +44,7 @@ public class ScanActivity extends AppCompatActivity
     private boolean mScanning;
     private ProgressBar scanning_wheel;
     private Button btnScan;
+    private int temp = -999, rssi, index;
 
     private final BluetoothLeScannerCompat mScanner = BluetoothLeScannerCompat.getScanner();
     private final Handler mStopScanHandler = new Handler();
@@ -104,13 +105,25 @@ public class ScanActivity extends AppCompatActivity
             Log.i(TAG, "onBatchScanResults: " + results.toString());
 
             if (!results.isEmpty()) {
-                ScanResult result = results.get(0);
-                Log.i(TAG, "found BLE: " + results.toString());
+                for (int i = 0; i < results.size(); i++)
+                {
+                    ScanResult result = results.get(i);
+                    Log.i(TAG, "found BLE: " + result.getDevice().getName());
+                    if (result.getRssi() > temp)
+                    {
+                        index = i;
+                        rssi = result.getRssi();
+                        temp = rssi;
+                    }
+                }
+                //ScanResult result = results.get(0);
+                //Log.i(TAG, "found BLE: " + results.toString());
                 stopLeScan();
                 btnScan.setVisibility(View.INVISIBLE);
+                ScanResult result = results.get(index);
                 Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_SHORT).show();
-
                 startMainActivity(result.getDevice());
+                //startMainActivity(result.getDevice());
             }
         }
 
