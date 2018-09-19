@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="56sp"
+        android:minWidth="56sp">
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
-    android:layout_width="56sp"
-    android:minWidth="56sp">
-
-    <ProgressBar android:layout_width="40sp"
-        android:layout_height="40sp"
-        android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/custom_scanning_wheel"
-        />
-</FrameLayout>
+        <ProgressBar android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_gravity="center"
+            android:indeterminateDrawable="@drawable/custom_scanning_wheel"
+            />
+    </FrameLayout>
+</android.support.constraint.ConstraintLayout>

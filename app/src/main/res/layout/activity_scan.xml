@@ -1,58 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ScanActivity">
+    android:layout_width="match_parent">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/logo"
-        android:src="@drawable/walbro_logo_w"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="125sp"
-        android:layout_marginBottom="35dp"/>
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ScanActivity">
 
-    <TextView
-        android:id="@+id/efc_connect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/logo"
-        android:text="@string/efc_connect"
-        android:layout_centerHorizontal="true"
-        android:textSize="26sp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/logo"
+            android:src="@drawable/walbro_logo_w"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="125sp"
+            android:layout_marginBottom="35dp"/>
 
-    <TextView
-        android:id="@+id/walbro_llc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/efc_connect"
-        android:text="@string/walbro_llc"
-        android:layout_centerHorizontal="true"
-        android:textSize="24sp"/>
+        <TextView
+            android:id="@+id/efc_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/logo"
+            android:text="@string/efc_connect"
+            android:layout_centerHorizontal="true"
+            android:textSize="26sp"/>
 
-    <ProgressBar
-        android:id="@+id/scanning_wheel"
-        android:layout_width="100sp"
-        android:layout_height="100sp"
-        android:layout_marginTop="35sp"
-        android:layout_centerHorizontal="true"
-        android:indeterminateDrawable="@drawable/custom_scanning_wheel"
-        android:layout_below="@+id/walbro_llc"/>
+        <TextView
+            android:id="@+id/walbro_llc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/efc_connect"
+            android:text="@string/walbro_llc"
+            android:layout_centerHorizontal="true"
+            android:textSize="24sp"/>
 
-    <Button
-        android:id="@+id/btn_scan"
-        android:layout_width="150sp"
-        android:layout_height="50sp"
-        android:textSize="24sp"
-        android:layout_below="@id/walbro_llc"
-        android:layout_marginTop="40sp"
-        android:layout_centerHorizontal="true"
-        android:text="@string/btn_scan"
-        android:background="@drawable/button_scan"
-        android:elevation="20sp"
-        android:textColor="@color/colorBlack"/>
-</RelativeLayout>
+        <ProgressBar
+            android:id="@+id/scanning_wheel"
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:layout_marginTop="35sp"
+            android:layout_centerHorizontal="true"
+            android:indeterminateDrawable="@drawable/custom_scanning_wheel"
+            android:layout_below="@+id/walbro_llc"/>
+
+        <Button
+            android:id="@+id/btn_scan"
+            android:layout_width="150sp"
+            android:layout_height="50sp"
+            android:textSize="24sp"
+            android:layout_below="@id/walbro_llc"
+            android:layout_marginTop="40sp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/btn_scan"
+            android:background="@drawable/button_scan"
+            android:elevation="20sp"
+            android:textColor="@color/colorBlack"/>
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
