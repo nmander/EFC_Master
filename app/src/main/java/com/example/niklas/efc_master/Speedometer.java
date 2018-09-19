@@ -186,7 +186,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 		//adjusts spacing of each tick   adjust i+=4
 		for(int i = -205; i < 25; i+=4){
 			//adjusts sweepAngle tick thickness
-			offPath.addArc(oval, i, 2f);
+				offPath.addArc(oval, i, 2f);
 		}
 		canvas.drawPath(offPath, offMarkPaint);
 	}
@@ -196,7 +196,8 @@ public class Speedometer extends View implements SpeedChangeListener {
 
 		//changes scale arc circumference
 		//adjusts current speed spacing of each tick
-		for(int i = -205; i < ((mCurrentSpeed/mMaxSpeed)*205 - 194); i+=4){
+		for(int i = -205; i < ((mCurrentSpeed/mMaxSpeed)*230 - 203); i+=4)
+		{
 			//adjusts current speed tick thickness
 			onPath.addArc(oval, i, 2f);
 		}
