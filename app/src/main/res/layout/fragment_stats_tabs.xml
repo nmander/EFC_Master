@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="40sp"
         android:background="@color/colorMaterialLight"
-        android:elevation="4dp"
+        android:elevation="4sp"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/colorSelectedNav"
         app:tabIndicatorHeight="4sp"

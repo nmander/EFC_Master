@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="Device Name:"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium">
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="Trimmer_1"
                 android:textAppearance="?android:attr/textAppearanceMedium">
 
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="Model Number:"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium">
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="EX-5782"
                 android:textAppearance="?android:attr/textAppearanceMedium">
 
@@ -91,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="Hardware Revision:"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium">
@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="99-1078"
                 android:textAppearance="?android:attr/textAppearanceMedium">
             </TextView>
@@ -120,7 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="Firmware Revision:"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium">
@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="25.0.0"
                 android:textAppearance="?android:attr/textAppearanceMedium">
             </TextView>
@@ -148,7 +148,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="Total Runtime:"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium">
@@ -160,7 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="185.0 hrs"
                 android:textAppearance="?android:attr/textAppearanceMedium">
             </TextView>
@@ -176,7 +176,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="Last Runtime:"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium">
@@ -188,7 +188,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
+                android:padding="5sp"
                 android:text="0.30 hrs"
                 android:textAppearance="?android:attr/textAppearanceMedium">
             </TextView>

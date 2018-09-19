@@ -6,13 +6,13 @@
     android:toDegrees="1440" >
 
     <shape
-        android:innerRadius="40dp"
+        android:innerRadius="40sp"
         android:shape="ring"
-        android:thickness="6dp"
+        android:thickness="6sp"
         android:useLevel="false" >
         <size
-            android:height="48dp"
-            android:width="48dp" />
+            android:height="48sp"
+            android:width="48sp" />
 
         <gradient
             android:centerColor="#59aeff"

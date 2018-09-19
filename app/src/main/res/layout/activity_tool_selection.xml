@@ -9,18 +9,18 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="4dp" >
+        android:padding="4sp" >
 
         <!-- Views with default image and text, for demonstration.
         They will be changed in the adapter -->
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="40sp"
             android:id="@+id/tool_icon"
             android:src="@drawable/ic_string"
             android:scaleType="centerInside"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="4dp" />
+            android:layout_marginEnd="8sp"
+            android:layout_marginStart="4sp" />
 
         <TextView
             android:layout_width="wrap_content"

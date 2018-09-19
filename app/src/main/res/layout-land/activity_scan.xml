@@ -13,7 +13,7 @@
         android:src="@drawable/walbro_logo"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="40dp"/>
+        android:layout_marginTop="40sp"/>
 
     <TextView
         android:id="@+id/efc_connect"
@@ -35,8 +35,8 @@
 
     <ProgressBar
         android:id="@+id/scanning_wheel"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="100sp"
+        android:layout_height="100sp"
         android:layout_marginTop="15sp"
         android:layout_centerHorizontal="true"
         android:indeterminateDrawable="@drawable/custom_scanning_wheel"
@@ -44,15 +44,15 @@
 
     <Button
         android:id="@+id/btn_scan"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
+        android:layout_width="150sp"
+        android:layout_height="50sp"
         android:textSize="24sp"
         android:layout_below="@id/walbro_llc"
         android:layout_marginTop="40sp"
         android:layout_centerHorizontal="true"
         android:text="@string/btn_scan"
         android:background="@drawable/button_scan"
-        android:elevation="20dp"
+        android:elevation="20sp"
         android:textColor="@color/colorBlack"/>
 
 </RelativeLayout>

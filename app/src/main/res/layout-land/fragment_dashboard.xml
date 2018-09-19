@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
@@ -15,8 +19,8 @@
             android:id="@+id/Speedometer"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginTop="-60dp"
+            android:layout_marginStart="70sp"
+            android:layout_marginTop="-60sp"
             android:background="@color/colorMaterialLight"
             custom:currentSpeed="0"
             custom:maxSpeed="12000" />
@@ -42,8 +46,8 @@
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="425dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="425sp"
+            android:layout_marginTop="5sp"
             android:format12Hour="hh:mm a"
             android:textColor="#000000"
             android:textSize="44sp"
@@ -59,8 +63,8 @@
             android:id="@+id/runtime_clock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="20sp"
+            android:layout_marginTop="5sp"
             android:textColor="#000000"
             android:textSize="44sp"
             android:background="@color/colorMaterialLight"
@@ -77,7 +81,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/string"
             android:layout_marginTop="155sp"
-            android:layout_marginStart="500dp"/>
+            android:layout_marginStart="500sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -110,3 +114,4 @@
             />
     </LinearLayout>
 </FrameLayout>
+</android.support.constraint.ConstraintLayout>
