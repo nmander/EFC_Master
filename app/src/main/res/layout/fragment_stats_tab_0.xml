@@ -193,34 +193,6 @@
                 android:textAppearance="?android:attr/textAppearanceMedium">
             </TextView>
         </TableRow>
-
-        <TableRow
-            android:id="@+id/row_avg_start_temp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/cell_avg_start_temp_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
-                android:text="AVG Starting Temperature:"
-                android:textStyle="bold"
-                android:textAppearance="?android:attr/textAppearanceMedium">
-
-            </TextView>
-
-            <TextView
-                android:id="@+id/cell_avg_start_temp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/table_cell_shape"
-                android:padding="5dp"
-                android:text="13 C"
-                android:textAppearance="?android:attr/textAppearanceMedium">
-            </TextView>
-        </TableRow>
     </TableLayout>
     </ScrollView>
 
