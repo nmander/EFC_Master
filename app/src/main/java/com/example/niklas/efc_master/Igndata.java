@@ -4,8 +4,8 @@ import android.databinding.Bindable;
 
 public class Igndata extends BaseObservable
 {
-    public final byte ENGINE_RUNNING = 1;
-    public final byte ENGINE_NOT_RUNNING = 2;
+    public final byte ENGINE_RUNNING = 1; //1  stands for protocol#1
+    public final byte ENGINE_NOT_RUNNING = 2; //1  stands for protocol#2
     private String primerBulb;
     private int temperature;
     private int rpm;
@@ -13,7 +13,7 @@ public class Igndata extends BaseObservable
     private int attachment_nbr_status; //[String, Blade, Edger, Tiller, Blower, Pole Saw]
     private int trim_mode_status;   //0 = normal, lite = 1
     private int stop_status; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
-    private int at_idle_status; // 0= NOT at idle, 1 = at idle position
+    private int tps_status; // 0= NOT at idle, 1 = at idle position, 2 = WOT
 
     public Igndata() {
         this.primerBulb = "PUSH PRIMER BULB N TIMES";
@@ -78,11 +78,11 @@ public class Igndata extends BaseObservable
         this.temperature = temperature;
         notifyPropertyChanged(BR.temperature);
     }
-    public int getAt_idle_status() {
-        return at_idle_status;
+    public int getTps_status() {
+        return tps_status;
     }
 
-    public void setAt_idle_status(int at_idle_status) {
-        this.at_idle_status = at_idle_status;
+    public void setTps_status(int tps_status) {
+        this.tps_status = tps_status;
     }
 }

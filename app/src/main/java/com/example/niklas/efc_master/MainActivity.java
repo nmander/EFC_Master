@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity{
             } else if (status != BluetoothGatt.GATT_SUCCESS) {
                 Log.i(TAG, "!GATT_SUCCESS, Disconnected from GATT client");
                 disconnectGattServer();
+               // connectToGattServer();
                 return;
             }
             if (newState == BluetoothProfile.STATE_CONNECTED) {
@@ -318,6 +319,7 @@ public class MainActivity extends AppCompatActivity{
 
                     live_data.setTemperature(data[2]);
                     live_data.setAttachment_nbr_status(data[3]);
+                    live_data.setTps_status(data[4]);
                     if (!start_fragment_loaded)
                     {
                         //live_data.setTemperature(50);
@@ -338,7 +340,7 @@ public class MainActivity extends AppCompatActivity{
 		                }
 	                });
 
-                    Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status());
+                    Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status() + "," + live_data.getTps_status());
                 }
 
                 //if engine running
@@ -361,14 +363,14 @@ public class MainActivity extends AppCompatActivity{
                     live_data.setAttachment_nbr_status(data[7]);
                     live_data.setTrim_mode_status(data[8]);
                     live_data.setStop_status(data[9]);
-                    live_data.setAt_idle_status(data[10]);
+                    live_data.setTps_status(data[10]);
                     runOnUiThread(new Runnable() {
 	                    @Override
 	                    public void run() {
 	                        //if selected nav item is Dash:
 		                    dashboardFragment.updateSpeedometer(live_data.getRpm());
 		                    dashboardFragment.updateRunTimer(live_data.getRun_time());
-                            if (engine_running && live_data.getAt_idle_status()==0)
+                            if (engine_running && live_data.getTps_status()!=1)
                             {
                                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
                                 navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
@@ -381,7 +383,7 @@ public class MainActivity extends AppCompatActivity{
                             }
                         }
                     });
-                    Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm() + " - " + live_data.getRun_time());
+                    Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm() + " - " + live_data.getRun_time()+ "," + live_data.getTps_status());
                 }
                 else
                 {

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
@@ -72,6 +73,12 @@ public class ScanActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+
+
+
         setContentView(R.layout.activity_scan);
         scanning_wheel = (ProgressBar)findViewById(R.id.scanning_wheel);
         //scanning_wheel.setVisibility(View.INVISIBLE);
@@ -218,6 +225,7 @@ public class ScanActivity extends AppCompatActivity
     {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(MainActivity.EXTRA_DEVICE_ADDRESS, device.getAddress());
+
         startActivity(intent);
         finish();
     }
