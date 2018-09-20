@@ -38,6 +38,7 @@ public class StatsTabRPMBinsFragment extends Fragment {
 		chart.getXAxis().setDrawGridLines(false);
 		chart.getAxisLeft().setSpaceBottom(0);
 		chart.getAxisRight().setSpaceBottom(0);
+
 		chart.setDescription("Total run-time in minutes at different rpm interval");
 		chart.setDescriptionPosition(1800,100);
 		chart.setFitBars(true); // make the x-axis fit exactly all bars
@@ -72,7 +73,7 @@ public class StatsTabRPMBinsFragment extends Fragment {
 		entries.add(new BarEntry(12000f, 12f));
 
 		BarDataSet set = new BarDataSet(entries, "BarDataSet");
-		set.setColor(Color.rgb(13,74,173));
+		set.setColor(Color.rgb(173,13,90));
 		set.setHighlightEnabled(false);
 
 

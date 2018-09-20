@@ -38,7 +38,7 @@ public class StatsTabStartTempFragment extends Fragment {
 		chart.getXAxis().setDrawGridLines(false);
 		chart.getAxisLeft().setSpaceBottom(0);
 		chart.getAxisRight().setSpaceBottom(0);
-		//chart.setDescription("Igntion module temperature at startup");
+		chart.setDescription("Number of times the unit was started at a certain module temperature.");
 		chart.setDescriptionPosition(1800,100);
 		chart.setFitBars(true); // make the x-axis fit exactly all bars
 		chart.invalidate();
@@ -62,7 +62,7 @@ public class StatsTabStartTempFragment extends Fragment {
 		entries.add(new BarEntry(65f, 8f));
 
 		BarDataSet set = new BarDataSet(entries, "BarDataSet");
-		set.setColor(Color.rgb(13,74,173));
+		set.setColor(Color.rgb(13,138,173));
 		set.setHighlightEnabled(false);
 
 

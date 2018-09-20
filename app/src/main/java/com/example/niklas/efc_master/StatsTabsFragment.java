@@ -95,7 +95,7 @@ public class StatsTabsFragment extends Fragment {
 					String details = "Information";
 					return details;
 				case 1:
-					String recent_runs = "Recent Runs";
+					String recent_runs = "Recent Run";
 					return recent_runs;
 				case 2:
 					String usage = "Usage";

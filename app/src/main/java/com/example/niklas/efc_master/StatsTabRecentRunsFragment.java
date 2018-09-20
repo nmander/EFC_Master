@@ -28,7 +28,7 @@ public class StatsTabRecentRunsFragment extends Fragment {
 		BarChart chart = (BarChart) rootView.findViewById(R.id.bar_chart);
 		chart.setTouchEnabled(false);
 		chart.setData(getData());
-		chart.getXAxis().setAxisMaxValue(6);
+		chart.getXAxis().setAxisMaxValue(12500);
 		chart.getXAxis().setAxisMinValue(0);
 		chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
 		chart.setDescription("");
@@ -36,7 +36,7 @@ public class StatsTabRecentRunsFragment extends Fragment {
 		chart.getXAxis().setDrawGridLines(false);
 		chart.getAxisLeft().setSpaceBottom(0);
 		chart.getAxisRight().setSpaceBottom(0);
-		chart.setDescription("Description");
+		chart.setDescription("Last run-time in seconds at different rpm interval");
 		chart.setDescriptionPosition(1800,100);
 		chart.setFitBars(true); // make the x-axis fit exactly all bars
 		chart.invalidate();
@@ -46,20 +46,25 @@ public class StatsTabRecentRunsFragment extends Fragment {
 
 	private BarData getData() {
 		List<BarEntry> entries = new ArrayList<>();
-		entries.add(new BarEntry(1f, 20f));
-		entries.add(new BarEntry(2f, 10f));
-		entries.add(new BarEntry(3f, 9f));
-		entries.add(new BarEntry(4f, 15f));
-		entries.add(new BarEntry(5f, 7f));
+		entries.add(new BarEntry(3000f, 35f));
+		entries.add(new BarEntry(3500f, 3f));
+		entries.add(new BarEntry(4000f, 1f));
+		entries.add(new BarEntry(5000f, 8f));
+		entries.add(new BarEntry(5500f, 20f));
+		entries.add(new BarEntry(6000f, 6f));
+		entries.add(new BarEntry(7000f, 37f));
+		entries.add(new BarEntry(7500f, 72f));
+		entries.add(new BarEntry(8000f, 62f));
+		entries.add(new BarEntry(8500f, 31f));
 
 		BarDataSet set = new BarDataSet(entries, "BarDataSet");
-		set.setColor(Color.rgb(13,74,173));
+		set.setColor(Color.rgb(123,102,196));
 		set.setHighlightEnabled(false);
 
 
 		BarData data = new BarData(set);
 		data.setValueTextSize(10);
-		data.setBarWidth(0.25f); // set custom bar width
+		data.setBarWidth(450f); // set custom bar width
 
 		return data;
 
