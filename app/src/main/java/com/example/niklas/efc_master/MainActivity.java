@@ -321,6 +321,7 @@ public class MainActivity extends AppCompatActivity{
                     live_data.setTemperature(data[2]);
                     live_data.setAttachment_nbr_status(data[3]);
                     live_data.setTps_status(data[4]);
+                    live_data.setError_code(data[5]);
                     if (!start_fragment_loaded)
                     {
                         //live_data.setTemperature(50);

@@ -14,6 +14,7 @@ public class Igndata extends BaseObservable
     private int trim_mode_status;   //0 = normal, lite = 1
     private int stop_status; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
     private int tps_status; // 0= NOT at idle, 1 = at idle position, 2 = WOT
+    private int error_code; //0=Success, 1=Not following starting procedure,
 
     public Igndata() {
         this.primerBulb = "PUSH PRIMER BULB N TIMES";
@@ -84,5 +85,13 @@ public class Igndata extends BaseObservable
 
     public void setTps_status(int tps_status) {
         this.tps_status = tps_status;
+    }
+
+    public int getError_code() {
+        return error_code;
+    }
+
+    public void setError_code(int error_code) {
+        this.error_code = error_code;
     }
 }
