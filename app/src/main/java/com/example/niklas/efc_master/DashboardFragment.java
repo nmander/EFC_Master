@@ -42,6 +42,14 @@ public class DashboardFragment extends Fragment
 		myRunTimer.setText(myFoundModRunTime);
 
 		myToolSelection = rootView.findViewById(R.id.dashboard_tool);
+
+		Bundle bundle = getArguments();
+		if (bundle != null) {
+			if (bundle.containsKey("TOOL")) {
+				int myStartingTool = getArguments().getInt("TOOL");
+				updateToolView(myStartingTool);
+			}
+		}
 		return rootView;
 	}
 

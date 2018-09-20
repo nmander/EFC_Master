@@ -13,4 +13,6 @@
 
     <color name="colorSelectedNav">#0d4aad</color>
     <color name="colorMaterialLight">#FFFAFAFA</color>
+
+    <color name="colorStopButton">#ad0d0d</color>
 </resources>

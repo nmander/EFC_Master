@@ -2,6 +2,7 @@ package com.example.niklas.efc_master;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.ColorSpace;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -50,8 +51,6 @@ public class MainActivity extends AppCompatActivity{
     private boolean start_high_temp_fragment_loaded = false;
     private boolean lite_trim_on = false;
 
-	private Menu menu;
-	private ImageView imgTool;
 	private BottomNavigationView navigation;
     private StartFragment startFragment = new StartFragment();
     private StartHighTempFragment startHighTempFragment = new StartHighTempFragment();
@@ -134,38 +133,52 @@ public class MainActivity extends AppCompatActivity{
             String toolCode = data.getStringExtra(ToolSelectionActivity.RESULT_TOOL);
             Integer myTool = Integer.valueOf(toolCode);
 
-
             //TODO: pass tool selection to dashboardFragment
             if (myTool == 0) {
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLADE);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(0);
-	            else
-		            Toast.makeText(getApplicationContext(), "BLADE ATTACHMENT", Toast.LENGTH_SHORT).show();
+	            else {
+	            	Bundle bundle = new Bundle();
+	            	bundle.putInt("TOOL", myTool);
+	            	dashboardFragment.setArguments(bundle);
+                    Toast.makeText(getApplicationContext(), "BLADE ATTACHMENT", Toast.LENGTH_SHORT).show();
+                }
             }
 
             if (myTool == 1) {
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLOWER);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(myTool);
-	            else
-		            Toast.makeText(getApplicationContext(), "BLOWER ATTACHMENT", Toast.LENGTH_SHORT).show();
+	            else {
+		            Bundle bundle = new Bundle();
+		            bundle.putInt("TOOL", myTool);
+		            dashboardFragment.setArguments(bundle);
+                    Toast.makeText(getApplicationContext(), "BLOWER ATTACHMENT", Toast.LENGTH_SHORT).show();
+                }
             }
 
             if (myTool == 2) {
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_EDGER);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(myTool);
-	            else
-		            Toast.makeText(getApplicationContext(), "EDGER ATTACHMENT", Toast.LENGTH_SHORT).show();
+	            else {
+		            Bundle bundle = new Bundle();
+		            dashboardFragment.setArguments(bundle);
+                    Toast.makeText(getApplicationContext(), "EDGER ATTACHMENT", Toast.LENGTH_SHORT).show();
+                }
             }
 
             if (myTool == 3) {
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_POLE_SAW);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(myTool);
-	            else
-		            Toast.makeText(getApplicationContext(), "POLE SAW ATTACHMENT", Toast.LENGTH_SHORT).show();
+	            else{
+		            Bundle bundle = new Bundle();
+		            bundle.putInt("TOOL", myTool);
+		            dashboardFragment.setArguments(bundle);
+                    Toast.makeText(getApplicationContext(), "POLE SAW ATTACHMENT", Toast.LENGTH_SHORT).show();
+                }
             }
 
             if (myTool == 4)
@@ -173,16 +186,24 @@ public class MainActivity extends AppCompatActivity{
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_TILLER);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(myTool);
-	            else
-		            Toast.makeText(getApplicationContext(), "TILLER ATTACHMENT", Toast.LENGTH_SHORT).show();
+	            else{
+		            Bundle bundle = new Bundle();
+		            bundle.putInt("TOOL", myTool);
+		            dashboardFragment.setArguments(bundle);
+                    Toast.makeText(getApplicationContext(), "TILLER ATTACHMENT", Toast.LENGTH_SHORT).show();
+                }
             }
 
             if (myTool == 5) {
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_STRING);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(myTool);
-	            else
-		            Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_SHORT).show();
+	            else{
+		            Bundle bundle = new Bundle();
+		            bundle.putInt("TOOL", myTool);
+		            dashboardFragment.setArguments(bundle);
+                    Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_SHORT).show();
+                }
             }
         }
 	}
@@ -326,6 +347,7 @@ public class MainActivity extends AppCompatActivity{
                     engine_running = true;
                     if (!dashboard_fragment_loaded) {
 	                    loadFragment(dashboardFragment);
+	                    navigation.findViewById(R.id.navigation_kill).setBackgroundColor(getColor(R.color.colorStopButton));
                         dashboard_fragment_loaded = true;
 	                    start_fragment_loaded = false;
 	                    start_high_temp_fragment_loaded = false;
