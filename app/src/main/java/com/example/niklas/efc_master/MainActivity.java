@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity{
                 case R.id.navigation_start_instructions:
                     setConditionalStartingFragment();
                     hideRunningFeatures();
+                    //startFragment.flashSqueezeThrottle();
                     return true;
 
                 case R.id.navigation_stats:
@@ -335,6 +336,7 @@ public class MainActivity extends AppCompatActivity{
                             if (live_data.getTemperature() < 50 && !start_high_temp_fragment_loaded)
                             {
                                 startFragment.updatePrimerBulb(live_data.getTemperature());
+
                             }
 			                //else: statstab graph logic:
 		                }
