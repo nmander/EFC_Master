@@ -448,6 +448,7 @@ public class MainActivity extends AppCompatActivity{
             public void run() {
                 navigation.findViewById(R.id.navigation_start_instructions).setVisibility(View.VISIBLE);
                 navigation.findViewById(R.id.navigation_stats).setVisibility(View.VISIBLE);
+                navigation.findViewById(R.id.navigation_tool).setVisibility(View.VISIBLE);
                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
                 navigation.findViewById(R.id.navigation_kill).setVisibility(View.GONE);
                 hide_running_features = true;
