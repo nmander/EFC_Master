@@ -73,12 +73,6 @@ public class ScanActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-
-
-
         setContentView(R.layout.activity_scan);
         scanning_wheel = (ProgressBar)findViewById(R.id.scanning_wheel);
         //scanning_wheel.setVisibility(View.INVISIBLE);
@@ -216,7 +210,7 @@ public class ScanActivity extends AppCompatActivity
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
         } else {
-            Toast.makeText(this, "BLE is not supported", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "BLE not supported", Toast.LENGTH_LONG).show();
             finish();
         }
     }

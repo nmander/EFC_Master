@@ -26,7 +26,7 @@ public class StartFragment extends Fragment {
 		//myTemp = mainActivity.live_data.getTemperature();
 		primeBulb = rootView.findViewById(R.id.instruction_prime_bulb);
 		squeezeThrottle = rootView.findViewById(R.id.instruction_squeeze_throttle);
- 		return rootView;
+		return rootView;
 	}
 
 	public void updatePrimerBulb(int temperature)
@@ -44,29 +44,40 @@ public class StartFragment extends Fragment {
 
 	public void flashSqueezeThrottle()
 	{
-		//squeezeThrottle.setBackgroundColor(getResources().getColor(R.color.colorStopButton));
-		squeezeThrottle.setTextColor(getResources().getColor(R.color.colorStopButton));
 		Animation anim = new AlphaAnimation(0.0f, 1.0f);
-		anim.setDuration(150); //You can manage the blinking time with this parameter
-		anim.setStartOffset(100);
-		anim.setRepeatMode(Animation.REVERSE);
-		anim.setRepeatCount(6);
-		squeezeThrottle.startAnimation(anim);
-		anim.setAnimationListener(new Animation.AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {
+		if (mainActivity.live_data.getTps_status() != 2) {
+			//squeezeThrottle.setBackgroundColor(getResources().getColor(R.color.colorStopButton));
+			squeezeThrottle.setTextColor(getResources().getColor(R.color.colorStopButton));
 
-			}
+			anim.setDuration(150); //You can manage the blinking time with this parameter
+			anim.setStartOffset(100);
+			anim.setRepeatMode(Animation.REVERSE);
+			anim.setRepeatCount(6);
+			squeezeThrottle.startAnimation(anim);
 
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				squeezeThrottle.setTextColor(getResources().getColor(R.color.colorBlack));
-			}
+			anim.setAnimationListener(new Animation.AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
 
-			@Override
-			public void onAnimationRepeat(Animation animation) {
+				}
 
-			}
-		});
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					squeezeThrottle.setTextColor(getResources().getColor(R.color.colorBlack));
+				}
+
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+
+				}
+			});
+		}
+		else
+			{
+			squeezeThrottle.clearAnimation();
+			anim.setFillAfter(false);
+			squeezeThrottle.setTextColor(getResources().getColor(R.color.colorBlack));
+		}
+
 	}
 }

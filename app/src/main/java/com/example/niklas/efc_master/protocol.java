@@ -7,6 +7,8 @@ public class protocol
     public static byte BTN_TOOL_SELECT = 1;
     public static byte BTN_TRIM_MODE = 2;
     public static byte BTN_STOP = 3;
+    public static byte BTN_CLEAR_CODE = 4;
+    public static byte RESET_CODE = 1;
     public static byte STOP_OFF = 0;
     public static byte STOP_ON = 1;
     public static byte NORMAL_TRIM = 0;

@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity{
     private boolean start_fragment_loaded = false;
     private boolean start_high_temp_fragment_loaded = false;
     private boolean lite_trim_on = false;
+    private boolean hide_running_features = false;
+    private boolean hide_starting_features = false;
 
 	private BottomNavigationView navigation;
     private StartFragment startFragment = new StartFragment();
@@ -134,7 +136,6 @@ public class MainActivity extends AppCompatActivity{
             String toolCode = data.getStringExtra(ToolSelectionActivity.RESULT_TOOL);
             Integer myTool = Integer.valueOf(toolCode);
 
-            //TODO: pass tool selection to dashboardFragment
             if (myTool == 0) {
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLADE);
 	            if (dashboard_fragment_loaded)
@@ -316,17 +317,19 @@ public class MainActivity extends AppCompatActivity{
                 {
                     engine_running = false;
                     //hide navigational features:
-                    hideRunningFeatures();
+                    if (!hide_running_features)
+                        hideRunningFeatures();
 
                     live_data.setTemperature(data[2]);
                     live_data.setAttachment_nbr_status(data[3]);
                     live_data.setTps_status(data[4]);
-                    live_data.setError_code(data[5]);
+                    live_data.setError_code(data[5]); // flash if ==1
                     if (!start_fragment_loaded)
                     {
                         //live_data.setTemperature(50);
                         setConditionalStartingFragment();
                         setStartFragment();
+                        hideRunningFeatures();
                         start_fragment_loaded = true;
                         dashboard_fragment_loaded = false;
                     }
@@ -337,7 +340,11 @@ public class MainActivity extends AppCompatActivity{
                             if (live_data.getTemperature() < 50 && !start_high_temp_fragment_loaded)
                             {
                                 startFragment.updatePrimerBulb(live_data.getTemperature());
-
+                                if (live_data.getError_code() == 1)
+                                {
+                                    startFragment.flashSqueezeThrottle();
+                                    writeToIgnitionModule(protocol.BTN_CLEAR_CODE, protocol.RESET_CODE);
+                                }
                             }
 			                //else: statstab graph logic:
 		                }
@@ -358,7 +365,8 @@ public class MainActivity extends AppCompatActivity{
 	                    start_high_temp_fragment_loaded = false;
                     }
                     //hide navigational features:
-	                hideStartingFeatures();
+                    if (!hide_starting_features)
+	                    hideStartingFeatures();
 
                     live_data.setRpm((data[3]<< 8)&0x0000ff00|(data[2]&0x000000ff));
                     live_data.setRun_time((data[5]<< 8)&0x0000ff00|(data[4]&0x000000ff));
@@ -442,6 +450,8 @@ public class MainActivity extends AppCompatActivity{
                 navigation.findViewById(R.id.navigation_stats).setVisibility(View.VISIBLE);
                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
                 navigation.findViewById(R.id.navigation_kill).setVisibility(View.GONE);
+                hide_running_features = true;
+                hide_starting_features = false;
                 //navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
             }
         });
@@ -457,6 +467,8 @@ public class MainActivity extends AppCompatActivity{
                 navigation.findViewById(R.id.navigation_stats).setVisibility(View.GONE);
                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
                 navigation.findViewById(R.id.navigation_kill).setVisibility(View.VISIBLE);
+                hide_running_features = false;
+                hide_starting_features = true;
                 //navigation.findViewById(R.id.navigation_tool).setVisibility(View.VISIBLE);
             }
         });
