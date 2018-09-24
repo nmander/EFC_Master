@@ -41,12 +41,10 @@ public class StatsTabRPMBinsFragment extends Fragment {
 		chart.getAxisLeft().setSpaceBottom(0);
 		chart.getAxisRight().setSpaceBottom(0);
 		chart.getXAxis().setLabelCount(12);
-		chart.setFitBars(true); // make the x-axis fit exactly all bars
 		chart.getDescription().setEnabled(false);
 		chart.getLegend().setTextSize(13);
 		chart.getXAxis().setValueFormatter(new myXAxisValueFormatter());
-		chart.getAxisLeft().setValueFormatter(new myYAxisValueFormatter());
-		chart.invalidate();
+	    chart.invalidate();
 
  		return rootView;
 	}

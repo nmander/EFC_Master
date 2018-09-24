@@ -39,6 +39,7 @@ public class StatsTabStartTempFragment extends Fragment {
 		chart.getXAxis().setDrawGridLines(false);
 		chart.getAxisLeft().setSpaceBottom(0);
 		chart.getXAxis().setLabelCount(20);
+		chart.getAxisLeft().setLabelCount(10);
 		chart.getLegend().setTextSize(13);
 		chart.getXAxis().setValueFormatter(new myXAxisValueFormatter());
 		chart.getDescription().setEnabled(false);

@@ -37,11 +37,10 @@ public class StatsTabRecentRunsFragment extends Fragment {
 		chart.setDrawBorders(true);
 		chart.getXAxis().setDrawGridLines(false);
 		chart.getAxisLeft().setSpaceBottom(0);
-		chart.getXAxis().setLabelCount(10);
+		chart.getXAxis().setLabelCount(12);
 		chart.getDescription().setEnabled(false);
 		chart.getLegend().setTextSize(13);
 		chart.getXAxis().setValueFormatter(new myXAxisValueFormatter());
-		chart.getAxisLeft().setValueFormatter(new myYAxisValueFormatter());
 		chart.invalidate();
 
 		return rootView;
