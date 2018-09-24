@@ -1,12 +1,17 @@
 package com.example.niklas.efc_master;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextClock;
@@ -20,7 +25,9 @@ public class DashboardFragment extends Fragment
 	public MainActivity mainActivity;
 	public static Speedometer mySpeedometer;
 	public TextView myRunTimer;
+	public TextView myBUMP;
 	public ImageView myToolSelection;
+	public ImageView mySTRING;
 	public int myRPM;
 	public int myRUNTIME;
 
@@ -42,6 +49,9 @@ public class DashboardFragment extends Fragment
 		myRunTimer.setText(myFoundModRunTime);
 
 		myToolSelection = rootView.findViewById(R.id.dashboard_tool);
+		myBUMP = rootView.findViewById(R.id.BUMP);
+		//myBUMP.setTextColor(getResources().getColor(R.color.colorMaterialLight));
+		myBUMP.setVisibility(View.INVISIBLE);
 
 		Bundle bundle = getArguments();
 		if (bundle != null) {
@@ -91,6 +101,7 @@ public class DashboardFragment extends Fragment
 		return false;
 	}
 
+
 	public String getModuleRunTimeFormat(int timeSeconds)
 	{
 		int hours = timeSeconds / 3600;
@@ -112,10 +123,38 @@ public class DashboardFragment extends Fragment
 			formatTime += "0";
 		formatTime += seconds ;
 
-/*		if (miliSeconds < 10)
-			formatTime += "0";
-		formatTime += miliSeconds;*/
-
 		return formatTime;
+	}
+
+	public void flashBUMP()
+	{
+		Animation anim = new AlphaAnimation(0.0f, 1.0f);
+		myBUMP.setVisibility(View.VISIBLE);
+		myBUMP.setTextColor(getResources().getColor(R.color.colorStopButton));
+
+		anim.setDuration(150); //You can manage the blinking time with this parameter
+		anim.setStartOffset(100);
+		anim.setRepeatMode(Animation.REVERSE);
+		anim.setRepeatCount(Animation.INFINITE);
+		myBUMP.startAnimation(anim);
+
+		anim.setAnimationListener(new Animation.AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				myBUMP.setTextColor(Color.BLACK);
+				myBUMP.setVisibility(View.INVISIBLE);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+
+			}
+		});
+
 	}
 }

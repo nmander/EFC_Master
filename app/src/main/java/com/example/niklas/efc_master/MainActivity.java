@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity{
     private static final String TAG = MainActivity.class.getSimpleName();
     private static String device_address;
     public static final String EXTRA_DEVICE_ADDRESS = "mAddress";
+    public static final int STRING_MAX_SPEED = 8300;
+    public int startingCreepRPM = 8300;
+
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity{
     private boolean lite_trim_on = false;
     private boolean hide_running_features = false;
     private boolean hide_starting_features = false;
+    private boolean start_rpm_creep = false;
+    private boolean start_bump_notif = false;
 
 	private BottomNavigationView navigation;
     private StartFragment startFragment = new StartFragment();
@@ -379,16 +384,41 @@ public class MainActivity extends AppCompatActivity{
 	                    @Override
 	                    public void run() {
 	                        //if selected nav item is Dash:
-		                    dashboardFragment.updateSpeedometer(live_data.getRpm());
+                            if (!start_rpm_creep)
+		                        dashboardFragment.updateSpeedometer(live_data.getRpm());
 		                    dashboardFragment.updateRunTimer(live_data.getRun_time());
                             if (engine_running && live_data.getTps_status()!=1)
                             {
                                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
                                 navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
 
+                                if (live_data.getRpm() > STRING_MAX_SPEED && live_data.getAttachment_nbr_status() == 0) //string
+                                {
+                                    start_rpm_creep = true;
+                                    startingCreepRPM += 8;
+                                    dashboardFragment.updateSpeedometer(startingCreepRPM);
+
+                                    if (startingCreepRPM > 9000 && !start_bump_notif)
+                                    {
+                                        dashboardFragment.flashBUMP();
+                                        start_bump_notif = true;
+                                    }
+                                    else if (startingCreepRPM >= 9500)
+                                    {
+                                        dashboardFragment.updateSpeedometer(9500);
+                                    }
+                                }
+                                else
+                                    {
+                                        start_rpm_creep = false;
+                                        startingCreepRPM = 8400;
+                                }
+
                             }
                             else
                             {
+                                start_rpm_creep = false;
+                                start_bump_notif = false;
                                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
                                 navigation.findViewById(R.id.navigation_tool).setVisibility(View.VISIBLE);
                             }
