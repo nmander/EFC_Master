@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity{
     private boolean hide_running_features = false;
     private boolean hide_starting_features = false;
     private boolean start_rpm_creep = false;
-    private boolean start_bump_notif = false;
+    public static boolean start_bump_notif = false;
 
 	private BottomNavigationView navigation;
     private StartFragment startFragment = new StartFragment();

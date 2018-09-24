@@ -1,12 +1,16 @@
 package com.example.niklas.efc_master;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +20,12 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.content.ContentValues.TAG;
 
 public class DashboardFragment extends Fragment
 {
@@ -31,11 +38,13 @@ public class DashboardFragment extends Fragment
 	public int myRPM;
 	public int myRUNTIME;
 
+	private ShakeListener mShaker;
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
-		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_dashboard, container, false);
+		final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_dashboard, container, false);
 		mainActivity = (MainActivity) getActivity();
 
 		myRPM = mainActivity.live_data.getRpm();
@@ -60,6 +69,19 @@ public class DashboardFragment extends Fragment
 				updateToolView(myStartingTool);
 			}
 		}
+
+		Vibrator vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+
+		mShaker = new ShakeListener(getContext());
+		mShaker.setOnShakeListener(new ShakeListener.OnShakeListener () {
+			public void onShake()
+			{
+				MainActivity.start_bump_notif = false;
+				rootView.clearAnimation();
+				Toast.makeText(getContext(), "YOU SHOOK ME!", Toast.LENGTH_SHORT).show();
+			}
+		});
+
 		return rootView;
 	}
 
@@ -129,32 +151,40 @@ public class DashboardFragment extends Fragment
 	public void flashBUMP()
 	{
 		Animation anim = new AlphaAnimation(0.0f, 1.0f);
-		myBUMP.setVisibility(View.VISIBLE);
-		myBUMP.setTextColor(getResources().getColor(R.color.colorStopButton));
+		if (MainActivity.start_bump_notif = true) {
+			myBUMP.setVisibility(View.VISIBLE);
+			myBUMP.setTextColor(getResources().getColor(R.color.colorStopButton));
 
-		anim.setDuration(150); //You can manage the blinking time with this parameter
-		anim.setStartOffset(100);
-		anim.setRepeatMode(Animation.REVERSE);
-		anim.setRepeatCount(Animation.INFINITE);
-		myBUMP.startAnimation(anim);
+			anim.setDuration(150); //You can manage the blinking time with this parameter
+			anim.setStartOffset(100);
+			anim.setRepeatMode(Animation.REVERSE);
+			anim.setRepeatCount(Animation.INFINITE);
+			myBUMP.startAnimation(anim);
 
-		anim.setAnimationListener(new Animation.AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {
+			anim.setAnimationListener(new Animation.AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
 
-			}
+				}
 
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				myBUMP.setTextColor(Color.BLACK);
-				myBUMP.setVisibility(View.INVISIBLE);
-			}
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					myBUMP.setTextColor(Color.BLACK);
+					myBUMP.setVisibility(View.INVISIBLE);
+				}
 
-			@Override
-			public void onAnimationRepeat(Animation animation) {
+				@Override
+				public void onAnimationRepeat(Animation animation) {
 
-			}
-		});
-
+				}
+			});
+		}
+		else
+		{
+			myBUMP.clearAnimation();
+			anim.setFillAfter(false);
+			myBUMP.setTextColor(getResources().getColor(R.color.colorBlack));
+			myBUMP.setVisibility(View.INVISIBLE);
+		}
 	}
 }
