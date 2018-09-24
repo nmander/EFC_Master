@@ -31,17 +31,21 @@ public class StatsTabRPMBinsFragment extends Fragment {
 		BarChart chart = (BarChart) rootView.findViewById(R.id.bar_chart);
 		chart.setTouchEnabled(false);
 		chart.setData(getData());
-		chart.getXAxis().setAxisMaxValue(12500);
+		chart.getXAxis().setAxisMaximum(12000);
+		chart.getXAxis().setAxisMinimum(0);
+		chart.getAxisLeft().setAxisMinimum(0);
+		chart.getAxisRight().setEnabled(false);
 		chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-		chart.setDescription("");
 		chart.setDrawBorders(true);
 		chart.getXAxis().setDrawGridLines(false);
 		chart.getAxisLeft().setSpaceBottom(0);
 		chart.getAxisRight().setSpaceBottom(0);
-
-		chart.setDescription("Total run-time in minutes at different rpm interval");
-		chart.setDescriptionPosition(1800,100);
+		chart.getXAxis().setLabelCount(12);
 		chart.setFitBars(true); // make the x-axis fit exactly all bars
+		chart.getDescription().setEnabled(false);
+		chart.getLegend().setTextSize(13);
+		chart.getXAxis().setValueFormatter(new myXAxisValueFormatter());
+		chart.getAxisLeft().setValueFormatter(new myYAxisValueFormatter());
 		chart.invalidate();
 
  		return rootView;
@@ -49,30 +53,29 @@ public class StatsTabRPMBinsFragment extends Fragment {
 
 	private BarData getData() {
 		List<BarEntry> entries = new ArrayList<>();
-		entries.add(new BarEntry(1500f, 1f));
+		entries.add(new BarEntry(1500f, 1.1f));
 		entries.add(new BarEntry(2000f, 2f));
-		entries.add(new BarEntry(2500f, 2f));
-		entries.add(new BarEntry(3000f, 85f));
-		entries.add(new BarEntry(3500f, 12f));
-		entries.add(new BarEntry(4000f, 8f));
+		entries.add(new BarEntry(2500f, 2.5f));
+		entries.add(new BarEntry(3000f, 85.3f));
+		entries.add(new BarEntry(3500f, 12.7f));
+		entries.add(new BarEntry(4000f, 8.6f));
 		entries.add(new BarEntry(4500f, 2));
-		entries.add(new BarEntry(5000f, 8f));
-		entries.add(new BarEntry(5500f, 20f));
-		entries.add(new BarEntry(6000f, 18f));
+		entries.add(new BarEntry(5000f, 8.8f));
+		entries.add(new BarEntry(5500f, 20.9f));
+		entries.add(new BarEntry(6000f, 18.6f));
 		entries.add(new BarEntry(6500f, 32f));
-		entries.add(new BarEntry(7000f, 55f));
-		entries.add(new BarEntry(7500f, 72f));
-		entries.add(new BarEntry(8000f, 62f));
-		entries.add(new BarEntry(8500f, 60f));
-		entries.add(new BarEntry(9000f, 42f));
-		entries.add(new BarEntry(9500f, 32f));
+		entries.add(new BarEntry(7000f, 55.7f));
+		entries.add(new BarEntry(7500f, 72.4f));
+		entries.add(new BarEntry(8000f, 62.9f));
+		entries.add(new BarEntry(8500f, 60.1f));
+		entries.add(new BarEntry(9000f, 42.0f));
+		entries.add(new BarEntry(9500f, 32.3f));
 		entries.add(new BarEntry(10000f, 35f));
-		entries.add(new BarEntry(10500f, 22f));
-		entries.add(new BarEntry(11000f, 33f));
-		entries.add(new BarEntry(11500f, 17f));
-		entries.add(new BarEntry(12000f, 12f));
+		entries.add(new BarEntry(10500f, 22.7f));
+		entries.add(new BarEntry(11000f, 33.5f));
+		entries.add(new BarEntry(11500f, 10.9f));
 
-		BarDataSet set = new BarDataSet(entries, "BarDataSet");
+		BarDataSet set = new BarDataSet(entries, "Life time speed profile.");
 		set.setColor(Color.rgb(173,13,90));
 		set.setHighlightEnabled(false);
 

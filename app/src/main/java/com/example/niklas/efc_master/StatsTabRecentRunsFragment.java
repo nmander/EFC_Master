@@ -12,6 +12,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.LargeValueFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +29,19 @@ public class StatsTabRecentRunsFragment extends Fragment {
 		BarChart chart = (BarChart) rootView.findViewById(R.id.bar_chart);
 		chart.setTouchEnabled(false);
 		chart.setData(getData());
-		chart.getXAxis().setAxisMaxValue(12500);
-		chart.getXAxis().setAxisMinValue(0);
+		chart.getXAxis().setAxisMaximum(12000);
+		chart.getXAxis().setAxisMinimum(0);
+		chart.getAxisLeft().setAxisMinimum(0);
+		chart.getAxisRight().setEnabled(false);
 		chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-		chart.setDescription("");
 		chart.setDrawBorders(true);
 		chart.getXAxis().setDrawGridLines(false);
 		chart.getAxisLeft().setSpaceBottom(0);
-		chart.getAxisRight().setSpaceBottom(0);
-		chart.setDescription("Last run-time in seconds at different rpm interval");
-		chart.setDescriptionPosition(1800,100);
-		chart.setFitBars(true); // make the x-axis fit exactly all bars
+		chart.getXAxis().setLabelCount(10);
+		chart.getDescription().setEnabled(false);
+		chart.getLegend().setTextSize(13);
+		chart.getXAxis().setValueFormatter(new myXAxisValueFormatter());
+		chart.getAxisLeft().setValueFormatter(new myYAxisValueFormatter());
 		chart.invalidate();
 
 		return rootView;
@@ -46,21 +49,20 @@ public class StatsTabRecentRunsFragment extends Fragment {
 
 	private BarData getData() {
 		List<BarEntry> entries = new ArrayList<>();
-		entries.add(new BarEntry(3000f, 35f));
-		entries.add(new BarEntry(3500f, 3f));
-		entries.add(new BarEntry(4000f, 1f));
-		entries.add(new BarEntry(5000f, 8f));
-		entries.add(new BarEntry(5500f, 20f));
-		entries.add(new BarEntry(6000f, 6f));
-		entries.add(new BarEntry(7000f, 37f));
-		entries.add(new BarEntry(7500f, 72f));
-		entries.add(new BarEntry(8000f, 62f));
-		entries.add(new BarEntry(8500f, 31f));
+		entries.add(new BarEntry(2750f, 35f));
+		entries.add(new BarEntry(3250f, 3f));
+		entries.add(new BarEntry(3750f, 1f));
+		entries.add(new BarEntry(4750f, 8f));
+		entries.add(new BarEntry(5250f, 20f));
+		entries.add(new BarEntry(5750f, 6f));
+		entries.add(new BarEntry(6750f, 37f));
+		entries.add(new BarEntry(7250f, 72f));
+		entries.add(new BarEntry(7750f, 62f));
+		entries.add(new BarEntry(8250f, 31f));
 
-		BarDataSet set = new BarDataSet(entries, "BarDataSet");
+		BarDataSet set = new BarDataSet(entries, "Last run speed profile.");
 		set.setColor(Color.rgb(123,102,196));
 		set.setHighlightEnabled(false);
-
 
 		BarData data = new BarData(set);
 		data.setValueTextSize(10);

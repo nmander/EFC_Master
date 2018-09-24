@@ -67,11 +67,11 @@ public class StatsTabsFragment extends Fragment {
 				case 1:
                     return new StatsTabRecentRunsFragment();
 				case 2:
-                    return new StatsTabUsageFragment();
+					return new StatsTabRPMBinsFragment();
 				case 3:
                     return new StatsTabStartTempFragment();
 				case 4:
-					return new StatsTabRPMBinsFragment();
+					return new StatsTabUsageFragment();
 			}
 			return null;
 		}
@@ -92,21 +92,15 @@ public class StatsTabsFragment extends Fragment {
 
 			switch (position) {
 				case 0:
-					String details = "Information";
-					return details;
+					return  "Information";
 				case 1:
-					String recent_runs = "Recent Run";
-					return recent_runs;
+					return "Last Run";
 				case 2:
-					String usage = "Usage";
-					return usage;
+					return "Life Time";
 				case 3:
-					String start_temp = "Startup Temp";
-					return start_temp;
-
+					return "Startup Temp";
 				case 4:
-					String rpm_bins = "Rpm Bins";
-					return rpm_bins;
+					return "Usage";
 			}
 			return null;
 		}
