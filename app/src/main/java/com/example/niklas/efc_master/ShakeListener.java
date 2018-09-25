@@ -7,14 +7,14 @@ import java.lang.UnsupportedOperationException;
 
 public class ShakeListener implements SensorListener
 {
-	private static final int FORCE_THRESHOLD = 2300;
+	private static final int FORCE_THRESHOLD = 2500;
 	private static final int TIME_THRESHOLD = 100;
 	private static final int SHAKE_TIMEOUT = 500;
-	private static final int SHAKE_DURATION = 1000;
-	private static final int SHAKE_COUNT = 3;
+	private static final int SHAKE_DURATION = 500;
+	private static final int SHAKE_COUNT = 1;
 
 	private SensorManager mSensorMgr;
-	private float mLastX=-1.0f, mLastY=-1.0f, mLastZ=-1.0f;
+	private float mLastX=-1.0f, mLastY=10.0f, mLastZ=-1.0f;
 	private long mLastTime;
 	private OnShakeListener mShakeListener;
 	private Context mContext;
@@ -70,7 +70,7 @@ public class ShakeListener implements SensorListener
 
 		if ((now - mLastTime) > TIME_THRESHOLD) {
 			long diff = now - mLastTime;
-			float speed = Math.abs(values[SensorManager.DATA_X] + values[SensorManager.DATA_Y] + values[SensorManager.DATA_Z] - mLastX - mLastY - mLastZ) / diff * 10000;
+			float speed = Math.abs(values[SensorManager.DATA_Y]- mLastY) / diff * 10000;
 			if (speed > FORCE_THRESHOLD) {
 				if ((++mShakeCount >= SHAKE_COUNT) && (now - mLastShake > SHAKE_DURATION)) {
 					mLastShake = now;
@@ -82,9 +82,9 @@ public class ShakeListener implements SensorListener
 				mLastForce = now;
 			}
 			mLastTime = now;
-			mLastX = values[SensorManager.DATA_X];
+			//mLastX = values[SensorManager.DATA_X];
 			mLastY = values[SensorManager.DATA_Y];
-			mLastZ = values[SensorManager.DATA_Z];
+			//mLastZ = values[SensorManager.DATA_Z];
 		}
 	}
 

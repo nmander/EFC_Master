@@ -2,13 +2,10 @@ package com.example.niklas.efc_master;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.ColorSpace;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,11 +21,8 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.List;
 
 import static com.example.niklas.efc_master.NordicProfile.CHARACTERISTIC_RX;
 import static com.example.niklas.efc_master.NordicProfile.CHARACTERISTIC_TX;
@@ -58,7 +52,7 @@ public class MainActivity extends AppCompatActivity{
     private boolean hide_starting_features = false;
     private boolean start_rpm_creep = false;
     public static boolean start_bump_notif = false;
-    public boolean did_we_clear_bump = false;
+    public boolean did_we_clear_bump = true;
 
 	private BottomNavigationView navigation;
     private StartFragment startFragment = new StartFragment();
@@ -99,14 +93,11 @@ public class MainActivity extends AppCompatActivity{
                 case R.id.navigation_start_instructions:
                     setConditionalStartingFragment();
                     hideRunningFeatures();
-                    //startFragment.flashSqueezeThrottle();
                     return true;
 
                 case R.id.navigation_stats:
                     loadFragment(statsTabsFragment);
-                    //loadFragment(dashboardFragment);
                     hideRunningFeatures();
-                    //dashboardFragment.updateSpeedometer(6000);
                     return true;
 
                 case R.id.navigation_light_trim:
@@ -217,6 +208,10 @@ public class MainActivity extends AppCompatActivity{
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_STRING);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(myTool);
+	            if (!did_we_clear_bump) {
+                    dashboardFragment.flashBUMP();
+                    listenForBUMP();
+                }
 	            else{
 		            Bundle bundle = new Bundle();
 		            bundle.putInt("TOOL", myTool);
@@ -224,6 +219,7 @@ public class MainActivity extends AppCompatActivity{
                     Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_SHORT).show();
                 }
                 bumpStringImg = "string";
+
             }
         }
 	}
@@ -344,7 +340,6 @@ public class MainActivity extends AppCompatActivity{
                     live_data.setError_code(data[5]); // flash if ==1
                     if (!start_fragment_loaded)
                     {
-                        //live_data.setTemperature(50);
                         setConditionalStartingFragment();
                         setStartFragment();
                         hideRunningFeatures();
@@ -364,7 +359,6 @@ public class MainActivity extends AppCompatActivity{
                                     writeToIgnitionModule(protocol.BTN_CLEAR_CODE, protocol.RESET_CODE);
                                 }
                             }
-			                //else: statstab graph logic:
 		                }
 	                });
 
@@ -414,6 +408,7 @@ public class MainActivity extends AppCompatActivity{
                                     if (startingCreepRPM >= 9000 && !start_bump_notif)
                                     {
                                         start_bump_notif = true;
+                                        did_we_clear_bump = false;
                                         dashboardFragment.flashBUMP();
                                         listenForBUMP();
                                     }
@@ -431,7 +426,6 @@ public class MainActivity extends AppCompatActivity{
                             else
                             {
                                 start_rpm_creep = false;
-                                //start_bump_notif = false;
                                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
                                 navigation.findViewById(R.id.navigation_tool).setVisibility(View.VISIBLE);
 
@@ -567,8 +561,11 @@ public class MainActivity extends AppCompatActivity{
         mShaker.setOnShakeListener(new ShakeListener.OnShakeListener () {
             public void onShake()
             {
-                start_bump_notif = false;
-                dashboardFragment.myBUMP.clearAnimation();
+                if (live_data.getTps_status() == 1 && bumpStringImg.equals("string")) {
+                    start_bump_notif = false;
+                    did_we_clear_bump = true;
+                    dashboardFragment.myBUMP.clearAnimation();
+                }
             }
         });
     }
