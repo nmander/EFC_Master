@@ -142,6 +142,8 @@ public class MainActivity extends AppCompatActivity{
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLADE);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(0);
+                if (!did_we_clear_bump)
+                    dashboardFragment.myBUMP.clearAnimation();
 	            else {
 	            	Bundle bundle = new Bundle();
 	            	bundle.putInt("TOOL", myTool);
@@ -155,6 +157,8 @@ public class MainActivity extends AppCompatActivity{
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLOWER);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(myTool);
+                if (!did_we_clear_bump)
+                    dashboardFragment.myBUMP.clearAnimation();
 	            else {
 		            Bundle bundle = new Bundle();
 		            bundle.putInt("TOOL", myTool);
@@ -168,6 +172,8 @@ public class MainActivity extends AppCompatActivity{
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_EDGER);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(myTool);
+                if (!did_we_clear_bump)
+                    dashboardFragment.myBUMP.clearAnimation();
 	            else {
 		            Bundle bundle = new Bundle();
                     bundle.putInt("TOOL", myTool);
@@ -181,6 +187,8 @@ public class MainActivity extends AppCompatActivity{
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_POLE_SAW);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(myTool);
+                if (!did_we_clear_bump)
+                    dashboardFragment.myBUMP.clearAnimation();
 	            else{
 		            Bundle bundle = new Bundle();
 		            bundle.putInt("TOOL", myTool);
@@ -195,6 +203,8 @@ public class MainActivity extends AppCompatActivity{
 	            writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_TILLER);
 	            if (dashboard_fragment_loaded)
 		            dashboardFragment.updateToolView(myTool);
+                if (!did_we_clear_bump)
+                    dashboardFragment.myBUMP.clearAnimation();
 	            else{
 		            Bundle bundle = new Bundle();
 		            bundle.putInt("TOOL", myTool);
@@ -396,6 +406,7 @@ public class MainActivity extends AppCompatActivity{
 		                    dashboardFragment.updateRunTimer(live_data.getRun_time());
                             if (engine_running && live_data.getTps_status()!=1)
                             {
+
                                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
                                 navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
 
@@ -561,10 +572,12 @@ public class MainActivity extends AppCompatActivity{
         mShaker.setOnShakeListener(new ShakeListener.OnShakeListener () {
             public void onShake()
             {
-                if (live_data.getTps_status() == 1 && bumpStringImg.equals("string")) {
+                if (live_data.getTps_status() != 1 && bumpStringImg.equals("string")) {
                     start_bump_notif = false;
                     did_we_clear_bump = true;
                     dashboardFragment.myBUMP.clearAnimation();
+                    dashboardFragment.updateSpeedometer(live_data.getRpm());
+
                 }
             }
         });
