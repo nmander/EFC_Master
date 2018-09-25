@@ -38,8 +38,6 @@ public class DashboardFragment extends Fragment
 	public int myRPM;
 	public int myRUNTIME;
 
-	private ShakeListener mShaker;
-
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -69,18 +67,6 @@ public class DashboardFragment extends Fragment
 				updateToolView(myStartingTool);
 			}
 		}
-
-		Vibrator vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-
-		mShaker = new ShakeListener(getContext());
-		mShaker.setOnShakeListener(new ShakeListener.OnShakeListener () {
-			public void onShake()
-			{
-				MainActivity.start_bump_notif = false;
-				rootView.clearAnimation();
-				Toast.makeText(getContext(), "YOU SHOOK ME!", Toast.LENGTH_SHORT).show();
-			}
-		});
 
 		return rootView;
 	}
@@ -151,40 +137,30 @@ public class DashboardFragment extends Fragment
 	public void flashBUMP()
 	{
 		Animation anim = new AlphaAnimation(0.0f, 1.0f);
-		if (MainActivity.start_bump_notif = true) {
-			myBUMP.setVisibility(View.VISIBLE);
-			myBUMP.setTextColor(getResources().getColor(R.color.colorStopButton));
+		myBUMP.setVisibility(View.VISIBLE);
+		myBUMP.setTextColor(getResources().getColor(R.color.colorStopButton));
 
-			anim.setDuration(150); //You can manage the blinking time with this parameter
-			anim.setStartOffset(100);
-			anim.setRepeatMode(Animation.REVERSE);
-			anim.setRepeatCount(Animation.INFINITE);
-			myBUMP.startAnimation(anim);
+		anim.setDuration(150); //You can manage the blinking time with this parameter
+		anim.setStartOffset(100);
+		anim.setRepeatMode(Animation.REVERSE);
+		anim.setRepeatCount(Animation.INFINITE);
+		myBUMP.startAnimation(anim);
 
-			anim.setAnimationListener(new Animation.AnimationListener() {
-				@Override
-				public void onAnimationStart(Animation animation) {
+		anim.setAnimationListener(new Animation.AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
 
-				}
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				myBUMP.setTextColor(Color.BLACK);
+				myBUMP.setVisibility(View.INVISIBLE);
+			}
 
-				@Override
-				public void onAnimationEnd(Animation animation) {
-					myBUMP.setTextColor(Color.BLACK);
-					myBUMP.setVisibility(View.INVISIBLE);
-				}
+			@Override
+			public void onAnimationRepeat(Animation animation) {
 
-				@Override
-				public void onAnimationRepeat(Animation animation) {
-
-				}
-			});
-		}
-		else
-		{
-			myBUMP.clearAnimation();
-			anim.setFillAfter(false);
-			myBUMP.setTextColor(getResources().getColor(R.color.colorBlack));
-			myBUMP.setVisibility(View.INVISIBLE);
-		}
+			}
+		});
 	}
 }

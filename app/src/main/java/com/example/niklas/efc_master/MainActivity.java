@@ -40,8 +40,9 @@ public class MainActivity extends AppCompatActivity{
     private static final String TAG = MainActivity.class.getSimpleName();
     private static String device_address;
     public static final String EXTRA_DEVICE_ADDRESS = "mAddress";
-    public static final int STRING_MAX_SPEED = 8300;
-    public int startingCreepRPM = 8300;
+    public static final int STRING_MAX_SPEED = 8100;
+    public int startingCreepRPM = 8100;
+    public String bumpStringImg;
 
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
@@ -57,12 +58,15 @@ public class MainActivity extends AppCompatActivity{
     private boolean hide_starting_features = false;
     private boolean start_rpm_creep = false;
     public static boolean start_bump_notif = false;
+    public boolean did_we_clear_bump = false;
 
 	private BottomNavigationView navigation;
     private StartFragment startFragment = new StartFragment();
     private StartHighTempFragment startHighTempFragment = new StartHighTempFragment();
     private StatsTabsFragment statsTabsFragment = new StatsTabsFragment();
 	private DashboardFragment dashboardFragment = new DashboardFragment();
+
+    private ShakeListener mShaker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,8 @@ public class MainActivity extends AppCompatActivity{
         //
         setConditionalStartingFragment();
         hideRunningFeatures();
+
+        bumpStringImg = "string";  // default
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -151,6 +157,7 @@ public class MainActivity extends AppCompatActivity{
 	            	dashboardFragment.setArguments(bundle);
                     Toast.makeText(getApplicationContext(), "BLADE ATTACHMENT", Toast.LENGTH_SHORT).show();
                 }
+                bumpStringImg = "not string";
             }
 
             if (myTool == 1) {
@@ -163,6 +170,7 @@ public class MainActivity extends AppCompatActivity{
 		            dashboardFragment.setArguments(bundle);
                     Toast.makeText(getApplicationContext(), "BLOWER ATTACHMENT", Toast.LENGTH_SHORT).show();
                 }
+                bumpStringImg = "not string";
             }
 
             if (myTool == 2) {
@@ -171,9 +179,11 @@ public class MainActivity extends AppCompatActivity{
 		            dashboardFragment.updateToolView(myTool);
 	            else {
 		            Bundle bundle = new Bundle();
+                    bundle.putInt("TOOL", myTool);
 		            dashboardFragment.setArguments(bundle);
                     Toast.makeText(getApplicationContext(), "EDGER ATTACHMENT", Toast.LENGTH_SHORT).show();
                 }
+                bumpStringImg = "not string";
             }
 
             if (myTool == 3) {
@@ -186,6 +196,7 @@ public class MainActivity extends AppCompatActivity{
 		            dashboardFragment.setArguments(bundle);
                     Toast.makeText(getApplicationContext(), "POLE SAW ATTACHMENT", Toast.LENGTH_SHORT).show();
                 }
+                bumpStringImg = "not string";
             }
 
             if (myTool == 4)
@@ -199,6 +210,7 @@ public class MainActivity extends AppCompatActivity{
 		            dashboardFragment.setArguments(bundle);
                     Toast.makeText(getApplicationContext(), "TILLER ATTACHMENT", Toast.LENGTH_SHORT).show();
                 }
+                bumpStringImg = "not string";
             }
 
             if (myTool == 5) {
@@ -211,6 +223,7 @@ public class MainActivity extends AppCompatActivity{
 		            dashboardFragment.setArguments(bundle);
                     Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_SHORT).show();
                 }
+                bumpStringImg = "string";
             }
         }
 	}
@@ -395,13 +408,14 @@ public class MainActivity extends AppCompatActivity{
                                 if (live_data.getRpm() > STRING_MAX_SPEED && live_data.getAttachment_nbr_status() == 0) //string
                                 {
                                     start_rpm_creep = true;
-                                    startingCreepRPM += 8;
+                                    startingCreepRPM += 13;
                                     dashboardFragment.updateSpeedometer(startingCreepRPM);
 
-                                    if (startingCreepRPM > 9000 && !start_bump_notif)
+                                    if (startingCreepRPM >= 9000 && !start_bump_notif)
                                     {
-                                        dashboardFragment.flashBUMP();
                                         start_bump_notif = true;
+                                        dashboardFragment.flashBUMP();
+                                        listenForBUMP();
                                     }
                                     else if (startingCreepRPM >= 9500)
                                     {
@@ -411,16 +425,21 @@ public class MainActivity extends AppCompatActivity{
                                 else
                                     {
                                         start_rpm_creep = false;
-                                        startingCreepRPM = 8400;
+                                        startingCreepRPM = 8100;
                                 }
-
                             }
                             else
                             {
                                 start_rpm_creep = false;
-                                start_bump_notif = false;
+                                //start_bump_notif = false;
                                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
                                 navigation.findViewById(R.id.navigation_tool).setVisibility(View.VISIBLE);
+
+                                if (start_bump_notif && !bumpStringImg.equals("string"))
+                                {
+                                    start_bump_notif = false;
+                                    dashboardFragment.myBUMP.clearAnimation();
+                                }
                             }
                         }
                     });
@@ -541,4 +560,17 @@ public class MainActivity extends AppCompatActivity{
     public void onBackPressed() {
         // Simply Do noting!
     }
+
+    public void listenForBUMP()
+    {
+        mShaker = new ShakeListener(getApplicationContext());
+        mShaker.setOnShakeListener(new ShakeListener.OnShakeListener () {
+            public void onShake()
+            {
+                start_bump_notif = false;
+                dashboardFragment.myBUMP.clearAnimation();
+            }
+        });
+    }
+
 }
