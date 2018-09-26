@@ -12,12 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.niklas.efc_master.R;
+import com.example.niklas.efc_master.activities.MainActivity;
 
 public class StatsTabsFragment extends Fragment {
 
 	public static TabLayout tabLayout;
 	public static ViewPager viewPager;
 	public static int int_items = 5;
+
+	public String myLastRunDate;
+	private StatsTabDetailsFragment statsTabDetailsFragment = new StatsTabDetailsFragment();
 
 	@Nullable
 	@Override
@@ -47,6 +51,14 @@ public class StatsTabsFragment extends Fragment {
 			}
 		});
 
+		Bundle bundle = getArguments();
+		if (bundle != null) {
+			if (bundle.containsKey("LAST_RUN_DATE")) {
+				myLastRunDate = getArguments().getString("LAST_RUN_DATE");
+				//modLastRunDateTimeCell.setText(myLastRunDate);
+			}
+		}
+
 		return v;
 
 	}
@@ -65,7 +77,10 @@ public class StatsTabsFragment extends Fragment {
 		public Fragment getItem(int position) {
 			switch (position) {
 				case 0:
-					return new StatsTabDetailsFragment();
+					Bundle bundle = new Bundle();
+					bundle.putString("LAST_RUN_DATE", myLastRunDate);
+					statsTabDetailsFragment.setArguments(bundle);
+					return statsTabDetailsFragment;
 				case 1:
                     return new StatsTabRecentRunsFragment();
 				case 2:

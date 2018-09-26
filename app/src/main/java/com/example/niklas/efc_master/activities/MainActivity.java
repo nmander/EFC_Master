@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static boolean start_bump_notif = false;
     public boolean did_we_clear_bump = true;
     public boolean detected_accelerometer_bump = false;
+    public boolean did_we_recieve_last_run_date = false;
 
 	private BottomNavigationView navigation;
     private StartFragment startFragment = new StartFragment();
@@ -124,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		    detected_accelerometer_bump = true;
 		    Log.i(TAG, "BUMP: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
 	    }
-	    Log.i(TAG, "ACCEL: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
     }
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener()
@@ -380,11 +380,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if (CHARACTERISTIC_TX.equals(characteristic.getUuid()))
             {
                 final byte[] data = characteristic.getValue();
-                //getLastRunDateTime();
                 //if engine not running
                 if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
                 {
                     engine_running = false;
+                    getLastRunDateTime();
                     //hide navigational features:
                     if (!hide_running_features)
                         hideRunningFeatures();
@@ -430,6 +430,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         dashboard_fragment_loaded = true;
 	                    start_fragment_loaded = false;
 	                    start_high_temp_fragment_loaded = false;
+	                    did_we_recieve_last_run_date = false;
                     }
                     //hide navigational features:
                     if (!hide_starting_features)
@@ -537,8 +538,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         {
             mBluetoothGatt.disconnect();
             mBluetoothGatt.close();
-
-
         }
     }
 
@@ -634,17 +633,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
     }
 
-    public String getLastRunDateTime()
+    public void getLastRunDateTime()
     {
     	String date;
-        int myRunSeconds = live_data.getRun_time();
-        if (myRunSeconds >= 5 && !engine_running)
+        if (live_data.getRun_time() >= 5 && !engine_running && !did_we_recieve_last_run_date)
         {
+        	did_we_recieve_last_run_date = true;
             DateFormat df = new SimpleDateFormat("MMM d, yyyy HH:mm:ss z");
             date = df.format(Calendar.getInstance().getTime());
-            return date;
+	        Bundle bundle = new Bundle();
+	        bundle.putString("LAST_RUN_DATE", date);
+	        statsTabsFragment.setArguments(bundle);
         }
-        return null;
     }
 
     public void startAccelerometer()

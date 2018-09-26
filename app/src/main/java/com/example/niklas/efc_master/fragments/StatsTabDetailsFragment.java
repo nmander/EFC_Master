@@ -20,14 +20,23 @@ public class StatsTabDetailsFragment extends Fragment
 {
 	public MainActivity mainActivity;
 	public TextView modLastRunDateTimeCell;
+	public String myLastRunDate;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_stats_tab_detail, container, false);
 		mainActivity = (MainActivity) getActivity();
 		modLastRunDateTimeCell = rootView.findViewById(R.id.cell_last_runtime_datetime);
+
+		Bundle bundle = getArguments();
+		if (bundle != null) {
+			if (bundle.containsKey("LAST_RUN_DATE")) {
+				myLastRunDate = getArguments().getString("LAST_RUN_DATE");
+				modLastRunDateTimeCell.setText(myLastRunDate);
+			}
+		}
+
  		return rootView;
 	}
 }
