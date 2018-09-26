@@ -1,4 +1,4 @@
-package com.example.niklas.efc_master;
+package com.example.niklas.efc_master.listeners;
 
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
@@ -7,7 +7,7 @@ import java.lang.UnsupportedOperationException;
 
 public class ShakeListener implements SensorListener
 {
-	private static final int FORCE_THRESHOLD = 1500;
+	private static final int FORCE_THRESHOLD = 300;
 	private static final int TIME_THRESHOLD = 100;
 	private static final int SHAKE_TIMEOUT = 500;
 	private static final int SHAKE_DURATION = 500;

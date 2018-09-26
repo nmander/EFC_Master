@@ -1,4 +1,4 @@
-package com.example.niklas.efc_master;
+package com.example.niklas.efc_master.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -8,9 +8,6 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
@@ -23,9 +20,10 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.niklas.efc_master.R;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import no.nordicsemi.android.support.v18.scanner.BluetoothLeScannerCompat;
 import no.nordicsemi.android.support.v18.scanner.ScanCallback;
@@ -33,12 +31,12 @@ import no.nordicsemi.android.support.v18.scanner.ScanFilter;
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
 import no.nordicsemi.android.support.v18.scanner.ScanSettings;
 
-import static com.example.niklas.efc_master.NordicProfile.SERVICE_UUID;
+import static com.example.niklas.efc_master.profiles.NordicProfile.SERVICE_UUID;
 
 public class ScanActivity extends AppCompatActivity
 {
     private static final String TAG = ScanActivity.class.getSimpleName();
-    private static final long SCAN_TIMEOUT_MS = 10_000;
+    private static final long SCAN_TIMEOUT_MS = 15_000;
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_PERMISSION_LOCATION = 1;
     public static final String EXTRA_DEVICE_ADDRESS = "mAddress";

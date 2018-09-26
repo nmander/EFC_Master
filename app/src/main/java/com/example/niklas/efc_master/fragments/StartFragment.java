@@ -1,15 +1,17 @@
-package com.example.niklas.efc_master;
+package com.example.niklas.efc_master.fragments;
 
-import android.animation.Animator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
+
+import com.example.niklas.efc_master.R;
+import com.example.niklas.efc_master.profiles.TempToPress;
+import com.example.niklas.efc_master.activities.MainActivity;
 
 public class StartFragment extends Fragment {
 

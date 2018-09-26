@@ -18,8 +18,8 @@
         <TableLayout
             android:id="@+id/table_about"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:stretchColumns="1">
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
 
             <TableRow
                 android:id="@+id/row_device"
@@ -180,16 +180,25 @@
                     android:text="Last Runtime:"
                     android:textStyle="bold"
                     android:textAppearance="?android:attr/textAppearanceMedium">
-
                 </TextView>
 
                 <TextView
-                    android:id="@+id/cell_last_runtime"
+                    android:id="@+id/cell_last_runtime_stopwatch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/table_cell_shape"
                     android:padding="5sp"
                     android:text="0.30 hrs"
+                    android:textAppearance="?android:attr/textAppearanceMedium">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/cell_last_runtime_datetime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_cell_shape"
+                    android:padding="5sp"
+                    android:text="MMM d, yyyy HH:mm:ss z"
                     android:textAppearance="?android:attr/textAppearanceMedium">
                 </TextView>
             </TableRow>

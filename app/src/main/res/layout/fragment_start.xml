@@ -3,7 +3,7 @@
     <data>
         <variable
             name="igndata"
-            type="com.example.niklas.efc_master.Igndata"/>
+            type="com.example.niklas.efc_master.profiles.Igndata"/>
     </data>
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

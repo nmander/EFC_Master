@@ -1,31 +1,20 @@
-package com.example.niklas.efc_master;
+package com.example.niklas.efc_master.fragments;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.Chronometer;
 import android.widget.ImageView;
-import android.widget.TextClock;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static android.content.ContentValues.TAG;
+import com.example.niklas.efc_master.R;
+import com.example.niklas.efc_master.profiles.Speedometer;
+import com.example.niklas.efc_master.activities.MainActivity;
 
 public class DashboardFragment extends Fragment
 {
@@ -49,7 +38,7 @@ public class DashboardFragment extends Fragment
 		mySpeedometer = rootView.findViewById(R.id.Speedometer);
 		updateSpeedometer(myRPM);
 
-		myRUNTIME = mainActivity.live_data.getRun_time();
+		//myRUNTIME = mainActivity.live_data.getRun_time();
 		myRunTimer = rootView.findViewById(R.id.runtime_clock);
 
 		String myFoundModRunTime = getModuleRunTimeFormat(mainActivity.live_data.getRun_time());

@@ -1,4 +1,4 @@
-package com.example.niklas.efc_master;
+package com.example.niklas.efc_master.profiles;
 
 import java.text.DecimalFormat;
 

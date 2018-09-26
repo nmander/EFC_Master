@@ -1,4 +1,4 @@
-package com.example.niklas.efc_master;
+package com.example.niklas.efc_master.profiles;
 
 
 import com.github.mikephil.charting.data.Entry;

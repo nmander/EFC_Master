@@ -1,4 +1,4 @@
-package com.example.niklas.efc_master;
+package com.example.niklas.efc_master.profiles;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
@@ -52,7 +52,7 @@ public class Igndata extends BaseObservable
     }
     public void setRpm(int rpm) {
         this.rpm = rpm;
-        notifyPropertyChanged(BR.rpm);
+        notifyPropertyChanged(com.example.niklas.efc_master.BR.rpm);
     }
 
     public int getRun_time() {
@@ -67,7 +67,7 @@ public class Igndata extends BaseObservable
     @Bindable
     public void setPrimerBulb(String primerBulb) {
         this.primerBulb = primerBulb;
-        notifyPropertyChanged(BR.primerBulb);
+        notifyPropertyChanged(com.example.niklas.efc_master.BR.primerBulb);
     }
 
     @Bindable
@@ -77,7 +77,7 @@ public class Igndata extends BaseObservable
     @Bindable
     public void setTemperature(int temperature) {
         this.temperature = temperature;
-        notifyPropertyChanged(BR.temperature);
+        notifyPropertyChanged(com.example.niklas.efc_master.BR.temperature);
     }
     public int getTps_status() {
         return tps_status;

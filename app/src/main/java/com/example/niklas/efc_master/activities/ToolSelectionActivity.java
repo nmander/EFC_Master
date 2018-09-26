@@ -1,4 +1,4 @@
-package com.example.niklas.efc_master;
+package com.example.niklas.efc_master.activities;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -6,9 +6,11 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+
+import com.example.niklas.efc_master.R;
+import com.example.niklas.efc_master.adapters.ToolSelectionArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

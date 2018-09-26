@@ -1,4 +1,4 @@
-package com.example.niklas.efc_master;
+package com.example.niklas.efc_master.profiles;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,8 +9,10 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
+
+import com.example.niklas.efc_master.R;
+import com.example.niklas.efc_master.listeners.SpeedChangeListener;
 
 public class Speedometer extends View implements SpeedChangeListener {
 	private static final String TAG = Speedometer.class.getSimpleName();

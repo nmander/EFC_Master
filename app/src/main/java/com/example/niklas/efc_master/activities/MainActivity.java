@@ -1,7 +1,12 @@
-package com.example.niklas.efc_master;
+package com.example.niklas.efc_master.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -22,14 +27,30 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.view.View;
 import android.widget.Toast;
+import com.example.niklas.efc_master.fragments.DashboardFragment;
+import com.example.niklas.efc_master.fragments.StatsTabDetailsFragment;
+import com.example.niklas.efc_master.profiles.Igndata;
+import com.example.niklas.efc_master.R;
+import com.example.niklas.efc_master.listeners.ShakeListener;
+import com.example.niklas.efc_master.fragments.StartFragment;
+import com.example.niklas.efc_master.fragments.StatsTabsFragment;
+import com.example.niklas.efc_master.fragments.StartHighTempFragment;
+import com.example.niklas.efc_master.profiles.protocol;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-import static com.example.niklas.efc_master.NordicProfile.CHARACTERISTIC_RX;
-import static com.example.niklas.efc_master.NordicProfile.CHARACTERISTIC_TX;
-import static com.example.niklas.efc_master.NordicProfile.DESCRIPTOR_CONFIG;
-import static com.example.niklas.efc_master.NordicProfile.SERVICE_UUID;
+import static com.example.niklas.efc_master.profiles.NordicProfile.CHARACTERISTIC_RX;
+import static com.example.niklas.efc_master.profiles.NordicProfile.CHARACTERISTIC_TX;
+import static com.example.niklas.efc_master.profiles.NordicProfile.DESCRIPTOR_CONFIG;
+import static com.example.niklas.efc_master.profiles.NordicProfile.SERVICE_UUID;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
+
+	private SensorManager sensorManager;
+	Sensor accelerometer;
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static String device_address;
@@ -42,7 +63,7 @@ public class MainActivity extends AppCompatActivity{
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
     //Variables used to interpret data coming in and out
-    Igndata live_data = new Igndata();
+    public Igndata live_data = new Igndata();
     private boolean engine_running = false;
     private boolean dashboard_fragment_loaded = false;
     private boolean start_fragment_loaded = false;
@@ -53,11 +74,13 @@ public class MainActivity extends AppCompatActivity{
     private boolean start_rpm_creep = false;
     public static boolean start_bump_notif = false;
     public boolean did_we_clear_bump = true;
+    public boolean detected_accelerometer_bump = false;
 
 	private BottomNavigationView navigation;
     private StartFragment startFragment = new StartFragment();
     private StartHighTempFragment startHighTempFragment = new StartHighTempFragment();
     private StatsTabsFragment statsTabsFragment = new StatsTabsFragment();
+    private StatsTabDetailsFragment statsTabDetailsFragment = new StatsTabDetailsFragment();
 	private DashboardFragment dashboardFragment = new DashboardFragment();
 
     private ShakeListener mShaker;
@@ -80,8 +103,29 @@ public class MainActivity extends AppCompatActivity{
         hideRunningFeatures();
 
         bumpStringImg = "string";  // default
+	    sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+	    accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i)
+    {
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent)
+    {
+	    float myX = sensorEvent.values[1];
+    	float myY = sensorEvent.values[1];
+    	float myZ = sensorEvent.values[2];
+	    DecimalFormat df = new DecimalFormat("#0.000");
+    	if (myX < -7 && myY < -7 && myZ > 18) {
+		    detected_accelerometer_bump = true;
+		    Log.i(TAG, "BUMP: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
+	    }
+	    Log.i(TAG, "ACCEL: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
+    }
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener()
     {
@@ -336,6 +380,7 @@ public class MainActivity extends AppCompatActivity{
             if (CHARACTERISTIC_TX.equals(characteristic.getUuid()))
             {
                 final byte[] data = characteristic.getValue();
+                //getLastRunDateTime();
                 //if engine not running
                 if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
                 {
@@ -372,7 +417,7 @@ public class MainActivity extends AppCompatActivity{
 		                }
 	                });
 
-                    Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status() + "," + live_data.getTps_status());
+                    //Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status() + "," + live_data.getTps_status());
                 }
 
                 //if engine running
@@ -404,9 +449,8 @@ public class MainActivity extends AppCompatActivity{
                             if (!start_rpm_creep)
 		                        dashboardFragment.updateSpeedometer(live_data.getRpm());
 		                    dashboardFragment.updateRunTimer(live_data.getRun_time());
-                            if (engine_running && live_data.getTps_status()!=1)
+                            if (engine_running && live_data.getTps_status() ==2)
                             {
-
                                 navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
                                 navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
 
@@ -420,6 +464,7 @@ public class MainActivity extends AppCompatActivity{
                                     {
                                         start_bump_notif = true;
                                         did_we_clear_bump = false;
+                                        startAccelerometer();
                                         dashboardFragment.flashBUMP();
                                         listenForBUMP();
                                     }
@@ -448,7 +493,7 @@ public class MainActivity extends AppCompatActivity{
                             }
                         }
                     });
-                    Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm() + " - " + live_data.getRun_time()+ "," + live_data.getTps_status());
+                    //Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm() + " - " + live_data.getRun_time()+ "," + live_data.getTps_status());
                 }
                 else
                 {
@@ -492,6 +537,8 @@ public class MainActivity extends AppCompatActivity{
         {
             mBluetoothGatt.disconnect();
             mBluetoothGatt.close();
+
+
         }
     }
 
@@ -572,15 +619,42 @@ public class MainActivity extends AppCompatActivity{
         mShaker.setOnShakeListener(new ShakeListener.OnShakeListener () {
             public void onShake()
             {
-                if (live_data.getTps_status() != 1 && bumpStringImg.equals("string")) {
+                if (live_data.getTps_status() == 2 && bumpStringImg.equals("string") && detected_accelerometer_bump) {
                     start_bump_notif = false;
                     did_we_clear_bump = true;
+	                Toast.makeText(getApplicationContext(), "BUMPED STRING", Toast.LENGTH_SHORT).show();
+	                Log.i(TAG, String.valueOf(live_data.getTps_status()));
+                    stopAccelerometer();
+					detected_accelerometer_bump = false;
+					startingCreepRPM = 8100;
                     dashboardFragment.myBUMP.clearAnimation();
                     dashboardFragment.updateSpeedometer(live_data.getRpm());
-
                 }
             }
         });
+    }
+
+    public String getLastRunDateTime()
+    {
+    	String date;
+        int myRunSeconds = live_data.getRun_time();
+        if (myRunSeconds >= 5 && !engine_running)
+        {
+            DateFormat df = new SimpleDateFormat("MMM d, yyyy HH:mm:ss z");
+            date = df.format(Calendar.getInstance().getTime());
+            return date;
+        }
+        return null;
+    }
+
+    public void startAccelerometer()
+    {
+	    sensorManager.registerListener(MainActivity.this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void stopAccelerometer()
+    {
+    	sensorManager.unregisterListener(this);
     }
 
 }

@@ -17,7 +17,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="-40sp">
 
-            <com.example.niklas.efc_master.Speedometer
+            <com.example.niklas.efc_master.profiles.Speedometer
                 android:id="@+id/Speedometer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,6 +44,7 @@
             android:layout_height="wrap_content">
 
             <TextClock
+                android:id="@+id/runtime_datetime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="425sp"
