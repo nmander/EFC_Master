@@ -7,10 +7,10 @@ import java.lang.UnsupportedOperationException;
 
 public class ShakeListener implements SensorListener
 {
-	private static final int FORCE_THRESHOLD = 500;
+	private static final int FORCE_THRESHOLD = 300;
 	private static final int TIME_THRESHOLD = 100;
 	private static final int SHAKE_TIMEOUT = 500;
-	private static final int SHAKE_DURATION = 500;
+	private static final int SHAKE_DURATION = 200;
 	private static final int SHAKE_COUNT = 1;
 
 	private SensorManager mSensorMgr;
@@ -70,7 +70,7 @@ public class ShakeListener implements SensorListener
 
 		if ((now - mLastTime) > TIME_THRESHOLD) {
 			long diff = now - mLastTime;
-			float speed = Math.abs(values[SensorManager.DATA_Y]- mLastX - mLastY) / diff * 10000;
+			float speed = Math.abs(values[SensorManager.DATA_Y]- mLastX - mLastY - mLastZ) / diff * 10000;
 			if (speed > FORCE_THRESHOLD) {
 				if ((++mShakeCount >= SHAKE_COUNT) && (now - mLastShake > SHAKE_DURATION)) {
 					mLastShake = now;
@@ -84,7 +84,7 @@ public class ShakeListener implements SensorListener
 			mLastTime = now;
 			mLastX = values[SensorManager.DATA_X];
 			mLastY = values[SensorManager.DATA_Y];
-			//mLastZ = values[SensorManager.DATA_Z];
+			mLastZ = values[SensorManager.DATA_Z];
 		}
 	}
 

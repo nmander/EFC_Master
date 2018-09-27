@@ -10,21 +10,13 @@ import android.widget.TextView;
 import com.example.niklas.efc_master.R;
 import com.example.niklas.efc_master.activities.MainActivity;
 
-import org.w3c.dom.Text;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 public class StatsTabDetailsFragment extends Fragment
 {
 	public MainActivity mainActivity;
 	public TextView modLastRunDateTimeCell;
 	public TextView modLastRunTimerCell;
 	public String myLastRunTimeDate;
-	public int myMinSecs;
 	public String[] LastRun;
-	public String[] MinSecs;
 	private DashboardFragment dashboardFragment = new DashboardFragment();
 
 	@Override
@@ -49,7 +41,6 @@ public class StatsTabDetailsFragment extends Fragment
 						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " hrs");
 					else if ((Integer.valueOf(LastRun[0]) >= 360000))
 						modLastRunTimerCell.setText("100+ hrs");
-
 					modLastRunDateTimeCell.setText(LastRun[1]);
 				}
 				else

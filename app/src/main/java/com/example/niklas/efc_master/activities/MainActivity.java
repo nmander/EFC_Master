@@ -123,10 +123,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		float myY = sensorEvent.values[1];
 		float myZ = sensorEvent.values[2];
 		DecimalFormat df = new DecimalFormat("#0.000");
-		if (myX < -7 && myY < -7 && myZ > 18) {
+		if (myX > -20 && myX < -3 && myY > -20 && myY < -3 && myZ > 20) {
 			detected_accelerometer_bump = true;
 			Log.i(TAG, "BUMP: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
 		}
+		Log.i(TAG, "AXIS POS: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
 	}
 	private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
 			= new BottomNavigationView.OnNavigationItemSelectedListener()
@@ -187,15 +188,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			if (myTool == 0) {
 				writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLADE);
 				if (dashboard_fragment_loaded)
-					dashboardFragment.updateToolView(0);
+					dashboardFragment.updateToolView(myTool);
 				if (!did_we_clear_bump)
 					dashboardFragment.myBUMP.clearAnimation();
-				else {
-					Bundle bundle = new Bundle();
-					bundle.putInt("TOOL", myTool);
-					dashboardFragment.setArguments(bundle);
-					Toast.makeText(getApplicationContext(), "BLADE ATTACHMENT", Toast.LENGTH_SHORT).show();
-				}
+				Bundle bundle = new Bundle();
+				bundle.putInt("TOOL", myTool);
+				dashboardFragment.setArguments(bundle);
+				Toast.makeText(getApplicationContext(), "BLADE ATTACHMENT", Toast.LENGTH_SHORT).show();
 				bumpStringImg = "not string";
 			}
 
@@ -205,12 +204,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					dashboardFragment.updateToolView(myTool);
 				if (!did_we_clear_bump)
 					dashboardFragment.myBUMP.clearAnimation();
-				else {
-					Bundle bundle = new Bundle();
-					bundle.putInt("TOOL", myTool);
-					dashboardFragment.setArguments(bundle);
-					Toast.makeText(getApplicationContext(), "BLOWER ATTACHMENT", Toast.LENGTH_SHORT).show();
-				}
+				Bundle bundle = new Bundle();
+				bundle.putInt("TOOL", myTool);
+				dashboardFragment.setArguments(bundle);
+				Toast.makeText(getApplicationContext(), "BLOWER ATTACHMENT", Toast.LENGTH_SHORT).show();
 				bumpStringImg = "not string";
 			}
 
@@ -220,12 +217,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					dashboardFragment.updateToolView(myTool);
 				if (!did_we_clear_bump)
 					dashboardFragment.myBUMP.clearAnimation();
-				else {
-					Bundle bundle = new Bundle();
-					bundle.putInt("TOOL", myTool);
-					dashboardFragment.setArguments(bundle);
-					Toast.makeText(getApplicationContext(), "EDGER ATTACHMENT", Toast.LENGTH_SHORT).show();
-				}
+				Bundle bundle = new Bundle();
+				bundle.putInt("TOOL", myTool);
+				dashboardFragment.setArguments(bundle);
+				Toast.makeText(getApplicationContext(), "EDGER ATTACHMENT", Toast.LENGTH_SHORT).show();
 				bumpStringImg = "not string";
 			}
 
@@ -235,12 +230,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					dashboardFragment.updateToolView(myTool);
 				if (!did_we_clear_bump)
 					dashboardFragment.myBUMP.clearAnimation();
-				else{
-					Bundle bundle = new Bundle();
-					bundle.putInt("TOOL", myTool);
-					dashboardFragment.setArguments(bundle);
-					Toast.makeText(getApplicationContext(), "POLE SAW ATTACHMENT", Toast.LENGTH_SHORT).show();
-				}
+				Bundle bundle = new Bundle();
+				bundle.putInt("TOOL", myTool);
+				dashboardFragment.setArguments(bundle);
+				Toast.makeText(getApplicationContext(), "POLE SAW ATTACHMENT", Toast.LENGTH_SHORT).show();
 				bumpStringImg = "not string";
 			}
 
@@ -251,12 +244,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					dashboardFragment.updateToolView(myTool);
 				if (!did_we_clear_bump)
 					dashboardFragment.myBUMP.clearAnimation();
-				else{
-					Bundle bundle = new Bundle();
-					bundle.putInt("TOOL", myTool);
-					dashboardFragment.setArguments(bundle);
-					Toast.makeText(getApplicationContext(), "TILLER ATTACHMENT", Toast.LENGTH_SHORT).show();
-				}
+				Bundle bundle = new Bundle();
+				bundle.putInt("TOOL", myTool);
+				dashboardFragment.setArguments(bundle);
+				Toast.makeText(getApplicationContext(), "TILLER ATTACHMENT", Toast.LENGTH_SHORT).show();
 				bumpStringImg = "not string";
 			}
 
@@ -264,16 +255,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_STRING);
 				if (dashboard_fragment_loaded)
 					dashboardFragment.updateToolView(myTool);
-				if (!did_we_clear_bump) {
+				if (!did_we_clear_bump && dashboard_fragment_loaded) {
 					dashboardFragment.flashBUMP();
 					listenForBUMP();
+
 				}
-				else{
-					Bundle bundle = new Bundle();
-					bundle.putInt("TOOL", myTool);
-					dashboardFragment.setArguments(bundle);
-					Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_SHORT).show();
-				}
+				Bundle bundle = new Bundle();
+				bundle.putInt("TOOL", myTool);
+				dashboardFragment.setArguments(bundle);
+				Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_SHORT).show();
 				bumpStringImg = "string";
 
 			}
@@ -386,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
 				{
 					engine_running = false;
+					stopAccelerometer();
 					//navigation.findViewById(R.id.navigation_stats).setEnabled(true);
 					live_data.setTemperature(data[2]);
 					live_data.setAttachment_nbr_status(data[3]);
@@ -417,7 +408,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 					updateStartingScreen();
 
-					Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status() + "," + live_data.getTps_status());
+					//Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status() + "," + live_data.getTps_status());
 				}
 
 				//if engine running

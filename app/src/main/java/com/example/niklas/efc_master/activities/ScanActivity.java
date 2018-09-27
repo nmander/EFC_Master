@@ -120,9 +120,11 @@ public class ScanActivity extends AppCompatActivity
                 stopLeScan();
                 btnScan.setVisibility(View.INVISIBLE);
                 ScanResult result = results.get(index);
-                Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_SHORT).show();
-                startMainActivity(result.getDevice());
-                //startMainActivity(result.getDevice());
+                if (result.getDevice().getName().equals("Trimmer_1"))
+                {
+                    Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_SHORT).show();
+                    startMainActivity(result.getDevice());
+                }
             }
         }
 

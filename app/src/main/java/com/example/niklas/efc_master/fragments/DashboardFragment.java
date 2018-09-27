@@ -23,9 +23,7 @@ public class DashboardFragment extends Fragment
 	public TextView myRunTimer;
 	public TextView myBUMP;
 	public ImageView myToolSelection;
-	public ImageView mySTRING;
 	public int myRPM;
-	public int myRUNTIME;
 
 	@Nullable
 	@Override
@@ -53,7 +51,14 @@ public class DashboardFragment extends Fragment
 		if (bundle != null) {
 			if (bundle.containsKey("TOOL")) {
 				int myStartingTool = getArguments().getInt("TOOL");
-				updateToolView(myStartingTool);
+				{
+					if (mainActivity.did_we_clear_bump && myStartingTool != 5)
+						updateToolView(myStartingTool);
+					else if (!mainActivity.did_we_clear_bump && myStartingTool != 5)
+						updateToolView(myStartingTool);
+					else if (!mainActivity.did_we_clear_bump && myStartingTool == 5)
+						flashBUMP();
+				}
 			}
 		}
 
