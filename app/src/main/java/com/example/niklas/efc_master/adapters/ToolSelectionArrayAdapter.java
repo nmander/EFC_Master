@@ -37,8 +37,8 @@ public class ToolSelectionArrayAdapter extends ArrayAdapter<ToolSelectionActivit
             LayoutInflater inflator = context.getLayoutInflater();
             view = inflator.inflate(R.layout.activity_tool_selection, null);
             final ViewHolder viewHolder = new ViewHolder();
-            viewHolder.name = (TextView) view.findViewById(R.id.name);
-            viewHolder.flag = (ImageView) view.findViewById(R.id.tool_icon);
+            viewHolder.name = view.findViewById(R.id.name);
+            viewHolder.flag = view.findViewById(R.id.tool_icon);
             view.setTag(viewHolder);
         } else {
             view = convertView;

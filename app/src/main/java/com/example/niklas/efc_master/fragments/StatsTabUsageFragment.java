@@ -29,7 +29,7 @@ public class StatsTabUsageFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_stats_tab_usage, container, false);
-		BarChart chart = (BarChart) rootView.findViewById(R.id.bar_chart);
+		BarChart chart = rootView.findViewById(R.id.bar_chart);
 		chart.setTouchEnabled(false);
 		chart.setData(getData());
 		chart.getXAxis().setAxisMaximum(40);

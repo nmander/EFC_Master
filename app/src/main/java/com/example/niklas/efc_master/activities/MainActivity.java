@@ -409,8 +409,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					if (live_data.getTps_status() != 1)
 					{
 						start_fragment_loaded = false;
-						//navigation.findViewById(R.id.navigation_stats).setEnabled(false);
+						navigation.findViewById(R.id.navigation_stats).setEnabled(false);
 					}
+
+					if (live_data.getTps_status() == 1)
+						navigation.findViewById(R.id.navigation_stats).setEnabled(true);
 
 					updateStartingScreen();
 
@@ -592,9 +595,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			DateFormat df = new SimpleDateFormat("MMM d, yyyy HH:mm:ss z");
 			date = df.format(Calendar.getInstance().getTime());
 			runtime = String.valueOf(live_data.getRun_time());
-			//RunTimeAndDate = runtime + "-" + date;
+			RunTimeAndDate = runtime + "-" + date;
 			Bundle bundle = new Bundle();
-			bundle.putString("LAST_RUN_DATE", date);
+			bundle.putString("LAST_RUN_DATE", RunTimeAndDate);
 			statsTabsFragment.setArguments(bundle);
 		}
 	}

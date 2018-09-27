@@ -24,7 +24,6 @@ public final class TempToPress
 
 		int inX = 12;
 		for (; x < temp[inX]; inX--);
-			return (int)((press[inX]+((x-temp[inX])*(press[inX+1]-press[inX]) / (temp[inX+1] - temp[inX]))));
-			//return press[inX];
+			return (press[inX]+((x-temp[inX])*(press[inX+1]-press[inX]) / (temp[inX+1] - temp[inX])));
 	}
 }

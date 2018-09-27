@@ -31,7 +31,7 @@ public class StatsTabStartTempFragment extends Fragment {
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_stats_tab_start_temp, container, false);
 		mainActivity = (MainActivity) getActivity();
 
-		BarChart chart = (BarChart) rootView.findViewById(R.id.bar_chart);
+		BarChart chart = rootView.findViewById(R.id.bar_chart);
 		chart.setTouchEnabled(false);
 		chart.setData(getData());
 		chart.getXAxis().setAxisMaximum(90);

@@ -72,10 +72,10 @@ public class ScanActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
-        scanning_wheel = (ProgressBar)findViewById(R.id.scanning_wheel);
+        scanning_wheel = findViewById(R.id.scanning_wheel);
         //scanning_wheel.setVisibility(View.INVISIBLE);
 
-        btnScan = (Button)findViewById(R.id.btn_scan);
+        btnScan = findViewById(R.id.btn_scan);
         btnScan.setVisibility(View.INVISIBLE);
 
         btnScan.setOnClickListener(new View.OnClickListener() {

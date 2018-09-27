@@ -30,8 +30,8 @@ public class StatsTabsFragment extends Fragment {
 		 *Inflate tab_layout and setup Views.
 		 */
 		View v = inflater.inflate(R.layout.fragment_stats_tabs, container, false);
-		tabLayout = (TabLayout) v.findViewById(R.id.tabs);
-		viewPager = (ViewPager) v.findViewById(R.id.viewpager);
+		tabLayout = v.findViewById(R.id.tabs);
+		viewPager = v.findViewById(R.id.viewpager);
 
 		/**
 		 *Set an Apater for the View Pager
@@ -55,7 +55,6 @@ public class StatsTabsFragment extends Fragment {
 		if (bundle != null) {
 			if (bundle.containsKey("LAST_RUN_DATE")) {
 				myLastRunTimeDate = getArguments().getString("LAST_RUN_DATE");
-				//modLastRunDateTimeCell.setText(myLastRunDate);
 			}
 		}
 
