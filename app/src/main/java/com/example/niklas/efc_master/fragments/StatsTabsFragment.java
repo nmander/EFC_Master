@@ -20,7 +20,7 @@ public class StatsTabsFragment extends Fragment {
 	public static ViewPager viewPager;
 	public static int int_items = 5;
 
-	public String myLastRunDate;
+	public String myLastRunTimeDate;
 	private StatsTabDetailsFragment statsTabDetailsFragment = new StatsTabDetailsFragment();
 
 	@Nullable
@@ -54,7 +54,7 @@ public class StatsTabsFragment extends Fragment {
 		Bundle bundle = getArguments();
 		if (bundle != null) {
 			if (bundle.containsKey("LAST_RUN_DATE")) {
-				myLastRunDate = getArguments().getString("LAST_RUN_DATE");
+				myLastRunTimeDate = getArguments().getString("LAST_RUN_DATE");
 				//modLastRunDateTimeCell.setText(myLastRunDate);
 			}
 		}
@@ -78,7 +78,7 @@ public class StatsTabsFragment extends Fragment {
 			switch (position) {
 				case 0:
 					Bundle bundle = new Bundle();
-					bundle.putString("LAST_RUN_DATE", myLastRunDate);
+					bundle.putString("LAST_RUN_DATE", myLastRunTimeDate);
 					statsTabDetailsFragment.setArguments(bundle);
 					return statsTabDetailsFragment;
 				case 1:

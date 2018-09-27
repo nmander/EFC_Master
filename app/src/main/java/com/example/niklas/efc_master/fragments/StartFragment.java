@@ -46,11 +46,11 @@ public class StartFragment extends Fragment {
 
 	public void flashSqueezeThrottle()
 	{
+		//squeezeThrottle.clearAnimation();
 		Animation anim = new AlphaAnimation(0.0f, 1.0f);
-		if (mainActivity.live_data.getTps_status() != 2) {
+		if (mainActivity.live_data.getTps_status() == 1) {
 			//squeezeThrottle.setBackgroundColor(getResources().getColor(R.color.colorStopButton));
 			squeezeThrottle.setTextColor(getResources().getColor(R.color.colorStopButton));
-
 			anim.setDuration(150); //You can manage the blinking time with this parameter
 			anim.setStartOffset(100);
 			anim.setRepeatMode(Animation.REVERSE);
@@ -74,12 +74,8 @@ public class StartFragment extends Fragment {
 				}
 			});
 		}
-		else
-			{
-			squeezeThrottle.clearAnimation();
-			anim.setFillAfter(false);
-			squeezeThrottle.setTextColor(getResources().getColor(R.color.colorBlack));
-		}
+//		else
+//			squeezeThrottle.clearAnimation();
 
 	}
 }
