@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private StartFragment startFragment = new StartFragment();
 	private StartHighTempFragment startHighTempFragment = new StartHighTempFragment();
 	private StatsTabsFragment statsTabsFragment = new StatsTabsFragment();
-	private StatsTabDetailsFragment statsTabDetailsFragment = new StatsTabDetailsFragment();
 	private DashboardFragment dashboardFragment = new DashboardFragment();
 
 	private ShakeListener mShaker;
@@ -387,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
 				{
 					engine_running = false;
-					navigation.findViewById(R.id.navigation_stats).setEnabled(true);
+					//navigation.findViewById(R.id.navigation_stats).setEnabled(true);
 					live_data.setTemperature(data[2]);
 					live_data.setAttachment_nbr_status(data[3]);
 					live_data.setTps_status(data[4]);
@@ -410,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					if (live_data.getTps_status() != 1)
 					{
 						start_fragment_loaded = false;
-						navigation.findViewById(R.id.navigation_stats).setEnabled(false);
+						//navigation.findViewById(R.id.navigation_stats).setEnabled(false);
 					}
 
 					updateStartingScreen();

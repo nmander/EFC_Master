@@ -17,7 +17,7 @@
             <ImageView
                 android:layout_width="60sp"
                 android:layout_height="60sp"
-                android:layout_toStartOf="@id/instruction_prime_bulb"
+                android:layout_marginStart="28sp"
                 android:layout_marginTop="30sp"
                 android:layout_marginEnd="10sp"
                 android:background="@drawable/ic_prime_bulb"
@@ -40,6 +40,7 @@
                 style="?android:attr/borderlessButtonStyle"/>
 
             <ImageView
+                android:id="@+id/ic_squeeze_throttle"
                 android:layout_width="60sp"
                 android:layout_height="60sp"
                 android:layout_toStartOf="@id/instruction_squeeze_throttle"
