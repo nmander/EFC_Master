@@ -13,7 +13,7 @@ import com.example.niklas.efc_master.activities.MainActivity;
 public class StatsTabDetailsFragment extends Fragment
 {
 	public MainActivity mainActivity;
-	public TextView modLastRunDateTimeCell;
+	//public TextView modLastRunDateTimeCell;
 	public TextView modLastRunTimerCell;
 	public String myLastRunTimeDate;
 	public String[] LastRun;
@@ -24,7 +24,7 @@ public class StatsTabDetailsFragment extends Fragment
 	{
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_stats_tab_detail, container, false);
 		mainActivity = (MainActivity) getActivity();
-		modLastRunDateTimeCell = rootView.findViewById(R.id.cell_last_runtime_datetime);
+		//modLastRunDateTimeCell = rootView.findViewById(R.id.cell_last_runtime_datetime);
 		modLastRunTimerCell = rootView.findViewById(R.id.cell_last_runtime_stopwatch);
 
 		Bundle bundle = getArguments();
@@ -34,19 +34,19 @@ public class StatsTabDetailsFragment extends Fragment
 				if (myLastRunTimeDate != null) {
 					LastRun = myLastRunTimeDate.split("-");
 					if ((Integer.valueOf(LastRun[0]) < 60))
-						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " secs");
+						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " sec" + "  ---  " + LastRun[1]);
 					if ((Integer.valueOf(LastRun[0]) >= 60 && (Integer.valueOf(LastRun[0]) < 3600)))
-						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " mins");
+						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " min" + "  ---  " + LastRun[1]);
 					if ((Integer.valueOf(LastRun[0]) >=3600 && (Integer.valueOf(LastRun[0]) < 36000)))
-						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " hrs");
+						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " hrs" + "  ---  " + LastRun[1]);
 					else if ((Integer.valueOf(LastRun[0]) >= 360000))
 						modLastRunTimerCell.setText("100+ hrs");
-					modLastRunDateTimeCell.setText(LastRun[1]);
+					//modLastRunDateTimeCell.setText(LastRun[1]);
 				}
 				else
 				{
 					modLastRunTimerCell.setText("");
-					modLastRunDateTimeCell.setText("");
+					//modLastRunDateTimeCell.setText("");
 				}
 			}
 		}

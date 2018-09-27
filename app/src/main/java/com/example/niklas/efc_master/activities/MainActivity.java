@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		float myY = sensorEvent.values[1];
 		float myZ = sensorEvent.values[2];
 		DecimalFormat df = new DecimalFormat("#0.000");
-		if (myX > -20 && myX < -3 && myY > -20 && myY < -3 && myZ > 20) {
+		if (myX > -20 && myX < -3 && myY > -20 && myY < -3 && myZ > 12) {
 			detected_accelerometer_bump = true;
 			Log.i(TAG, "BUMP: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
 		}
