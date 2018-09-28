@@ -40,7 +40,12 @@ import com.example.niklas.efc_master.profiles.protocol;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.example.niklas.efc_master.profiles.NordicProfile.CHARACTERISTIC_RX;
 import static com.example.niklas.efc_master.profiles.NordicProfile.CHARACTERISTIC_TX;
@@ -58,6 +63,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public static final int STRING_MAX_SPEED = 8100;
 	public int startingCreepRPM = 8100;
 	public String bumpStringImg;
+	public List<Integer> arrLastRunSpeedProfile = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed2500 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed3000 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed3500 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed4000 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed4500 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed5000 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed5500 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed6000 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed6500 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed7000 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed7500 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed8000 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed8500 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed9000 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed9500 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed10000 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed10500 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed11000 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed11500 = new ArrayList<>();
+	public List<Integer> arrLastRunSpeed12000 = new ArrayList<>();
+
+	//public String runtime = "0";
+
+	float oldX = -50;
+	float oldY = -50;
+	float oldZ = -50;
+
+	public int lastRun2500 = 0;
 
 	private BluetoothManager mBluetoothManager;
 	private BluetoothAdapter mBluetoothAdapter;
@@ -123,11 +157,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		float myY = sensorEvent.values[1];
 		float myZ = sensorEvent.values[2];
 		DecimalFormat df = new DecimalFormat("#0.000");
-		if (myX > -20 && myX < -3 && myY > -20 && myY < -3 && myZ > 12) {
-			detected_accelerometer_bump = true;
-			Log.i(TAG, "BUMP: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
+
+		if(myX > 0 && myY > 0 && myZ < 5)
+		{
+			oldX = -50;
+			oldY = -50;
+			oldZ = -50;
 		}
-		Log.i(TAG, "AXIS POS: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
+
+		if (myX+5 < oldX && myX > -15  & myY > -15 && myY+5 <oldY && myZ >oldZ+5)
+		{
+			detected_accelerometer_bump = true;
+			Log.i(TAG, "DETECTED BUMP: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
+
+			oldX = -50;
+			oldY = -50;
+			oldZ = -50;
+		}
+		else
+		{
+			oldX = myX;
+			oldY = myY;
+			oldZ = myZ;
+			Log.i(TAG, "AXIS POS: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
+		}
 	}
 	private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
 			= new BottomNavigationView.OnNavigationItemSelectedListener()
@@ -143,8 +196,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					return true;
 
 				case R.id.navigation_stats:
+					calcLastRunSpeedProfile();
 					loadFragment(statsTabsFragment);
 					hideRunningFeatures();
+
 					return true;
 
 				case R.id.navigation_light_trim:
@@ -436,7 +491,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						did_we_recieve_last_run_date = false;
 					}
 					updateRunningScreen();
-					//Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm() + " - " + live_data.getRun_time()+ "," + live_data.getTps_status());
+					Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm() + " - " + live_data.getRun_time()+ "," + live_data.getTps_status());
+					arrLastRunSpeedProfile.add(live_data.getRpm());
 				}
 				else
 				{
@@ -480,6 +536,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		{
 			mBluetoothGatt.disconnect();
 			mBluetoothGatt.close();
+			Toast.makeText(getApplicationContext(), "CONNECTION LOST", Toast.LENGTH_LONG).show();
+			Intent intent = new Intent(this, ScanActivity.class);
+			startActivity(intent);
+			finish();
 		}
 	}
 
@@ -564,7 +624,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					start_bump_notif = false;
 					did_we_clear_bump = true;
 					Toast.makeText(getApplicationContext(), "BUMPED STRING", Toast.LENGTH_SHORT).show();
-					Log.i(TAG, String.valueOf(live_data.getTps_status()));
 					stopAccelerometer();
 					detected_accelerometer_bump = false;
 					startingCreepRPM = 8100;
@@ -677,4 +736,96 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		});
 	}
 
+	public void calcLastRunSpeedProfile()
+	{
+		int profileSize = arrLastRunSpeedProfile.size();
+
+		if (profileSize >= 50)
+		{
+			Collections.sort(arrLastRunSpeedProfile);
+			for (int i=0; i < profileSize; i++)
+			{
+				if (arrLastRunSpeedProfile.get(i) >= 2250 && arrLastRunSpeedProfile.get(i) < 2750) // 2500RPM Range
+					arrLastRunSpeed2500.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 2750 && arrLastRunSpeedProfile.get(i) < 3250 ) // 3000RPM Range
+					arrLastRunSpeed3000.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 3250 && arrLastRunSpeedProfile.get(i) < 3750 ) // 3500RPM Range
+					arrLastRunSpeed3500.add(arrLastRunSpeedProfile.get(i));
+
+				if (arrLastRunSpeedProfile.get(i) >= 3750 && arrLastRunSpeedProfile.get(i) < 4250) // 4000RPM Range
+					arrLastRunSpeed4000.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 4250 && arrLastRunSpeedProfile.get(i) < 4750 ) // 4500RPM Range
+					arrLastRunSpeed4500.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 4750 && arrLastRunSpeedProfile.get(i) < 5250 ) // 5000RPM Range
+					arrLastRunSpeed5000.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 5250 && arrLastRunSpeedProfile.get(i) < 5750 ) // 5500RPM Range
+					arrLastRunSpeed5500.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 5750 && arrLastRunSpeedProfile.get(i) < 6250 ) // 6000RPM Range
+					arrLastRunSpeed6000.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 6250 && arrLastRunSpeedProfile.get(i) < 6750 ) // 6500RPM Range
+					arrLastRunSpeed6500.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 6750 && arrLastRunSpeedProfile.get(i) < 7250 ) // 7000RPM Range
+					arrLastRunSpeed7000.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 7250 && arrLastRunSpeedProfile.get(i) < 7750 ) // 7500RPM Range
+					arrLastRunSpeed7500.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 7750 && arrLastRunSpeedProfile.get(i) < 8250 ) // 8000RPM Range
+					arrLastRunSpeed8000.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 8250 && arrLastRunSpeedProfile.get(i) < 8750 ) // 8500RPM Range
+					arrLastRunSpeed8500.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 8750 && arrLastRunSpeedProfile.get(i) < 9250 ) // 9000RPM Range
+					arrLastRunSpeed9000.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 9250 && arrLastRunSpeedProfile.get(i) < 9750 ) // 9500RPM Range
+					arrLastRunSpeed9500.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 9750 && arrLastRunSpeedProfile.get(i) < 10250 ) // 10000RPM Range
+					arrLastRunSpeed10000.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 10250 && arrLastRunSpeedProfile.get(i) < 10750 ) // 10500RPM Range
+					arrLastRunSpeed10500.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 10750 && arrLastRunSpeedProfile.get(i) < 11250 ) // 11000RPM Range
+					arrLastRunSpeed11000.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 11250 && arrLastRunSpeedProfile.get(i) < 11750 ) // 11500RPM Range
+					arrLastRunSpeed11500.add(arrLastRunSpeedProfile.get(i));
+
+				if(arrLastRunSpeedProfile.get(i) >= 12000) // 12000RPM Range
+					arrLastRunSpeed12000.add(arrLastRunSpeedProfile.get(i));
+
+			}
+			Collections.sort(arrLastRunSpeed2500);
+			Collections.sort(arrLastRunSpeed3000);
+			Collections.sort(arrLastRunSpeed3500);
+			Collections.sort(arrLastRunSpeed4000);
+			Collections.sort(arrLastRunSpeed4500);
+			Collections.sort(arrLastRunSpeed5000);
+			Collections.sort(arrLastRunSpeed5500);
+			Collections.sort(arrLastRunSpeed6000);
+			Collections.sort(arrLastRunSpeed6500);
+			Collections.sort(arrLastRunSpeed7000);
+			Collections.sort(arrLastRunSpeed7500);
+			Collections.sort(arrLastRunSpeed8000);
+			Collections.sort(arrLastRunSpeed8500);
+			Collections.sort(arrLastRunSpeed9000);
+			Collections.sort(arrLastRunSpeed9500);
+			Collections.sort(arrLastRunSpeed10000);
+			Collections.sort(arrLastRunSpeed10500);
+			Collections.sort(arrLastRunSpeed11000);
+			Collections.sort(arrLastRunSpeed11500);
+			Collections.sort(arrLastRunSpeed12000);
+		}
+	}
 }

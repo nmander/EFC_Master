@@ -34,19 +34,17 @@ public class StatsTabDetailsFragment extends Fragment
 				if (myLastRunTimeDate != null) {
 					LastRun = myLastRunTimeDate.split("-");
 					if ((Integer.valueOf(LastRun[0]) < 60))
-						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " sec" + "  ---  " + LastRun[1]);
+						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " sec" + "  |  " + LastRun[1]);
 					if ((Integer.valueOf(LastRun[0]) >= 60 && (Integer.valueOf(LastRun[0]) < 3600)))
-						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " min" + "  ---  " + LastRun[1]);
+						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " min" + "  |  " + LastRun[1]);
 					if ((Integer.valueOf(LastRun[0]) >=3600 && (Integer.valueOf(LastRun[0]) < 36000)))
-						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " hrs" + "  ---  " + LastRun[1]);
+						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " hrs" + "  |  " + LastRun[1]);
 					else if ((Integer.valueOf(LastRun[0]) >= 360000))
 						modLastRunTimerCell.setText("100+ hrs");
-					//modLastRunDateTimeCell.setText(LastRun[1]);
 				}
 				else
 				{
 					modLastRunTimerCell.setText("");
-					//modLastRunDateTimeCell.setText("");
 				}
 			}
 		}
