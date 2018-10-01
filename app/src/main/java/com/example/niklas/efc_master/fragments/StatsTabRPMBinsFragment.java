@@ -53,6 +53,7 @@ public class StatsTabRPMBinsFragment extends Fragment {
 	}
 
 	private BarData getData() {
+		//float[] LastRunData =
 		List<BarEntry> entries = new ArrayList<>();
 		entries.add(new BarEntry(1500f, 1.1f));
 		entries.add(new BarEntry(2000f, 2f));
@@ -87,6 +88,11 @@ public class StatsTabRPMBinsFragment extends Fragment {
 
 
 		return data;
+
+	}
+
+	public void addonLifeTimeProfile()
+	{
 
 	}
 }

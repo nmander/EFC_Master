@@ -74,7 +74,7 @@ public class StatsTabStartTempFragment extends Fragment {
 
 		BarData data = new BarData(set);
 		data.setValueTextSize(10);
-		data.setBarWidth(4.5f); // set custom bar width
+		data.setBarWidth(4f); // set custom bar width
 		data.setValueFormatter(new myYvaluesFormatter());
 
 		return data;

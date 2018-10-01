@@ -57,9 +57,7 @@ public class StatsTabsFragment extends Fragment {
 				myLastRunTimeDate = getArguments().getString("LAST_RUN_DATE");
 			}
 		}
-
 		return v;
-
 	}
 
 	class MyAdapter extends FragmentPagerAdapter {
@@ -96,7 +94,6 @@ public class StatsTabsFragment extends Fragment {
 		public int getCount() {
 
 			return int_items;
-
 		}
 
 		/**
