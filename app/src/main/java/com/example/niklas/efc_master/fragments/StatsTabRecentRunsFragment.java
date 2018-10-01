@@ -89,13 +89,13 @@ public class StatsTabRecentRunsFragment extends Fragment {
 			entries.add(new BarEntry(9500f, LastRunData[18]));
 		if (LastRunData[19] != 0)
 			entries.add(new BarEntry(10000f, LastRunData[19]));
-		if (LastRunData[17] != 0)
+		if (LastRunData[20] != 0)
 			entries.add(new BarEntry(10500f, LastRunData[20]));
-		if (LastRunData[18] != 0)
+		if (LastRunData[21] != 0)
 			entries.add(new BarEntry(11000f, LastRunData[21]));
-		if (LastRunData[19] != 0)
+		if (LastRunData[22] != 0)
 			entries.add(new BarEntry(11500f, LastRunData[22]));
-		if (LastRunData[19] != 0)
+		if (LastRunData[23] != 0)
 			entries.add(new BarEntry(12000f, LastRunData[23]));
 
 
@@ -111,8 +111,8 @@ public class StatsTabRecentRunsFragment extends Fragment {
 
 	}
 
-	public float[] getLastRunProfileData() {
-		float data500  =  (MainActivity.arrLastRunSpeed500.size()/10f);//0
+	public static float[] getLastRunProfileData() {
+		float data500  = (MainActivity.arrLastRunSpeed500.size()/10f);//0
 		float data1000 = (MainActivity.arrLastRunSpeed1000.size()/10f);//1
 		float data1500 = (MainActivity.arrLastRunSpeed1500.size()/10f);//2
 		float data2000 = (MainActivity.arrLastRunSpeed2000.size()/10f);//3

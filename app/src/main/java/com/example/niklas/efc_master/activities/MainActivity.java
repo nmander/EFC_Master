@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.example.niklas.efc_master.fragments.DashboardFragment;
 import com.example.niklas.efc_master.fragments.StatsTabDetailsFragment;
+import com.example.niklas.efc_master.fragments.StatsTabRPMBinsFragment;
 import com.example.niklas.efc_master.fragments.StatsTabRecentRunsFragment;
 import com.example.niklas.efc_master.profiles.Igndata;
 import com.example.niklas.efc_master.R;
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public boolean detected_accelerometer_bump = false;
 	public boolean did_we_recieve_last_run_date = false;
 	public static boolean did_we_calc_last_run = false;
+	public static boolean did_we_calc_life_run = false;
 
 	private BottomNavigationView navigation;
 	private StartFragment startFragment = new StartFragment();
@@ -126,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private StatsTabsFragment statsTabsFragment = new StatsTabsFragment();
 	private DashboardFragment dashboardFragment = new DashboardFragment();
 	private StatsTabRecentRunsFragment statsTabRecentRunsFragment = new StatsTabRecentRunsFragment();
-
 	private ShakeListener mShaker;
 
 	@Override
@@ -546,10 +547,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		{
 			mBluetoothGatt.disconnect();
 			mBluetoothGatt.close();
-			Toast.makeText(getApplicationContext(), "CONNECTION LOST", Toast.LENGTH_LONG).show();
-			Intent intent = new Intent(this, ScanActivity.class);
-			startActivity(intent);
-			finish();
 		}
 	}
 
@@ -854,6 +851,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				Collections.sort(arrLastRunSpeed11500);
 				Collections.sort(arrLastRunSpeed12000);
 				did_we_calc_last_run = true;
+				did_we_calc_life_run = false;
 				arrLastRunSpeedProfile.clear();
 			}
 		}
