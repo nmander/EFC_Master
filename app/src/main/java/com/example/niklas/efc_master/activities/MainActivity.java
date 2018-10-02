@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					return true;
 
 				case R.id.navigation_kill:
-					hideStartingFeatures();
+					hideRunningFeatures();
 					writeToIgnitionModule(protocol.BTN_STOP, protocol.STOP_ON);
 					setCheckable(navigation, true);
 					return true;
