@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private boolean engine_running = false;
 	private boolean dashboard_fragment_loaded = false;
 	public boolean start_fragment_loaded = false;
+	public boolean stats_fragment_loaded = false;
 	private boolean start_high_temp_fragment_loaded = false;
 	private boolean lite_trim_on = false;
 	private boolean hide_running_features = false;
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
 		setConditionalStartingFragment();
-		setStartFragment();
+		//setStartFragment();
 		hideRunningFeatures();
 		start_fragment_loaded = true;
 		dashboard_fragment_loaded = false;
@@ -224,11 +225,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						writeToIgnitionModule(protocol.BTN_TRIM_MODE, protocol.NORMAL_TRIM);
 						setCheckable(navigation, false);
 					}
-
 					return true;
 
 				case R.id.navigation_kill:
-					hideRunningFeatures();
+					hideStartingFeatures();
 					writeToIgnitionModule(protocol.BTN_STOP, protocol.STOP_ON);
 					setCheckable(navigation, true);
 					return true;
@@ -442,8 +442,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				{
 					engine_running = false;
 					stopAccelerometer();
-					//setStartFragment();
-					//navigation.findViewById(R.id.navigation_stats).setEnabled(true);
 					live_data.setTemperature(data[2]);
 					live_data.setAttachment_nbr_status(data[3]);
 					live_data.setTps_status(data[4]);
@@ -474,7 +472,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 					updateStartingScreen();
 
-					//Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + "," + live_data.getAttachment_nbr_status() + "," + live_data.getTps_status());
+					Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature());
 				}
 
 				//if engine running
@@ -547,6 +545,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		{
 			mBluetoothGatt.disconnect();
 			mBluetoothGatt.close();
+			Intent intent = new Intent(this, ScanActivity.class);
+			startActivity(intent);
+			//this.finish();
 		}
 	}
 
@@ -565,6 +566,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				//navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
 			}
 		});
+	}
+
+	public void onDestroy()
+	{
+		super.onDestroy();
+		disconnectGattServer();
+		Log.i(TAG, "Closing Gatt connection -- onDestroy");
 	}
 
 	public void hideStartingFeatures()
@@ -596,7 +604,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	public void setConditionalStartingFragment()
 	{
-		if (live_data.getTemperature() >= 50)
+		if (live_data.getTemperature() >= 27)
 		{
 			loadFragment(startHighTempFragment);
 			start_high_temp_fragment_loaded = true;
@@ -606,7 +614,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			loadFragment(startFragment);
 			start_high_temp_fragment_loaded = false;
 		}
-
 	}
 
 	public static void setCheckable(BottomNavigationView view, boolean checkable) {
@@ -677,7 +684,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			@Override
 			public void run() {
 				//if selected nav item is Start:
-				if (live_data.getTemperature() < 50 && !start_high_temp_fragment_loaded)
+				if (live_data.getTemperature() < 27 && !start_high_temp_fragment_loaded)
 				{
 					startFragment.updatePrimerBulb(live_data.getTemperature());
 					if (live_data.getError_code() == 1)
@@ -685,6 +692,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						startFragment.flashSqueezeThrottle();
 						writeToIgnitionModule(protocol.BTN_CLEAR_CODE, protocol.RESET_CODE);
 					}
+				}
+				else if (live_data.getTemperature() < 27 && start_high_temp_fragment_loaded)
+				{
+					setConditionalStartingFragment();
+					setStartFragment();
+				}
+
+				else if (live_data.getTemperature() >= 27 && !start_high_temp_fragment_loaded)
+				{
+					setConditionalStartingFragment();
+					setStartFragment();
 				}
 			}
 		});
