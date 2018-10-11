@@ -8,6 +8,7 @@ public class protocol
     public static byte BTN_TRIM_MODE = 2;
     public static byte BTN_STOP = 3;
     public static byte BTN_CLEAR_CODE = 4;
+    public static byte BTN_STATS_REQUEST = 5;
     public static byte RESET_CODE = 1;
     public static byte STOP_OFF = 0;
     public static byte STOP_ON = 1;
@@ -19,4 +20,6 @@ public class protocol
     public static byte TOOL_TILLER = 3;
     public static byte TOOL_BLOWER = 4;
     public static byte TOOL_POLE_SAW = 5;
+    public static byte STATS_LAST_RUN_PAGE_1 = 0;
+    public static byte STATS_LAST_RUN_PAGE_2 = 1;
 }

@@ -11,18 +11,18 @@ public final class TempToPress
 	//private final static int press[] = {9, 9,  8,  7,  6,  6,  5,  5,  4,  3,  2,  1,  0};
 
 	private final static int temp[] = {18, 19, 20, 21, 22, 23, 24, 25, 26, 27};
-	private final static int press[] = {9,  8,  7,  6,  5,  4,  3,  2,  2,  0};
+	private final static int press[] = {9,  8,  7,  6,  5,  4,  3,  2,  2,  1};
 
 	public static int myNumOfPress(int x)
 	{
 		//function
-		if (x < temp[0] & x >= -127)
+		if (x <= temp[0])
 		{
 			return press[0];
 		}
-		else if (x > temp[9] && x <= 127)
+		else if (x >= temp[9])
 		{
-			return temp[9];
+			return press[9];
 		}
 
 		int inX = 9;

@@ -5,7 +5,9 @@ import android.databinding.Bindable;
 public class Igndata extends BaseObservable
 {
     public final byte ENGINE_RUNNING = 1; //1  stands for protocol#1
-    public final byte ENGINE_NOT_RUNNING = 2; //1  stands for protocol#2
+    public final byte ENGINE_NOT_RUNNING = 2; //2  stands for protocol#2
+    public final byte LAST_RUN_STATS_PAGE_1 = 4; //4  stands for protocol#4
+    public final byte LAST_RUN_STATS_PAGE_2 = 5; //4  stands for protocol#4
     private String primerBulb;
     private int temperature;
     private int rpm;

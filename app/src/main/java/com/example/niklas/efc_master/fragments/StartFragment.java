@@ -25,7 +25,8 @@ public class StartFragment extends Fragment {
 		mainActivity = (MainActivity) getActivity();
 		primeBulb = rootView.findViewById(R.id.instruction_prime_bulb);
 		squeezeThrottle = rootView.findViewById(R.id.instruction_squeeze_throttle);
-		primeBulb.setText("PUSH PRIMER BULB X TIMES");
+		updatePrimerBulb(mainActivity.live_data.getTemperature());
+		//primeBulb.setText("PUSH PRIMER BULB X TIMES");
 		return rootView;
 	}
 

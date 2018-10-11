@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.niklas.efc_master.R;
 import com.example.niklas.efc_master.activities.MainActivity;
@@ -21,11 +22,13 @@ import java.util.List;
 
 public class StatsTabRecentRunsFragment extends Fragment {
 
+	public static TextView y_axis_text;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_stats_tab_recent_runs, container, false);
 		BarChart chart = rootView.findViewById(R.id.bar_chart);
+		y_axis_text = rootView.findViewById(R.id.y_axis_text);
 		chart.setTouchEnabled(false);
 		chart.setData(getData());
 		chart.getXAxis().setAxisMaximum(12000);
@@ -112,65 +115,25 @@ public class StatsTabRecentRunsFragment extends Fragment {
 	}
 
 	public static float[] getLastRunProfileData() {
-		float data500  = (MainActivity.arrLastRunSpeed500.size()/10f);//0
-		float data1000 = (MainActivity.arrLastRunSpeed1000.size()/10f);//1
-		float data1500 = (MainActivity.arrLastRunSpeed1500.size()/10f);//2
-		float data2000 = (MainActivity.arrLastRunSpeed2000.size()/10f);//3
-		float data2500 = (MainActivity.arrLastRunSpeed2500.size()/10f);//4
-		float data3000 = (MainActivity.arrLastRunSpeed3000.size()/10f);//5
-		float data3500 = (MainActivity.arrLastRunSpeed3500.size()/10f);//6
-		float data4000 = (MainActivity.arrLastRunSpeed4000.size()/10f);//7
-		float data4500 = (MainActivity.arrLastRunSpeed4500.size()/10f);//8
-		float data5000 = (MainActivity.arrLastRunSpeed5000.size()/10f);//9
-		float data5500 = (MainActivity.arrLastRunSpeed5500.size()/10f);//10
-		float data6000 = (MainActivity.arrLastRunSpeed6000.size()/10f);//11
-		float data6500 = (MainActivity.arrLastRunSpeed6500.size()/10f);//12
-		float data7000 = (MainActivity.arrLastRunSpeed7000.size()/10f);//13
-		float data7500 = (MainActivity.arrLastRunSpeed7500.size()/10f);//14
-		float data8000 = (MainActivity.arrLastRunSpeed8000.size()/10f);//15
-		float data8500 = (MainActivity.arrLastRunSpeed8500.size()/10f);//16
-		float data9000 = (MainActivity.arrLastRunSpeed9000.size()/10f);//17
-		float data9500 = (MainActivity.arrLastRunSpeed9500.size()/10f);//18
-		float data10000 = (MainActivity.arrLastRunSpeed10000.size()/10f);//19
-		float data10500 = (MainActivity.arrLastRunSpeed10500.size()/10f);//20
-		float data11000 = (MainActivity.arrLastRunSpeed11000.size()/10f);//21
-		float data11500 = (MainActivity.arrLastRunSpeed11500.size()/10f);//22
-		float data12000 = (MainActivity.arrLastRunSpeed12000.size()/10f);//23
+		float[] mArray = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};  //24 possible speeds
+		float value;
+		boolean over_60_sec = false;
 
-		return new float[]{data500, data1000, data1500, data2000, data2500, data3000, data3500,
-				           data4000, data4500, data5000, data5500, data6000, data6500, data7000,
-						   data7500, data8000, data8500, data9000, data9500, data10000, data10500,
-						   data11000, data11500, data12000};
-	}
-
-	public void resetLastRunProfileData()
-	{
-		if (MainActivity.did_we_calc_last_run) {
-			MainActivity.arrLastRunSpeed500.clear();
-			MainActivity.arrLastRunSpeed1000.clear();
-			MainActivity.arrLastRunSpeed1500.clear();
-			MainActivity.arrLastRunSpeed2000.clear();
-			MainActivity.arrLastRunSpeed2500.clear();
-			MainActivity.arrLastRunSpeed3000.clear();
-			MainActivity.arrLastRunSpeed3500.clear();
-			MainActivity.arrLastRunSpeed4000.clear();
-			MainActivity.arrLastRunSpeed4500.clear();
-			MainActivity.arrLastRunSpeed5000.clear();
-			MainActivity.arrLastRunSpeed5500.clear();
-			MainActivity.arrLastRunSpeed6000.clear();
-			MainActivity.arrLastRunSpeed6500.clear();
-			MainActivity.arrLastRunSpeed7000.clear();
-			MainActivity.arrLastRunSpeed7500.clear();
-			MainActivity.arrLastRunSpeed8000.clear();
-			MainActivity.arrLastRunSpeed8500.clear();
-			MainActivity.arrLastRunSpeed9000.clear();
-			MainActivity.arrLastRunSpeed9500.clear();
-			MainActivity.arrLastRunSpeed10000.clear();
-			MainActivity.arrLastRunSpeed10500.clear();
-			MainActivity.arrLastRunSpeed11000.clear();
-			MainActivity.arrLastRunSpeed11500.clear();
-			MainActivity.arrLastRunSpeed12000.clear();
-			MainActivity.did_we_calc_last_run = false;
+		for (int i=4; i<22; i++) {
+			mArray[i] = (float)(MainActivity.array_last_run[i - 4])/10;  //time in 0.1 seconds resolution before div by 10
+			if (mArray[i] < 0)
+				mArray[i] = 0;
+			if (mArray[i] >= 60 && !over_60_sec )  //if over 60 seconds at any speed we will convert to minutes
+				over_60_sec = true;
+			y_axis_text.setText("time spent (seconds)");
 		}
+
+		if (over_60_sec) {                 //Convert to minutes
+			for (int i=4; i<22; i++) {
+				mArray[i] = mArray[i]/60;
+			}
+			y_axis_text.setText("time spent (minutes)");
+		}
+		return mArray;
 	}
 }

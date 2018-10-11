@@ -66,35 +66,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public static final int STRING_MAX_SPEED = 8100;
 	public int startingCreepRPM = 8100;
 	public String bumpStringImg;
+	public static int[] array_last_run = {0,0,0,0,10,10,8,6,0,0,0,0,0,0,0,0,0,0};
 
 	public static String runtime;
-	public static List<Integer> arrLastRunSpeedProfile = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed1000 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed1500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed2000 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed2500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed3000 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed3500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed4000 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed4500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed5000 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed5500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed6000 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed6500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed7000 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed7500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed8000 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed8500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed9000 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed9500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed10000 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed10500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed11000 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed11500 = new ArrayList<>();
-	public static List<Integer> arrLastRunSpeed12000 = new ArrayList<>();
-
-	//public String runtime = "0";
 
 	float oldX = -50;
 	float oldY = -50;
@@ -120,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public boolean did_we_clear_bump = true;
 	public boolean detected_accelerometer_bump = false;
 	public boolean did_we_recieve_last_run_date = false;
-	public static boolean did_we_calc_last_run = false;
 	public static boolean did_we_calc_life_run = false;
 
 	private BottomNavigationView navigation;
@@ -205,16 +178,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				case R.id.navigation_start_instructions:
 					setConditionalStartingFragment();
 					hideRunningFeatures();
+					stats_fragment_loaded = false;
 					return true;
 
 				case R.id.navigation_stats:
-					calcLastRunSpeedProfile();
+					writeToIgnitionModule(protocol.BTN_STATS_REQUEST,protocol.STATS_LAST_RUN_PAGE_1); //Ask for last run_time stats from module
+					try {//We need a delay here so the BLE module has time to send the stats pages needed for last_run in stats tab
+						Thread.sleep(400);
+					}
+					catch (InterruptedException e)
+					{}
 					loadFragment(statsTabsFragment);
+					stats_fragment_loaded = true;
 					hideRunningFeatures();
 					return true;
 
 				case R.id.navigation_light_trim:
 					hideStartingFeatures();
+					stats_fragment_loaded = false;
 					lite_trim_on = !lite_trim_on; //change state of lite trim mode
 					if (lite_trim_on) {
 						writeToIgnitionModule(protocol.BTN_TRIM_MODE, protocol.LITE_TRIM);
@@ -228,12 +209,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					return true;
 
 				case R.id.navigation_kill:
+					stats_fragment_loaded = false;
 					hideStartingFeatures();
 					writeToIgnitionModule(protocol.BTN_STOP, protocol.STOP_ON);
 					setCheckable(navigation, true);
 					return true;
 
 				case R.id.navigation_tool:
+					stats_fragment_loaded = false;
 					final Intent intent = new Intent(getApplicationContext(), ToolSelectionActivity.class);
 					startActivityForResult(intent, 1);
 			}
@@ -470,7 +453,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					if (live_data.getTps_status() == 1)
 						navigation.findViewById(R.id.navigation_stats).setEnabled(true);
 
-					updateStartingScreen();
+					if (!stats_fragment_loaded)
+						updateStartingScreen();
 
 					Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature());
 				}
@@ -500,8 +484,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						did_we_recieve_last_run_date = false;
 					}
 					updateRunningScreen();
-					//Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getRpm() + " - " + live_data.getRun_time()+ "," + live_data.getTps_status());
-					arrLastRunSpeedProfile.add(live_data.getRpm());
+
+				}
+				else if (data[0] == live_data.LAST_RUN_STATS_PAGE_1 && data.length == data[1])
+				{
+					for (int i=0, j=2; i<9; i++, j +=2) {
+						array_last_run[i] = data[j] + (data[j+1]*256);
+					}
+					writeToIgnitionModule(protocol.BTN_STATS_REQUEST,protocol.STATS_LAST_RUN_PAGE_2);
+				}
+				else if (data[0] == live_data.LAST_RUN_STATS_PAGE_2 && data.length == data[1])
+				{
+					for (int i=9, j=2; i<18; i++, j +=2) {
+						array_last_run[i] = data[j] + (data[j+1]*256);
+					}
 				}
 				else
 				{
@@ -604,7 +600,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	public void setConditionalStartingFragment()
 	{
-		if (live_data.getTemperature() >= 27)
+		if (live_data.getTemperature() > 27)
 		{
 			loadFragment(startHighTempFragment);
 			start_high_temp_fragment_loaded = true;
@@ -663,8 +659,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			Bundle bundle = new Bundle();
 			bundle.putString("LAST_RUN_DATE", RunTimeAndDate);
 			statsTabsFragment.setArguments(bundle);
-			if (did_we_calc_last_run)
-				statsTabRecentRunsFragment.resetLastRunProfileData();
 		}
 	}
 
@@ -699,7 +693,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					setStartFragment();
 				}
 
-				else if (live_data.getTemperature() >= 27 && !start_high_temp_fragment_loaded)
+				else if (live_data.getTemperature() > 27 && !start_high_temp_fragment_loaded)
 				{
 					setConditionalStartingFragment();
 					setStartFragment();
@@ -761,117 +755,5 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				}
 			}
 		});
-	}
-
-	public void calcLastRunSpeedProfile()
-	{
-		if (!did_we_calc_last_run) {
-			int profileSize = arrLastRunSpeedProfile.size();
-
-			if (profileSize >= 50) {
-				Collections.sort(arrLastRunSpeedProfile);
-				for (int i = 0; i < profileSize; i++) {
-					if (arrLastRunSpeedProfile.get(i) >= 250 && arrLastRunSpeedProfile.get(i) < 750) // 2500RPM Range
-						arrLastRunSpeed500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 750 && arrLastRunSpeedProfile.get(i) < 1250) // 3000RPM Range
-						arrLastRunSpeed1000.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 1250 && arrLastRunSpeedProfile.get(i) < 1750) // 3500RPM Range
-						arrLastRunSpeed1500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 1750 && arrLastRunSpeedProfile.get(i) < 2250) // 4000RPM Range
-						arrLastRunSpeed2000.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 2250 && arrLastRunSpeedProfile.get(i) < 2750) // 2500RPM Range
-						arrLastRunSpeed2500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 2750 && arrLastRunSpeedProfile.get(i) < 3250) // 3000RPM Range
-						arrLastRunSpeed3000.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 3250 && arrLastRunSpeedProfile.get(i) < 3750) // 3500RPM Range
-						arrLastRunSpeed3500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 3750 && arrLastRunSpeedProfile.get(i) < 4250) // 4000RPM Range
-						arrLastRunSpeed4000.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 4250 && arrLastRunSpeedProfile.get(i) < 4750) // 4500RPM Range
-						arrLastRunSpeed4500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 4750 && arrLastRunSpeedProfile.get(i) < 5250) // 5000RPM Range
-						arrLastRunSpeed5000.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 5250 && arrLastRunSpeedProfile.get(i) < 5750) // 5500RPM Range
-						arrLastRunSpeed5500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 5750 && arrLastRunSpeedProfile.get(i) < 6250) // 6000RPM Range
-						arrLastRunSpeed6000.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 6250 && arrLastRunSpeedProfile.get(i) < 6750) // 6500RPM Range
-						arrLastRunSpeed6500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 6750 && arrLastRunSpeedProfile.get(i) < 7250) // 7000RPM Range
-						arrLastRunSpeed7000.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 7250 && arrLastRunSpeedProfile.get(i) < 7750) // 7500RPM Range
-						arrLastRunSpeed7500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 7750 && arrLastRunSpeedProfile.get(i) < 8250) // 8000RPM Range
-						arrLastRunSpeed8000.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 8250 && arrLastRunSpeedProfile.get(i) < 8750) // 8500RPM Range
-						arrLastRunSpeed8500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 8750 && arrLastRunSpeedProfile.get(i) < 9250) // 9000RPM Range
-						arrLastRunSpeed9000.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 9250 && arrLastRunSpeedProfile.get(i) < 9750) // 9500RPM Range
-						arrLastRunSpeed9500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 9750 && arrLastRunSpeedProfile.get(i) < 10250) // 10000RPM Range
-						arrLastRunSpeed10000.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 10250 && arrLastRunSpeedProfile.get(i) < 10750) // 10500RPM Range
-						arrLastRunSpeed10500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 10750 && arrLastRunSpeedProfile.get(i) < 11250) // 11000RPM Range
-						arrLastRunSpeed11000.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 11250 && arrLastRunSpeedProfile.get(i) < 11750) // 11500RPM Range
-						arrLastRunSpeed11500.add(arrLastRunSpeedProfile.get(i));
-
-					if (arrLastRunSpeedProfile.get(i) >= 12000) // 12000RPM Range
-						arrLastRunSpeed12000.add(arrLastRunSpeedProfile.get(i));
-
-				}
-				Collections.sort(arrLastRunSpeed500);
-				Collections.sort(arrLastRunSpeed1000);
-				Collections.sort(arrLastRunSpeed1500);
-				Collections.sort(arrLastRunSpeed2000);
-				Collections.sort(arrLastRunSpeed2500);
-				Collections.sort(arrLastRunSpeed3000);
-				Collections.sort(arrLastRunSpeed3500);
-				Collections.sort(arrLastRunSpeed4000);
-				Collections.sort(arrLastRunSpeed4500);
-				Collections.sort(arrLastRunSpeed5000);
-				Collections.sort(arrLastRunSpeed5500);
-				Collections.sort(arrLastRunSpeed6000);
-				Collections.sort(arrLastRunSpeed6500);
-				Collections.sort(arrLastRunSpeed7000);
-				Collections.sort(arrLastRunSpeed7500);
-				Collections.sort(arrLastRunSpeed8000);
-				Collections.sort(arrLastRunSpeed8500);
-				Collections.sort(arrLastRunSpeed9000);
-				Collections.sort(arrLastRunSpeed9500);
-				Collections.sort(arrLastRunSpeed10000);
-				Collections.sort(arrLastRunSpeed10500);
-				Collections.sort(arrLastRunSpeed11000);
-				Collections.sort(arrLastRunSpeed11500);
-				Collections.sort(arrLastRunSpeed12000);
-				did_we_calc_last_run = true;
-				did_we_calc_life_run = false;
-				arrLastRunSpeedProfile.clear();
-			}
-		}
 	}
 }

@@ -120,10 +120,16 @@ public class ScanActivity extends AppCompatActivity
                 stopLeScan();
                 btnScan.setVisibility(View.INVISIBLE);
                 ScanResult result = results.get(index);
-                if (result.getDevice().getName().equals("Trimmer_1"))
+                try {
+                    if (result.getDevice().getName().equals("Trimmer_1")) {
+                        Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_SHORT).show();
+                        startMainActivity(result.getDevice());
+                    }
+                }
+                catch (Exception e )
                 {
-                    Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_SHORT).show();
-                    startMainActivity(result.getDevice());
+                    Log.i(TAG, "Can't find device: " + result.getDevice().getName());
+                    prepareForScan();
                 }
             }
         }
