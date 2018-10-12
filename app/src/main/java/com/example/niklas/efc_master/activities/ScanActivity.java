@@ -121,7 +121,7 @@ public class ScanActivity extends AppCompatActivity
                 btnScan.setVisibility(View.INVISIBLE);
                 ScanResult result = results.get(index);
                 try {
-                    if (result.getDevice().getName().equals("Trimmer_1")) {
+                    if (result.getDevice().getName().contains("WEFC")) {
                         Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_SHORT).show();
                         startMainActivity(result.getDevice());
                     }

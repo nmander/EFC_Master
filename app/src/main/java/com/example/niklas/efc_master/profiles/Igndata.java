@@ -17,6 +17,8 @@ public class Igndata extends BaseObservable
     private int stop_status; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
     private int tps_status; // 0= NOT at idle, 1 = at idle position, 2 = WOT
     private int error_code; //0=Success, 1=Not following starting procedure,
+    private int oil_life_cntr;
+    private int total_run_time;
 
     public Igndata() {
         this.primerBulb = "PUSH PRIMER BULB N TIMES";
@@ -25,6 +27,10 @@ public class Igndata extends BaseObservable
         this.attachment_nbr_status = 0;
         this.trim_mode_status = 0;
         this.stop_status = 0;
+        this.tps_status = 0;
+        this.error_code = 0;
+        this.oil_life_cntr = 0;
+        this.total_run_time = 0;
     }
 
     public int getAttachment_nbr_status() {
@@ -84,7 +90,6 @@ public class Igndata extends BaseObservable
     public int getTps_status() {
         return tps_status;
     }
-
     public void setTps_status(int tps_status) {
         this.tps_status = tps_status;
     }
@@ -92,8 +97,13 @@ public class Igndata extends BaseObservable
     public int getError_code() {
         return error_code;
     }
-
     public void setError_code(int error_code) {
         this.error_code = error_code;
     }
+
+    public int getOil_life_cntr() { return oil_life_cntr;  }
+    public void setOil_life_cntr(int oil_life_cntr) { this.oil_life_cntr = oil_life_cntr; }
+
+    public int getTotal_run_time() { return total_run_time; }
+    public void setTotal_run_time(int total_run_time) { this.total_run_time = total_run_time; }
 }

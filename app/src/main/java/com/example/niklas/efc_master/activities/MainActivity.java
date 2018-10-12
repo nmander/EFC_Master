@@ -150,7 +150,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			oldZ = -50;
 		}
 
-		if (myX+2 < oldX && myX > -17  & myY > -17 && myY+2 <oldY && myZ >oldZ+5)
+		//and tps ==2
+		if (myX+2 < oldX && myX > -17  & myY > -17 && myY+2 <oldY && myZ >oldZ+5 && live_data.getTps_status() == 2)
 		{
 			detected_accelerometer_bump = true;
 			Log.i(TAG, "DETECTED BUMP: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
@@ -470,6 +471,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					live_data.setTrim_mode_status(data[8]);
 					live_data.setStop_status(data[9]);
 					live_data.setTps_status(data[10]);
+					live_data.setTotal_run_time((data[12]<< 8)&0x0000ff00|(data[11]&0x000000ff));
+					live_data.setOil_life_cntr(data[13]);
 
 					//hide navigational features:
 					if (!hide_starting_features)
@@ -658,6 +661,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			RunTimeAndDate = runtime + "-" + date;
 			Bundle bundle = new Bundle();
 			bundle.putString("LAST_RUN_DATE", RunTimeAndDate);
+			bundle.putFloat("TOTAL_RUN_TIME", (float)(live_data.getTotal_run_time()/60));
 			statsTabsFragment.setArguments(bundle);
 		}
 	}
@@ -711,7 +715,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				if (!start_rpm_creep)
 					dashboardFragment.updateSpeedometer(live_data.getRpm());
 				dashboardFragment.updateRunTimer(live_data.getRun_time());
-				if (engine_running && live_data.getTps_status() ==2)
+				if (engine_running && live_data.getTps_status() != 1)
 				{
 					navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
 					navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);

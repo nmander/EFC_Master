@@ -161,7 +161,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/table_cell_shape"
                     android:padding="5sp"
-                    android:text="185.0 hrs"
+                    android:text="10.4 hrs"
                     android:textAppearance="?android:attr/textAppearanceMedium">
                 </TextView>
             </TableRow>

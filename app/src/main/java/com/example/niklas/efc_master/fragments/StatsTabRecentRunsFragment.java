@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.niklas.efc_master.R;
 import com.example.niklas.efc_master.activities.MainActivity;
+import com.example.niklas.efc_master.profiles.myLastRunYvalueFormatter;
 import com.example.niklas.efc_master.profiles.myXAxisValueFormatter;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -109,6 +110,7 @@ public class StatsTabRecentRunsFragment extends Fragment {
 		BarData data = new BarData(set);
 		data.setValueTextSize(10);
 		data.setBarWidth(450f); // set custom bar width
+		data.setValueFormatter(new myLastRunYvalueFormatter());
 
 		return data;
 
@@ -123,7 +125,7 @@ public class StatsTabRecentRunsFragment extends Fragment {
 			mArray[i] = (float)(MainActivity.array_last_run[i - 4])/10;  //time in 0.1 seconds resolution before div by 10
 			if (mArray[i] < 0)
 				mArray[i] = 0;
-			if (mArray[i] >= 60 && !over_60_sec )  //if over 60 seconds at any speed we will convert to minutes
+			else if (mArray[i] >= 60 && !over_60_sec )  //if over 60 seconds at any speed we will convert to minutes
 				over_60_sec = true;
 			y_axis_text.setText("time spent (seconds)");
 		}

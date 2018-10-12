@@ -15,6 +15,7 @@ public class StatsTabDetailsFragment extends Fragment
 	public MainActivity mainActivity;
 	//public TextView modLastRunDateTimeCell;
 	public TextView modLastRunTimerCell;
+	public TextView modTotalRunTimeCell;
 	public String myLastRunTimeDate;
 	public String[] LastRun;
 	private DashboardFragment dashboardFragment = new DashboardFragment();
@@ -26,6 +27,7 @@ public class StatsTabDetailsFragment extends Fragment
 		mainActivity = (MainActivity) getActivity();
 		//modLastRunDateTimeCell = rootView.findViewById(R.id.cell_last_runtime_datetime);
 		modLastRunTimerCell = rootView.findViewById(R.id.cell_last_runtime_stopwatch);
+		modTotalRunTimeCell = rootView.findViewById(R.id.cell_total_runtime);
 
 		Bundle bundle = getArguments();
 		if (bundle != null) {
@@ -46,6 +48,10 @@ public class StatsTabDetailsFragment extends Fragment
 				{
 					modLastRunTimerCell.setText("");
 				}
+			}
+			else if (bundle.containsKey("TOTAL_RUN_TIME"))
+			{
+				String total_run_time = String.valueOf(getArguments().getFloat("TOTAL_RUN_TIME"));
 			}
 		}
  		return rootView;
