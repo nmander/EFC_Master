@@ -18,7 +18,6 @@ import com.example.niklas.efc_master.activities.MainActivity;
 public class StatsTabDetailsFragment extends Fragment
 {
 	public MainActivity mainActivity;
-	//public TextView modLastRunDateTimeCell;
 	public TextView modLastRunTimerCell;
 	public TextView modTotalRunTimeCell;
 	public TextView txtOilLifeValue;
