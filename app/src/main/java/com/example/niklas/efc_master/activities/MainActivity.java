@@ -57,7 +57,6 @@ import static com.example.niklas.efc_master.profiles.NordicProfile.SERVICE_UUID;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
-	//tesating
 	private SensorManager sensorManager;
 	Sensor accelerometer;
 
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private static String device_address;
 	public static final String EXTRA_DEVICE_ADDRESS = "mAddress";
 	public static final int STRING_MAX_SPEED = 8000;
-	public int startingCreepRPM = 8000;
+	public int startingCreepRPM = STRING_MAX_SPEED;
 	public String bumpStringImg;
 	public static int[] array_last_run = {0,0,0,0,10,10,8,6,0,0,0,0,0,0,0,0,0,0};
 
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	private BluetoothManager mBluetoothManager;
 	private BluetoothAdapter mBluetoothAdapter;
-	private BluetoothGatt mBluetoothGatt;
+	public BluetoothGatt mBluetoothGatt;
 	//Variables used to interpret data coming in and out
 	public Igndata live_data = new Igndata();
 	private boolean engine_running = false;
@@ -431,7 +430,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					live_data.setAttachment_nbr_status(data[3]);
 					live_data.setTps_status(data[4]);
 					live_data.setError_code(data[5]); // flash if ==1
-					//live_data.setOil_life_cntr(data[13]);
 					getLastRunDateTime();
 
 					//hide navigational features:
@@ -641,7 +639,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					Toast.makeText(getApplicationContext(), "BUMPED STRING", Toast.LENGTH_SHORT).show();
 					stopAccelerometer();
 					detected_accelerometer_bump = false;
-					startingCreepRPM = 8100;
+					startingCreepRPM = STRING_MAX_SPEED;
 					dashboardFragment.myBUMP.clearAnimation();
 					dashboardFragment.updateSpeedometer(live_data.getRpm());
 				}
@@ -654,7 +652,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		String date;
 		//String runtime;
 		String RunTimeAndDate;
-		if (live_data.getRun_time() >= 5 && !engine_running && !did_we_recieve_last_run_date)
+		if (live_data.getRun_time() >= 2 && !engine_running && !did_we_recieve_last_run_date)
 		{
 			did_we_recieve_last_run_date = true;
 			DateFormat df = new SimpleDateFormat("MMM d, yyyy HH:mm:ss z");
@@ -744,7 +742,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					else
 					{
 						start_rpm_creep = false;
-						startingCreepRPM = 8000;
+						startingCreepRPM = STRING_MAX_SPEED;
 					}
 				}
 				else

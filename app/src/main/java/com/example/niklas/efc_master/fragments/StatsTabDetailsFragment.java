@@ -24,6 +24,7 @@ public class StatsTabDetailsFragment extends Fragment
 	public TextView txtOilLifeValue;
 	public Button btnResetOilLife;
 	public String myLastRunTimeDate;
+	private TextView mod_cell_device_name;
 	public String[] LastRun;
 	private DashboardFragment dashboardFragment = new DashboardFragment();
 
@@ -35,6 +36,8 @@ public class StatsTabDetailsFragment extends Fragment
 		//modLastRunDateTimeCell = rootView.findViewById(R.id.cell_last_runtime_datetime);
 		modLastRunTimerCell = rootView.findViewById(R.id.cell_last_runtime_stopwatch);
 		modTotalRunTimeCell = rootView.findViewById(R.id.cell_total_runtime);
+		mod_cell_device_name = rootView.findViewById(R.id.cell_device_name);
+		mod_cell_device_name.setText(mainActivity.mBluetoothGatt.getDevice().getName());
 		txtOilLifeValue = rootView.findViewById(R.id.cell_oil_life_value);
 		btnResetOilLife = rootView.findViewById(R.id.btn_reset_oil);
 
@@ -61,6 +64,7 @@ public class StatsTabDetailsFragment extends Fragment
 			if (bundle.containsKey("TOTAL_RUN_TIME"))
 			{
 				String total_run_time = String.valueOf(getArguments().getFloat("TOTAL_RUN_TIME"));
+				modTotalRunTimeCell.setText(total_run_time + " hrs");
 			}
 		}
 		//txtOilLifeValue.setText(mainActivity.live_data.getOil_life_cntr());
