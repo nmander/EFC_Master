@@ -432,7 +432,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					live_data.setAttachment_nbr_status(data[3]);
 					live_data.setTps_status(data[4]);
 					live_data.setError_code(data[5]); // flash if ==1
-					live_data.setOil_life_cntr(data[6]);
+					live_data.setOil_life_cntr(data[6]); //how about now?
 					getLastRunDateTime();
 
 					//hide navigational features:
