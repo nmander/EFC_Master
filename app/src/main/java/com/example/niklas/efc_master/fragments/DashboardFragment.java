@@ -1,16 +1,20 @@
 package com.example.niklas.efc_master.fragments;
 
+import android.app.job.JobInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.niklas.efc_master.R;
 import com.example.niklas.efc_master.profiles.Speedometer;
@@ -23,6 +27,8 @@ public class DashboardFragment extends Fragment
 	public TextView myRunTimer;
 	public TextView myBUMP;
 	public ImageView myToolSelection;
+	public TextView myOilLife;
+	public ImageButton btnChangeOil;
 	public int myRPM;
 
 	@Nullable
@@ -47,6 +53,8 @@ public class DashboardFragment extends Fragment
 		//myBUMP.setTextColor(getResources().getColor(R.color.colorMaterialLight));
 		myBUMP.setVisibility(View.INVISIBLE);
 
+		myOilLife = rootView.findViewById(R.id.dashboard_oil_value);
+
 		Bundle bundle = getArguments();
 		if (bundle != null) {
 			if (bundle.containsKey("TOOL")) {
@@ -62,6 +70,9 @@ public class DashboardFragment extends Fragment
 			}
 		}
 
+		if(!mainActivity.did_we_clear_change)
+			flashCHANGE();
+
 		return rootView;
 	}
 
@@ -75,6 +86,30 @@ public class DashboardFragment extends Fragment
 	{
 		String temp = getModuleRunTimeFormat(time);
 		myRunTimer.setText(temp);
+	}
+
+	public void changeOil()
+	{
+		if (mainActivity.start_change_notif)
+		{
+			mainActivity.start_change_notif = false;
+			myOilLife.clearAnimation();
+			myOilLife.setText("100%");
+		}
+	}
+
+	public void updateOilLife(int percent)
+	{
+		int myPercent;
+		myPercent = 100 - percent;
+		myOilLife.setText(String.valueOf(myPercent) + "%");
+
+		if (myPercent <= 10 && !mainActivity.start_change_notif)
+		{
+			mainActivity.start_change_notif = true;
+			mainActivity.did_we_clear_change = false;
+			flashCHANGE();
+		}
 	}
 
 	public boolean updateToolView(int toolCode)
@@ -149,6 +184,36 @@ public class DashboardFragment extends Fragment
 			public void onAnimationEnd(Animation animation) {
 				myBUMP.setTextColor(Color.BLACK);
 				myBUMP.setVisibility(View.INVISIBLE);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+
+			}
+		});
+	}
+
+	public void flashCHANGE()
+	{
+		Animation anim = new AlphaAnimation(0.0f, 1.0f);
+		myOilLife.setTextColor(getResources().getColor(R.color.colorStopButton));
+
+		anim.setDuration(150); //You can manage the blinking time with this parameter
+		anim.setStartOffset(100);
+		anim.setRepeatMode(Animation.REVERSE);
+		anim.setRepeatCount(Animation.INFINITE);
+		myOilLife.startAnimation(anim);
+
+		anim.setAnimationListener(new Animation.AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				myOilLife.setTextColor(Color.BLACK);
+				mainActivity.start_change_notif = false;
+				mainActivity.did_we_clear_change = true;
 			}
 
 			@Override

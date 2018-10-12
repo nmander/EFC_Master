@@ -66,11 +66,13 @@ public class StatsTabDetailsFragment extends Fragment
 				modTotalRunTimeCell.setText(total_run_time + " hrs");
 			}
 		}
-		//txtOilLifeValue.setText(mainActivity.live_data.getOil_life_cntr());
+		int myPercent;
+		myPercent = 100 - mainActivity.live_data.getOil_life_cntr();
+		txtOilLifeValue.setText(String.valueOf(myPercent) + "%");
 
 		btnResetOilLife.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View view)
+			public void onClick(final View view)
 			{
 /*				if (!txtOilLifeValue.getText().equals("100 %")) {
 					txtOilLifeValue.setText("100 %");
@@ -86,7 +88,8 @@ public class StatsTabDetailsFragment extends Fragment
 
 					public void onClick(DialogInterface dialog, int which) {
 						// Do nothing but close the dialog
-
+						txtOilLifeValue.setText("100 %");
+						btnResetOilLife.setVisibility(View.INVISIBLE);
 						dialog.dismiss();
 					}
 				});
