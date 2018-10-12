@@ -22,7 +22,7 @@ public class StatsTabDetailsFragment extends Fragment
 	public TextView modTotalRunTimeCell;
 	public TextView txtOilLifeValue;
 	public Button btnResetOilLife;
-	public String myLastRunTimeDate;
+	public String myLastRunTimeDate = "";
 	private TextView mod_cell_device_name;
 	public String[] LastRun;
 	private DashboardFragment dashboardFragment = new DashboardFragment();
@@ -41,26 +41,30 @@ public class StatsTabDetailsFragment extends Fragment
 		btnResetOilLife = rootView.findViewById(R.id.btn_reset_oil);
 
 		Bundle bundle = getArguments();
-		if (bundle != null) {
-			if (bundle.containsKey("LAST_RUN_DATE")) {
+		if (bundle != null || !mainActivity.RunTimeAndDate.isEmpty()) {
+			if (bundle != null && bundle.containsKey("LAST_RUN_DATE")) {
 				myLastRunTimeDate = getArguments().getString("LAST_RUN_DATE");
-				if (myLastRunTimeDate != null) {
-					LastRun = myLastRunTimeDate.split("-");
-					if ((Integer.valueOf(LastRun[0]) < 60))
-						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " sec" + "  |  " + LastRun[1]);
-					if ((Integer.valueOf(LastRun[0]) >= 60 && (Integer.valueOf(LastRun[0]) < 3600)))
-						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " min" + "  |  " + LastRun[1]);
-					if ((Integer.valueOf(LastRun[0]) >=3600 && (Integer.valueOf(LastRun[0]) < 36000)))
-						modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " hrs" + "  |  " + LastRun[1]);
-					else if ((Integer.valueOf(LastRun[0]) >= 360000))
-						modLastRunTimerCell.setText("100+ hrs");
-				}
-				else
-				{
-					modLastRunTimerCell.setText("");
-				}
 			}
-			if (bundle.containsKey("TOTAL_RUN_TIME"))
+			else
+			{
+				myLastRunTimeDate = mainActivity.RunTimeAndDate;
+			}
+			if (myLastRunTimeDate != null) {
+				LastRun = myLastRunTimeDate.split("-");
+				if ((Integer.valueOf(LastRun[0]) < 60))
+					modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " sec" + "  |  " + LastRun[1]);
+				if ((Integer.valueOf(LastRun[0]) >= 60 && (Integer.valueOf(LastRun[0]) < 3600)))
+					modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " min" + "  |  " + LastRun[1]);
+				if ((Integer.valueOf(LastRun[0]) >=3600 && (Integer.valueOf(LastRun[0]) < 36000)))
+					modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " hrs" + "  |  " + LastRun[1]);
+				else if ((Integer.valueOf(LastRun[0]) >= 360000))
+					modLastRunTimerCell.setText("100+ hrs");
+			}
+			else
+			{
+				modLastRunTimerCell.setText("");
+			}
+			if (bundle != null && bundle.containsKey("TOTAL_RUN_TIME"))
 			{
 				String total_run_time = String.valueOf(getArguments().getFloat("TOTAL_RUN_TIME"));
 				modTotalRunTimeCell.setText(total_run_time + " hrs");

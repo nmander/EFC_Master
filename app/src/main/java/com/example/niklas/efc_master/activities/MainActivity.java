@@ -3,6 +3,7 @@ package com.example.niklas.efc_master.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	private SensorManager sensorManager;
 	Sensor accelerometer;
+	SharedPreferences sharedPreferences;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private static String device_address;
@@ -67,7 +69,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public int startingCreepRPM = STRING_MAX_SPEED;
 	public String bumpStringImg;
 	public static int[] array_last_run = {0,0,0,0,10,10,8,6,0,0,0,0,0,0,0,0,0,0};
-
+	public static final String MY_PREFERENCES = "my_preferences";
+	public static final String LAST_RUN_TIME_AND_DATE = "lastRunKey";
+	public String RunTimeAndDate;
 	public static String runtime;
 
 	float oldX = -50;
@@ -91,9 +95,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private boolean hide_starting_features = false;
 	private boolean start_rpm_creep = false;
 	public static boolean start_bump_notif = false;
-	public boolean start_change_notif = false;
 	public boolean did_we_clear_bump = true;
-	public boolean did_we_clear_change = true;
 	public boolean detected_accelerometer_bump = false;
 	public boolean did_we_recieve_last_run_date = false;
 	public static boolean did_we_calc_life_run = false;
@@ -113,6 +115,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		//Try to connect to Gatt Server
 		device_address = getIntent().getStringExtra(EXTRA_DEVICE_ADDRESS);
 		connectToGattServer();
+
+		//Get stored strings from phone storage, for example last run data
+		sharedPreferences = getSharedPreferences(MY_PREFERENCES, Context.MODE_PRIVATE);
+		if (sharedPreferences.contains(LAST_RUN_TIME_AND_DATE))
+		{
+			RunTimeAndDate = sharedPreferences.getString(LAST_RUN_TIME_AND_DATE, "");
+		}
 
 		//Setup interface views
 		setContentView(R.layout.activity_main);
@@ -432,7 +441,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					live_data.setAttachment_nbr_status(data[3]);
 					live_data.setTps_status(data[4]);
 					live_data.setError_code(data[5]); // flash if ==1
-					live_data.setOil_life_cntr(data[6]);
 					getLastRunDateTime();
 
 					//hide navigational features:
@@ -453,23 +461,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						start_fragment_loaded = false;
 						navigation.findViewById(R.id.navigation_stats).setEnabled(false);
 					}
-					else navigation.findViewById(R.id.navigation_stats).setEnabled(true);
 
-/*					if (live_data.getTps_status() == 1)
-						navigation.findViewById(R.id.navigation_stats).setEnabled(true);*/
+					if (live_data.getTps_status() == 1)
+						navigation.findViewById(R.id.navigation_stats).setEnabled(true);
 
 					if (!stats_fragment_loaded)
 						updateStartingScreen();
-					if (stats_fragment_loaded)
-					{
-						if (live_data.getError_code() == 1)
-						{
-							start_fragment_loaded = false;
-							stats_fragment_loaded = false;
-							writeToIgnitionModule(protocol.BTN_CLEAR_CODE, protocol.RESET_CODE);
-						}
-
-					}
 
 					Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + live_data.getTps_status());
 				}
@@ -665,7 +662,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	{
 		String date;
 		//String runtime;
-		String RunTimeAndDate;
+		//String RunTimeAndDate;
 		if (live_data.getRun_time() >= 2 && !engine_running && !did_we_recieve_last_run_date)
 		{
 			did_we_recieve_last_run_date = true;
@@ -677,6 +674,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			bundle.putString("LAST_RUN_DATE", RunTimeAndDate);
 			bundle.putFloat("TOTAL_RUN_TIME", (float)(live_data.getTotal_run_time()/60));
 			statsTabsFragment.setArguments(bundle);
+			//Store last run in phone storage
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			editor.putString(LAST_RUN_TIME_AND_DATE,RunTimeAndDate);
+			editor.apply();
 		}
 	}
 
@@ -729,9 +730,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				if (!start_rpm_creep)
 					dashboardFragment.updateSpeedometer(live_data.getRpm());
 				dashboardFragment.updateRunTimer(live_data.getRun_time());
-
-				dashboardFragment.updateOilLife(live_data.getOil_life_cntr());
-
 				if (engine_running && live_data.getTps_status() != 1)
 				{
 					navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);

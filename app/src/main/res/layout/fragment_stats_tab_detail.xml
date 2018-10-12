@@ -51,7 +51,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/table_cell_shape"
                         android:padding="5sp"
-                        android:text="Trimmer_1"
+                        android:text="WEFC"
                         android:textSize="18sp"
                         android:textAppearance="?android:attr/textAppearanceMedium">
                     </TextView>
@@ -82,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/table_cell_shape"
                         android:padding="5sp"
-                        android:text="10.4 hrs"
+                        android:text="10.0 hrs"
                         android:textSize="18sp"
                         android:textAppearance="?android:attr/textAppearanceMedium">
                     </TextView>
@@ -111,7 +111,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/table_cell_shape"
                         android:padding="5sp"
-                        android:text="0.30 hrs"
+                        android:text=""
                         android:textSize="18sp"
                         android:textAppearance="?android:attr/textAppearanceMedium">
                     </TextView>
