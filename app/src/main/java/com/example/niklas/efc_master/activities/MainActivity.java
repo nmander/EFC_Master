@@ -57,6 +57,7 @@ import static com.example.niklas.efc_master.profiles.NordicProfile.SERVICE_UUID;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
+	//tesating
 	private SensorManager sensorManager;
 	Sensor accelerometer;
 
