@@ -49,7 +49,7 @@ public class StatsTabDetailsFragment extends Fragment
 					modLastRunTimerCell.setText("");
 				}
 			}
-			else if (bundle.containsKey("TOTAL_RUN_TIME"))
+			if (bundle.containsKey("TOTAL_RUN_TIME"))
 			{
 				String total_run_time = String.valueOf(getArguments().getFloat("TOTAL_RUN_TIME"));
 			}
