@@ -57,14 +57,15 @@ import static com.example.niklas.efc_master.profiles.NordicProfile.SERVICE_UUID;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
+	//tesating
 	private SensorManager sensorManager;
 	Sensor accelerometer;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private static String device_address;
 	public static final String EXTRA_DEVICE_ADDRESS = "mAddress";
-	public static final int STRING_MAX_SPEED = 8100;
-	public int startingCreepRPM = 8100;
+	public static final int STRING_MAX_SPEED = 8000;
+	public int startingCreepRPM = 8000;
 	public String bumpStringImg;
 	public static int[] array_last_run = {0,0,0,0,10,10,8,6,0,0,0,0,0,0,0,0,0,0};
 
@@ -430,6 +431,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					live_data.setAttachment_nbr_status(data[3]);
 					live_data.setTps_status(data[4]);
 					live_data.setError_code(data[5]); // flash if ==1
+					//live_data.setOil_life_cntr(data[13]);
 					getLastRunDateTime();
 
 					//hide navigational features:
@@ -742,7 +744,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					else
 					{
 						start_rpm_creep = false;
-						startingCreepRPM = 8100;
+						startingCreepRPM = 8000;
 					}
 				}
 				else
