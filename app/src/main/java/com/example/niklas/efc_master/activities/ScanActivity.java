@@ -2,6 +2,7 @@ package com.example.niklas.efc_master.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -9,6 +10,7 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
@@ -17,12 +19,18 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.niklas.efc_master.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,10 +52,18 @@ public class ScanActivity extends AppCompatActivity
     private boolean mScanning;
     private ProgressBar scanning_wheel;
     private Button btnScan;
-    private int temp = -999, rssi, index;
+    private Button btnConnect;
+    //private int temp = -999, rssi, index;
 
     private final BluetoothLeScannerCompat mScanner = BluetoothLeScannerCompat.getScanner();
     private final Handler mStopScanHandler = new Handler();
+
+    ArrayList<String> WBLE_Names = new ArrayList<String>();
+    ArrayList<BluetoothDevice> WBLE_Addresses = new ArrayList<BluetoothDevice>();
+    ListView myDevices;
+    int selectedDevice;
+    AlertDialog dialog;
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -58,7 +74,6 @@ public class ScanActivity extends AppCompatActivity
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION_LOCATION && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -71,6 +86,8 @@ public class ScanActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        WBLE_Names.clear();
+        WBLE_Addresses.clear();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         scanning_wheel = findViewById(R.id.scanning_wheel);
@@ -78,6 +95,7 @@ public class ScanActivity extends AppCompatActivity
 
         btnScan = findViewById(R.id.btn_scan);
         btnScan.setVisibility(View.INVISIBLE);
+
 
         btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +111,51 @@ public class ScanActivity extends AppCompatActivity
         Toast.makeText(getApplicationContext(), "Scanning for WBLE Modules...", Toast.LENGTH_SHORT).show();
     }
 
+    public void show_found_devices()
+    {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        View row = getLayoutInflater().inflate(R.layout.dialog_wble_devices, null);
+        myDevices = (ListView)row.findViewById(R.id.list_wble_devices);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, WBLE_Names);
+        myDevices.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        alertDialog.setView(row);
+        dialog = alertDialog.create();
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_rounded);
+        dialog.show();
+        btnConnect = (Button)row.findViewById(R.id.btn_connect) ;
+        btnConnect.setVisibility(View.INVISIBLE);
+
+        myDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //change radio button state
+                CheckedTextView checkedTextView = ((CheckedTextView)view);
+                checkedTextView.setChecked(!checkedTextView.isChecked());
+
+                if (checkedTextView.isChecked())
+                {
+                    selectedDevice = position;
+                    btnConnect.setVisibility(View.VISIBLE);
+                }
+                else
+                    btnConnect.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    public void Connect(View v)
+    {
+        Log.i(TAG, "YOU CLICKED CONNECT");
+        Toast.makeText(getApplicationContext(), "Connected: " + WBLE_Names.get(selectedDevice), Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
+        startMainActivity(WBLE_Addresses.get(selectedDevice));
+//        WBLE_Names.clear();
+//        WBLE_Addresses.clear();
+    }
+
     private final ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
@@ -105,32 +168,30 @@ public class ScanActivity extends AppCompatActivity
             Log.i(TAG, "onBatchScanResults: " + results.toString());
 
             if (!results.isEmpty()) {
-                for (int i = 0; i < results.size(); i++)
-                {
+                for (int i = 0; i < results.size(); i++) {
                     ScanResult result = results.get(i);
                     Log.i(TAG, "found BLE: " + result.getDevice().getName());
-                    if (result.getRssi() > temp)
-                    {
-                        index = i;
-                        rssi = result.getRssi();
-                        temp = rssi;
-                    }
-                }
-                //ScanResult result = results.get(0);
-                //Log.i(TAG, "found BLE: " + results.toString());
-                stopLeScan();
-                btnScan.setVisibility(View.INVISIBLE);
-                ScanResult result = results.get(index);
-                try {
                     if (result.getDevice().getName().contains("WEFC")) {
-                        Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_SHORT).show();
-                        startMainActivity(result.getDevice());
+                        WBLE_Names.add(result.getDevice().getName());
+                        WBLE_Addresses.add(result.getDevice());
                     }
                 }
-                catch (Exception e )
-                {
-                    Log.i(TAG, "Can't find device: " + result.getDevice().getName());
-                    prepareForScan();
+                stopLeScan();
+                if (WBLE_Names.size() > 1)
+                    show_found_devices();
+                else if (WBLE_Names.size() == 1) {
+                    ScanResult result = results.get(0);
+                    Log.i(TAG, "found BLE: " + results.toString());
+                    btnScan.setVisibility(View.INVISIBLE);
+                    try {
+                        if (result.getDevice().getName().contains("WEFC")) {
+                            Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_SHORT).show();
+                            startMainActivity(result.getDevice());
+                        }
+                    } catch (Exception e) {
+                        Log.i(TAG, "Can't find device: " + result.getDevice().getName());
+                        prepareForScan();
+                    }
                 }
             }
         }
@@ -178,6 +239,8 @@ public class ScanActivity extends AppCompatActivity
     }
 
     private void startLeScan() {
+        WBLE_Names.clear();
+        WBLE_Addresses.clear();
         Log.w(TAG, "Starting Scan");
         mScanning = true;
         ScanSettings settings = new ScanSettings.Builder()
