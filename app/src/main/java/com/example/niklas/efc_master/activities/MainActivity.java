@@ -29,8 +29,8 @@ import android.bluetooth.BluetoothProfile;
 import android.view.View;
 import android.widget.Toast;
 import com.example.niklas.efc_master.fragments.DashboardFragment;
-import com.example.niklas.efc_master.fragments.StatsTabDetailsFragment;
-import com.example.niklas.efc_master.fragments.StatsTabRPMBinsFragment;
+//import com.example.niklas.efc_master.fragments.StatsTabDetailsFragment;
+//import com.example.niklas.efc_master.fragments.StatsTabRPMBinsFragment;
 import com.example.niklas.efc_master.fragments.StatsTabRecentRunsFragment;
 import com.example.niklas.efc_master.profiles.Igndata;
 import com.example.niklas.efc_master.R;
@@ -43,13 +43,13 @@ import com.example.niklas.efc_master.profiles.protocol;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+//import java.util.Collection;
+//import java.util.Collections;
+//import java.util.List;
+//import java.util.Timer;
+//import java.util.TimerTask;
 
 import static com.example.niklas.efc_master.profiles.NordicProfile.CHARACTERISTIC_RX;
 import static com.example.niklas.efc_master.profiles.NordicProfile.CHARACTERISTIC_TX;
@@ -139,7 +139,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 		bumpStringImg = "string";  // default
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		if (null != sensorManager) {
+			accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		}
 	}
 
 	@Override
@@ -200,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					try {//We need a delay here so the BLE module has time to send the stats pages needed for last_run in stats tab
 						Thread.sleep(400);
 					}
-					catch (InterruptedException e)
+					catch (InterruptedException ignored)
 					{}
 					loadFragment(statsTabsFragment);
 					stats_fragment_loaded = true;
@@ -381,8 +383,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		{
 			if (status == BluetoothGatt.GATT_SUCCESS)
 			{
-				boolean connected = false;
-
 				BluetoothGattService service = gatt.getService(SERVICE_UUID);
 				if (service != null)
 				{
@@ -395,7 +395,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						if (descriptor != null)
 						{
 							descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-							connected = gatt.writeDescriptor(descriptor);
+							boolean connected = gatt.writeDescriptor(descriptor);
 							Log.w(TAG, "Trying to subscribe to notifications: " + connected);
 						}
 					}
@@ -555,7 +555,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	{
 		//Get bluetooth radio, need to do it again in this class
 		mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
-		mBluetoothAdapter = mBluetoothManager.getAdapter();
+		if (mBluetoothManager != null) {
+			mBluetoothAdapter = mBluetoothManager.getAdapter();
+		}
 		//Now setup radio to communicate with WBLE using address found from scanning and passed as parameter to this class
 		GattClientCallback mGattCallback = new GattClientCallback();
 		BluetoothDevice bluetoothDevice = mBluetoothAdapter.getRemoteDevice(device_address);

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.niklas.efc_master.R;
 import com.example.niklas.efc_master.activities.MainActivity;
+import com.example.niklas.efc_master.profiles.protocol;
 
 public class StatsTabDetailsFragment extends Fragment
 {
@@ -72,17 +73,16 @@ public class StatsTabDetailsFragment extends Fragment
 		}
 		int myPercent;
 		myPercent = 100 - mainActivity.live_data.getOil_life_cntr();
+		if (myPercent <= 0)
+		{
+			myPercent = 0;
+		}
 		txtOilLifeValue.setText(String.valueOf(myPercent) + "%");
 
 		btnResetOilLife.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View view)
 			{
-/*				if (!txtOilLifeValue.getText().equals("100 %")) {
-					txtOilLifeValue.setText("100 %");
-					//mainActivity.live_data.setOil_life_cntr(0);
-
-				}*/
 				AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
 				builder.setTitle("Confirm");
@@ -91,7 +91,7 @@ public class StatsTabDetailsFragment extends Fragment
 				builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int which) {
-						// Do nothing but close the dialog
+						mainActivity.writeToIgnitionModule(protocol.BTN_RESET_OIL, protocol.RESET_OIL_COUNTER);
 						txtOilLifeValue.setText("100 %");
 						btnResetOilLife.setVisibility(View.INVISIBLE);
 						dialog.dismiss();
