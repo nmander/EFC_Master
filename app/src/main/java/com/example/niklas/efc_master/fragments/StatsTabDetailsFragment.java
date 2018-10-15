@@ -83,7 +83,7 @@ public class StatsTabDetailsFragment extends Fragment
 		{
 			myPercent = 0;
 		}
-		else if (myPercent < 99)
+		else if (myPercent <= 99)
 			btnResetOilLife.setVisibility(View.VISIBLE);
 		txtOilLifeValue.setText(String.valueOf(myPercent) + "%");
 

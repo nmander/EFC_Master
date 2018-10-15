@@ -112,8 +112,7 @@
                 android:layout_marginStart="25sp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="@null"
-                android:onClick="changeOil"/>
+                android:background="@null"/>
         </LinearLayout>
 
         <LinearLayout

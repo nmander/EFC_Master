@@ -19,6 +19,9 @@ import android.widget.Toast;
 import com.example.niklas.efc_master.R;
 import com.example.niklas.efc_master.profiles.Speedometer;
 import com.example.niklas.efc_master.activities.MainActivity;
+import com.example.niklas.efc_master.profiles.protocol;
+
+import static android.content.ContentValues.TAG;
 
 public class DashboardFragment extends Fragment
 {
@@ -28,7 +31,6 @@ public class DashboardFragment extends Fragment
 	public TextView myBUMP;
 	public ImageView myToolSelection;
 	public TextView myOilLife;
-	public ImageButton btnChangeOil;
 	public int myRPM;
 
 	@Nullable
@@ -86,16 +88,6 @@ public class DashboardFragment extends Fragment
 	{
 		String temp = getModuleRunTimeFormat(time);
 		myRunTimer.setText(temp);
-	}
-
-	public void changeOil()
-	{
-		if (mainActivity.start_change_notif)
-		{
-			mainActivity.start_change_notif = false;
-			myOilLife.clearAnimation();
-			myOilLife.setText("100%");
-		}
 	}
 
 	public void updateOilLife(int percent)
