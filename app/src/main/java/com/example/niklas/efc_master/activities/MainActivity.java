@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public static int[] array_last_run = {0,0,0,0,10,10,8,6,0,0,0,0,0,0,0,0,0,0};
 	public static final String MY_PREFERENCES = "my_preferences";
 	public static final String LAST_RUN_TIME_AND_DATE = "lastRunKey";
-	public String RunTimeAndDate;
+	public String RunTimeAndDate = "";
 	public static String runtime;
 
 	float oldX = -50;
@@ -677,8 +677,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public void getLastRunDateTime()
 	{
 		String date;
-		//String runtime;
-		String RunTimeAndDate;
 		if (live_data.getRun_time() >= 2 && !engine_running && !did_we_recieve_last_run_date)
 		{
 			did_we_recieve_last_run_date = true;

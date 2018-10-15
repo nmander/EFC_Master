@@ -183,10 +183,13 @@ public class ScanActivity extends AppCompatActivity
             if (!results.isEmpty()) {
                 for (int i = 0; i < results.size(); i++) {
                     ScanResult result = results.get(i);
+                    String deviceName = result.getDevice().getName();
                     Log.i(TAG, "found BLE: " + result.getDevice().getName());
-                    if (result.getDevice().getName().contains("WEFC")) {
-                        WBLE_Names.add(result.getDevice().getName());
-                        WBLE_Addresses.add(result.getDevice());
+                    if (deviceName != null && deviceName.contains("WEFC")) {
+                        if (WBLE_Names != null && !WBLE_Names.contains(deviceName)) {
+                            WBLE_Names.add(result.getDevice().getName());
+                            WBLE_Addresses.add(result.getDevice());
+                        }
                     }
                 }
                 stopLeScan();
