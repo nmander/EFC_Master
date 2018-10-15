@@ -28,11 +28,11 @@
         </activity>
         <activity android:name=".activities.MainActivity"
             android:theme="@style/AppThemeNoBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="sensorLandscape">
         </activity>
         <activity android:name=".activities.ToolSelectionActivity"
             android:theme="@style/myDialog"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             android:noHistory="true">
         </activity>
     </application>

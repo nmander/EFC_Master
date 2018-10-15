@@ -126,7 +126,7 @@ public class ScanActivity extends AppCompatActivity
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_rounded);
         dialog.show();
-        btnConnect = (Button)row.findViewById(R.id.btn_connect) ;
+        btnConnect = (Button)row.findViewById(R.id.btn_connect);
         btnConnect.setVisibility(View.INVISIBLE);
 
         myDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,12 +141,6 @@ public class ScanActivity extends AppCompatActivity
 	            }
                 CheckedTextView checkedTextView = ((CheckedTextView)view);
 	            checkedTextView.setChecked(true);
-
-
-
-                //change radio button state
-                //CheckedTextView checkedTextView = ((CheckedTextView)view);
-                //checkedTextView.setChecked(!checkedTextView.isChecked());
 
                 if (checkedTextView.isChecked())
                 {

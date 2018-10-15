@@ -8,7 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,10 +26,13 @@ public class StatsTabDetailsFragment extends Fragment
 	public TextView modTotalRunTimeCell;
 	public TextView txtOilLifeValue;
 	public Button btnResetOilLife;
+	public Button btnYes;
+	public Button btnNo;
 	public String myLastRunTimeDate = "";
 	private TextView mod_cell_device_name;
 	public String[] LastRun;
 	private DashboardFragment dashboardFragment = new DashboardFragment();
+	AlertDialog dialog;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -77,20 +83,27 @@ public class StatsTabDetailsFragment extends Fragment
 		{
 			myPercent = 0;
 		}
+		else if (myPercent < 99)
+			btnResetOilLife.setVisibility(View.VISIBLE);
 		txtOilLifeValue.setText(String.valueOf(myPercent) + "%");
 
 		btnResetOilLife.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View view)
 			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+				AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+				View row = getLayoutInflater().inflate(R.layout.dialog_reset_oil, null);
+				alertDialog.setView(row);
+				dialog = alertDialog.create();
+				dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+				dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_rounded);
+				dialog.show();
+				btnYes = row.findViewById(R.id.btn_yes);
+				btnNo = row.findViewById(R.id.btn_no);
 
-				builder.setTitle("Confirm");
-				builder.setMessage("Are you sure?");
-
-				builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
-					public void onClick(DialogInterface dialog, int which) {
+				btnYes.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
 						mainActivity.writeToIgnitionModule(protocol.BTN_RESET_OIL, protocol.RESET_OIL_COUNTER);
 						txtOilLifeValue.setText("100 %");
 						btnResetOilLife.setVisibility(View.INVISIBLE);
@@ -98,18 +111,12 @@ public class StatsTabDetailsFragment extends Fragment
 					}
 				});
 
-				builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
+				btnNo.setOnClickListener(new View.OnClickListener() {
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
-
-						// Do nothing
+					public void onClick(View v) {
 						dialog.dismiss();
 					}
 				});
-
-				AlertDialog alert = builder.create();
-				alert.show();
 			}
 		});
  		return rootView;
