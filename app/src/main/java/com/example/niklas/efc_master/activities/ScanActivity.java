@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.niklas.efc_master.R;
@@ -131,9 +132,21 @@ public class ScanActivity extends AppCompatActivity
         myDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //change radio button state
+	            for (int i = 0; i < parent.getCount() ; i ++)
+	            {
+		            View v = parent.getChildAt(i);
+		            CheckedTextView checkedTextView = ((CheckedTextView)v);
+		            checkedTextView.setChecked(false);
+
+	            }
                 CheckedTextView checkedTextView = ((CheckedTextView)view);
-                checkedTextView.setChecked(!checkedTextView.isChecked());
+	            checkedTextView.setChecked(true);
+
+
+
+                //change radio button state
+                //CheckedTextView checkedTextView = ((CheckedTextView)view);
+                //checkedTextView.setChecked(!checkedTextView.isChecked());
 
                 if (checkedTextView.isChecked())
                 {
