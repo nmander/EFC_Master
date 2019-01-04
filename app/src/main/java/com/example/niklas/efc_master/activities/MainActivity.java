@@ -771,7 +771,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	}
 
 	public void send_EPOCH_to_BLE_module(byte id)
-	{
+	{//Date
 		long epoch_time = Calendar.getInstance().getTimeInMillis()/1000;
 		BluetoothGattCharacteristic interactor = mBluetoothGatt
 				.getService(SERVICE_UUID)
