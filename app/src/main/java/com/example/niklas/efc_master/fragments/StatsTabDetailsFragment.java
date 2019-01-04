@@ -73,8 +73,9 @@ public class StatsTabDetailsFragment extends Fragment
 			}
 			if (bundle != null && bundle.containsKey("TOTAL_RUN_TIME"))
 			{
-				String total_run_time = String.valueOf(getArguments().getFloat("TOTAL_RUN_TIME"));
-				modTotalRunTimeCell.setText(total_run_time + " hrs");
+				Float f = getArguments().getFloat("TOTAL_RUN_TIME");
+				int time_seconds = f.intValue();
+				modTotalRunTimeCell.setText(dashboardFragment.getModuleRunTimeFormat(time_seconds) + " hrs:min:sec");
 			}
 		}
 		int myPercent;

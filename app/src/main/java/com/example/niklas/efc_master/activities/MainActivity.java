@@ -45,6 +45,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 //import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 //import java.util.Collection;
 //import java.util.Collections;
 //import java.util.List;
@@ -68,7 +69,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public static final int STRING_MAX_SPEED = 8000;
 	public int startingCreepRPM = STRING_MAX_SPEED;
 	public String bumpStringImg;
-	public static int[] array_last_run = {0,0,0,0,10,10,8,6,0,0,0,0,0,0,0,0,0,0};
+	public static int[] array_last_run = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	public static int[] array_total_run = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	public static int[] array_start_temp = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	public static int[] array_usage = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	public static final String MY_PREFERENCES = "my_preferences";
 	public static final String LAST_RUN_TIME_AND_DATE = "lastRunKey";
 	public String RunTimeAndDate = "";
@@ -100,7 +104,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public boolean did_we_clear_change = true;
 	public boolean detected_accelerometer_bump = false;
 	public boolean did_we_recieve_last_run_date = false;
-	public static boolean did_we_calc_life_run = false;
+	public static boolean epoch_lastRun_sent = false;
+	public static boolean first_connection = false;
+
 
 	private BottomNavigationView navigation;
 	private StartFragment startFragment = new StartFragment();
@@ -198,12 +204,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					return true;
 
 				case R.id.navigation_stats:
-					writeToIgnitionModule(protocol.BTN_STATS_REQUEST,protocol.STATS_LAST_RUN_PAGE_1); //Ask for last run_time stats from module
+					writeToIgnitionModule(protocol.BTN_STATS_REQUEST,protocol.REQUEST_STATS); //Ask for last run_time stats from module
 					try {//We need a delay here so the BLE module has time to send the stats pages needed for last_run in stats tab
-						Thread.sleep(400);
+						Thread.sleep(250);
 					}
 					catch (InterruptedException ignored)
 					{}
+					did_we_recieve_last_run_date = false;
+					getLastRunDateTime();
 					loadFragment(statsTabsFragment);
 					stats_fragment_loaded = true;
 					hideRunningFeatures();
@@ -232,9 +240,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					return true;
 
 				case R.id.navigation_tool:
-					stats_fragment_loaded = false;
-					final Intent intent = new Intent(getApplicationContext(), ToolSelectionActivity.class);
-					startActivityForResult(intent, 1);
+					if (!lite_trim_on) {
+						stats_fragment_loaded = false;
+						final Intent intent = new Intent(getApplicationContext(), ToolSelectionActivity.class);
+						startActivityForResult(intent, 1);
+					}
 			}
 			return false;
 		}
@@ -242,95 +252,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
+	{//TOOL Selection from menu, also sends that to BLE module
 		super.onActivityResult(requestCode, resultCode, data);
 		if(requestCode == 1 && resultCode == Activity.RESULT_OK)
 		{
-			String toolCode = data.getStringExtra(ToolSelectionActivity.RESULT_TOOL);
-			Integer myTool = Integer.valueOf(toolCode);
-
-			if (myTool == 0) {
-				writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLADE);
-				if (dashboard_fragment_loaded)
-					dashboardFragment.updateToolView(myTool);
-				if (!did_we_clear_bump)
-					dashboardFragment.myBUMP.clearAnimation();
-				Bundle bundle = new Bundle();
-				bundle.putInt("TOOL", myTool);
-				dashboardFragment.setArguments(bundle);
-				Toast.makeText(getApplicationContext(), "BLADE ATTACHMENT", Toast.LENGTH_SHORT).show();
-				bumpStringImg = "not string";
-			}
-
-			if (myTool == 1) {
-				writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_BLOWER);
-				if (dashboard_fragment_loaded)
-					dashboardFragment.updateToolView(myTool);
-				if (!did_we_clear_bump)
-					dashboardFragment.myBUMP.clearAnimation();
-				Bundle bundle = new Bundle();
-				bundle.putInt("TOOL", myTool);
-				dashboardFragment.setArguments(bundle);
-				Toast.makeText(getApplicationContext(), "BLOWER ATTACHMENT", Toast.LENGTH_SHORT).show();
-				bumpStringImg = "not string";
-			}
-
-			if (myTool == 2) {
-				writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_EDGER);
-				if (dashboard_fragment_loaded)
-					dashboardFragment.updateToolView(myTool);
-				if (!did_we_clear_bump)
-					dashboardFragment.myBUMP.clearAnimation();
-				Bundle bundle = new Bundle();
-				bundle.putInt("TOOL", myTool);
-				dashboardFragment.setArguments(bundle);
-				Toast.makeText(getApplicationContext(), "EDGER ATTACHMENT", Toast.LENGTH_SHORT).show();
-				bumpStringImg = "not string";
-			}
-
-			if (myTool == 3) {
-				writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_POLE_SAW);
-				if (dashboard_fragment_loaded)
-					dashboardFragment.updateToolView(myTool);
-				if (!did_we_clear_bump)
-					dashboardFragment.myBUMP.clearAnimation();
-				Bundle bundle = new Bundle();
-				bundle.putInt("TOOL", myTool);
-				dashboardFragment.setArguments(bundle);
-				Toast.makeText(getApplicationContext(), "POLE SAW ATTACHMENT", Toast.LENGTH_SHORT).show();
-				bumpStringImg = "not string";
-			}
-
-			if (myTool == 4)
-			{
-				writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_TILLER);
-				if (dashboard_fragment_loaded)
-					dashboardFragment.updateToolView(myTool);
-				if (!did_we_clear_bump)
-					dashboardFragment.myBUMP.clearAnimation();
-				Bundle bundle = new Bundle();
-				bundle.putInt("TOOL", myTool);
-				dashboardFragment.setArguments(bundle);
-				Toast.makeText(getApplicationContext(), "TILLER ATTACHMENT", Toast.LENGTH_SHORT).show();
-				bumpStringImg = "not string";
-			}
-
-			if (myTool == 5) {
-				writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_STRING);
-				if (dashboard_fragment_loaded)
-					dashboardFragment.updateToolView(myTool);
-				if (!did_we_clear_bump && dashboard_fragment_loaded) {
-					dashboardFragment.flashBUMP();
-					listenForBUMP();
-
-				}
-				Bundle bundle = new Bundle();
-				bundle.putInt("TOOL", myTool);
-				dashboardFragment.setArguments(bundle);
-				Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_SHORT).show();
-				bumpStringImg = "string";
-
-			}
+			int toolCode = Integer.parseInt(data.getStringExtra(ToolSelectionActivity.RESULT_TOOL));
+			byte myTool  = (byte)(toolCode);
+			writeToIgnitionModule(protocol.BTN_TOOL_SELECT, myTool);
+			Toast.makeText(getApplicationContext(),protocol.TOOL_STR[myTool], Toast.LENGTH_SHORT).show();
+			if (dashboard_fragment_loaded)
+				dashboardFragment.updateToolView(myTool);
+			if (!did_we_clear_bump && dashboard_fragment_loaded)
+				dashboardFragment.flashBUMP();
+			Bundle bundle = new Bundle();
+			bundle.putInt("TOOL", myTool);
+			dashboardFragment.setArguments(bundle);
+			bumpStringImg = "string";
 		}
 	}
 
@@ -433,6 +370,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		{
 			if (CHARACTERISTIC_TX.equals(characteristic.getUuid()))
 			{
+				first_connection = true;
 				final byte[] data = characteristic.getValue();
 				//if engine not running
 				if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
@@ -441,11 +379,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					stopAccelerometer();
 					live_data.setTemperature(data[2]);
 					live_data.setAttachment_nbr_status(data[3]);
-					live_data.setTps_status(data[4]);
+					//live_data.setTps_status(data[4]);
+					live_data.setTps_status(1);  //Removed sensing of tps by BLE module, interfering with ignition module when programming and startup
 					live_data.setError_code(data[5]); // flash if ==1
 					live_data.setOil_life_cntr(data[6]); //how about now?
+					if (!epoch_lastRun_sent)
+						send_EPOCH_to_BLE_module(protocol.EPOCH_ID_LAST_RUN);
 					getLastRunDateTime();
-
 					//hide navigational features:
 					if (!hide_running_features)
 						hideRunningFeatures();
@@ -459,14 +399,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						dashboard_fragment_loaded = false;
 					}
 
-					if (live_data.getTps_status() != 1)
+					if (live_data.getTps_status() != protocol.TPS_IDLE)
 					{
 						start_fragment_loaded = false;
 						navigation.findViewById(R.id.navigation_stats).setEnabled(false);
 					}
 					else navigation.findViewById(R.id.navigation_stats).setEnabled(true);
 
-/*					if (live_data.getTps_status() == 1)
+/*					if (live_data.getTps_status() == protocol.TPS_IDLE)
 						navigation.findViewById(R.id.navigation_stats).setEnabled(true);*/
 
 					if (!stats_fragment_loaded)
@@ -482,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 					}
 
-					Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + live_data.getTps_status());
+					Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + ", " + live_data.getTps_status());
 				}
 
 				//if engine running
@@ -511,20 +451,52 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						start_high_temp_fragment_loaded = false;
 						did_we_recieve_last_run_date = false;
 					}
+					//Check if we need to cancel lite trim mode, user can by touching throttle
+					if (lite_trim_on && live_data.getTps_status() != protocol.TPS_IDLE)
+						disable_lite_trim();
+					//When first entering, check what attachment the ignition module have and set that as our selection
 					updateRunningScreen();
-
+					epoch_lastRun_sent = false;
+				}
+				else if (data[0] == live_data.DETAILS_STATS_PAGE && data.length == data[1])
+				{
+					live_data.setTotal_run_time((data[2]&0xff) + ((data[3]&0xff)*256));
+					live_data.setRun_time((data[4]&0xff) + ((data[5]&0xff)*256));
 				}
 				else if (data[0] == live_data.LAST_RUN_STATS_PAGE_1 && data.length == data[1])
 				{
 					for (int i=0, j=2; i<9; i++, j +=2) {
-						array_last_run[i] = data[j] + (data[j+1]*256);
+						array_last_run[i] = (data[j]&0xff) + ((data[j+1]&0xff)*256); //Make sure it is interpreted as positive number, looking for times
 					}
-					writeToIgnitionModule(protocol.BTN_STATS_REQUEST,protocol.STATS_LAST_RUN_PAGE_2);
 				}
 				else if (data[0] == live_data.LAST_RUN_STATS_PAGE_2 && data.length == data[1])
 				{
 					for (int i=9, j=2; i<18; i++, j +=2) {
-						array_last_run[i] = data[j] + (data[j+1]*256);
+						array_last_run[i] = (data[j]&0xff) + ((data[j+1]&0xff)*256);
+					}
+				}
+				else if (data[0] == live_data.TOTAL_RUN_STATS_PAGE_1 && data.length == data[1])
+				{
+					for (int i=0, j=2; i<9; i++, j +=2) {
+						array_total_run[i] = (data[j]&0xff) + ((data[j+1]&0xff)*256);
+					}
+				}
+				else if (data[0] == live_data.TOTAL_RUN_STATS_PAGE_2 && data.length == data[1])
+				{
+					for (int i=9, j=2; i<18; i++, j +=2) {
+						array_total_run[i] = (data[j]&0xff) + ((data[j+1]&0xff)*256);
+					}
+				}
+				else if (data[0] == live_data.START_TEMP_STATS_PAGE && data.length == data[1])
+				{
+					for (int i=0; i<18; i++) {
+						array_start_temp[i] = data[i+2];  //Need to interpret int correctly for minus temps, only one byte per bin!
+					}
+				}
+				else if (data[0] == live_data.USAGE_STATS_PAGE && data.length == data[1])
+				{
+					for (int i=0; i<18; i++) {
+						array_usage[i] = (data[i+2]&0xff); //Need only positive numbers and one byte per bin
 					}
 				}
 				else
@@ -598,6 +570,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	{
 		super.onDestroy();
 		disconnectGattServer();
+		first_connection = false;
 		Log.i(TAG, "Closing Gatt connection -- onDestroy");
 	}
 
@@ -609,11 +582,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			public void run() {
 				navigation.findViewById(R.id.navigation_start_instructions).setVisibility(View.GONE);
 				navigation.findViewById(R.id.navigation_stats).setVisibility(View.GONE);
-				navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
+				if (live_data.getAttachment_nbr_status() == protocol.TOOL_STRING)
+					navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
 				navigation.findViewById(R.id.navigation_kill).setVisibility(View.VISIBLE);
 				hide_running_features = false;
 				hide_starting_features = true;
-				//navigation.findViewById(R.id.navigation_tool).setVisibility(View.VISIBLE);
 			}
 		});
 	}
@@ -660,7 +633,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		mShaker.setOnShakeListener(new ShakeListener.OnShakeListener () {
 			public void onShake()
 			{
-				if (live_data.getTps_status() == 2 && bumpStringImg.equals("string") && detected_accelerometer_bump) {
+				if (live_data.getTps_status() == protocol.TPS_WOT && bumpStringImg.equals("string") && detected_accelerometer_bump) {
 					start_bump_notif = false;
 					did_we_clear_bump = true;
 					Toast.makeText(getApplicationContext(), "BUMPED STRING", Toast.LENGTH_SHORT).show();
@@ -682,11 +655,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			did_we_recieve_last_run_date = true;
 			DateFormat df = new SimpleDateFormat("MMM d, yyyy HH:mm:ss z");
 			date = df.format(Calendar.getInstance().getTime());
-			runtime = String.valueOf(live_data.getRun_time());
+			float f = live_data.getRun_time()*1024/1000;   //1.024 seconds per tick
+			runtime = String.valueOf((int)(f));
 			RunTimeAndDate = runtime + "-" + date;
 			Bundle bundle = new Bundle();
 			bundle.putString("LAST_RUN_DATE", RunTimeAndDate);
-			bundle.putFloat("TOTAL_RUN_TIME", (float)(live_data.getTotal_run_time()/60));
+			bundle.putFloat("TOTAL_RUN_TIME", (float)(live_data.getTotal_run_time())*167/10); //scale into seconds, 16.7 seconds per tick
 			statsTabsFragment.setArguments(bundle);
 			//Store last run in phone storage
 			SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -752,35 +726,38 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
 					navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
 
-					if (live_data.getRpm() > STRING_MAX_SPEED && live_data.getAttachment_nbr_status() == 0) //string
-					{
-						start_rpm_creep = true;
-						startingCreepRPM += 13;
-						dashboardFragment.updateSpeedometer(startingCreepRPM);
-
-						if (startingCreepRPM >= 9000 && !start_bump_notif)
-						{
-							start_bump_notif = true;
-							did_we_clear_bump = false;
-							startAccelerometer();
-							dashboardFragment.flashBUMP();
-							listenForBUMP();
-						}
-						else if (startingCreepRPM >= 9500)
-						{
-							dashboardFragment.updateSpeedometer(9500);
-						}
-					}
-					else
-					{
-						start_rpm_creep = false;
-						startingCreepRPM = STRING_MAX_SPEED;
-					}
+//					if (live_data.getRpm() > STRING_MAX_SPEED && live_data.getAttachment_nbr_status() == 0) //string
+//					{
+//						start_rpm_creep = true;
+//						startingCreepRPM += 13;
+//						dashboardFragment.updateSpeedometer(startingCreepRPM);
+//
+//						if (startingCreepRPM >= 9000 && !start_bump_notif)
+//						{
+//							start_bump_notif = true;
+//							did_we_clear_bump = false;
+//							startAccelerometer();
+//							dashboardFragment.flashBUMP();
+//							listenForBUMP();
+//						}
+//						else if (startingCreepRPM >= 9500)
+//						{
+//							dashboardFragment.updateSpeedometer(9500);
+//						}
+//					}
+//					else
+//					{
+//						start_rpm_creep = false;
+//						startingCreepRPM = STRING_MAX_SPEED;
+//					}
 				}
 				else
 				{
 					start_rpm_creep = false;
-					navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
+					if (live_data.getAttachment_nbr_status() == protocol.TOOL_STRING)
+						navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
+					else
+						navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
 					navigation.findViewById(R.id.navigation_tool).setVisibility(View.VISIBLE);
 
 					if (start_bump_notif && !bumpStringImg.equals("string"))
@@ -791,5 +768,41 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				}
 			}
 		});
+	}
+
+	public void send_EPOCH_to_BLE_module(byte id)
+	{
+		long epoch_time = Calendar.getInstance().getTimeInMillis()/1000;
+		BluetoothGattCharacteristic interactor = mBluetoothGatt
+				.getService(SERVICE_UUID)
+				.getCharacteristic(CHARACTERISTIC_RX);
+		//Prepare protocol packet
+		byte[] sendBytes = new byte[7];
+		sendBytes[0] = protocol.PHONE_EPOCH_PROTOCOL_NBR;
+		sendBytes[1] = protocol.PHONE_EPOCH_PROTOCOL_BYTES;
+		if (id == protocol.EPOCH_ID_LAST_RUN)
+		{
+			sendBytes[2] = protocol.EPOCH_ID_LAST_RUN;
+		}
+		else
+		{
+			sendBytes[2] = protocol.EPOCH_ID_OIL_CHANGE;
+		}
+		sendBytes[3] = (byte)(epoch_time);
+		sendBytes[4] = (byte)(epoch_time>>8);
+		sendBytes[5] = (byte)(epoch_time>>16);
+		sendBytes[6] = (byte)(epoch_time>>24);
+		interactor.setValue(sendBytes); //packet must go trough this xxx.setValue before being sent out
+		mBluetoothGatt.writeCharacteristic(interactor);
+		epoch_lastRun_sent = true;
+	}
+
+	public void disable_lite_trim()
+	{
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				navigation.findViewById(R.id.navigation_light_trim).performClick();
+			}});
 	}
 }

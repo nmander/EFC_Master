@@ -22,15 +22,10 @@ import java.util.List;
 
 public class StatsTabStartTempFragment extends Fragment {
 
-	public MainActivity mainActivity;
-
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_stats_tab_start_temp, container, false);
-		mainActivity = (MainActivity) getActivity();
-
 		BarChart chart = rootView.findViewById(R.id.bar_chart);
 		chart.setTouchEnabled(false);
 		chart.setData(getData());
@@ -53,19 +48,13 @@ public class StatsTabStartTempFragment extends Fragment {
 	}
 
 	private BarData getData() {
+		float[] startTempData = getStartupTemperatureData();
 		List<BarEntry> entries = new ArrayList<>();
-		entries.add(new BarEntry(7.5f, 1f));
-		entries.add(new BarEntry(12.5f, 5f));
-		entries.add(new BarEntry(17.5f, 8f));
-		entries.add(new BarEntry(22.5f, 14f));
-		entries.add(new BarEntry(27.5f, 7f));
-		entries.add(new BarEntry(32.5f, 3f));
-		entries.add(new BarEntry(47.5f, 1f));
-		//entries.add(new BarEntry(8000f, 62f));
-		//entries.add(new BarEntry(9000f, 42f));
-		entries.add(new BarEntry(57.5f, 10f));
-		entries.add(new BarEntry(62.5f, 13f));
-		entries.add(new BarEntry(67.5f, 8f));
+		for (int i=0; i<20; i++)
+		{
+			if (startTempData[i] != 0)
+				entries.add(new BarEntry((-7.5f+5*i), startTempData[i]));
+		}
 
 		BarDataSet set = new BarDataSet(entries, "Starts at different temperatures");
 		set.setColor(Color.rgb(13,138,173));
@@ -79,5 +68,14 @@ public class StatsTabStartTempFragment extends Fragment {
 
 		return data;
 
+	}
+
+	public static float[] getStartupTemperatureData() {
+		float[] mArray = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};  //20 possible temperature ranges
+
+		for (int i=1; i<19; i++)
+			mArray[i] = (float)(MainActivity.array_start_temp[i - 1]);  //Number of starts at certain temperature range
+
+		return mArray;
 	}
 }

@@ -50,14 +50,8 @@ public class StatsTabsFragment extends Fragment {
 				tabLayout.setupWithViewPager(viewPager);
 			}
 		});
-
-		//Bundle bundle = getArguments();
 		myBundle = getArguments();
-//		if (bundle != null) {
-//			if (bundle.containsKey("LAST_RUN_DATE")) {
-//				myLastRunTimeDate = getArguments().getString("LAST_RUN_DATE");
-//			}
-//		}
+
 		return v;
 	}
 
@@ -75,9 +69,6 @@ public class StatsTabsFragment extends Fragment {
 		public Fragment getItem(int position) {
 			switch (position) {
 				case 0:
-//					Bundle bundle = new Bundle();
-//					bundle.putString("LAST_RUN_DATE", myLastRunTimeDate);
-//					statsTabDetailsFragment.setArguments(bundle);
 					statsTabDetailsFragment.setArguments(myBundle);
 					return statsTabDetailsFragment;
 				case 1:

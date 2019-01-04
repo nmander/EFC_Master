@@ -6,16 +6,21 @@ public class Igndata extends BaseObservable
 {
     public final byte ENGINE_RUNNING = 1; //1  stands for protocol#1
     public final byte ENGINE_NOT_RUNNING = 2; //2  stands for protocol#2
-    public final byte LAST_RUN_STATS_PAGE_1 = 4; //4  stands for protocol#4
-    public final byte LAST_RUN_STATS_PAGE_2 = 5; //4  stands for protocol#4
+    public final byte DETAILS_STATS_PAGE = 10; //4  stands for protocol#4
+    public final byte LAST_RUN_STATS_PAGE_1 = 11; //4  stands for protocol#4
+    public final byte LAST_RUN_STATS_PAGE_2 = 12; //4  stands for protocol#5
+    public final byte TOTAL_RUN_STATS_PAGE_1 = 13; //4  stands for protocol#6
+    public final byte TOTAL_RUN_STATS_PAGE_2 = 14; //4  stands for protocol#7
+    public final byte START_TEMP_STATS_PAGE = 15; //4  stands for protocol#8
+    public final byte USAGE_STATS_PAGE = 16; //4  stands for protocol#9
     private String primerBulb;
     private int temperature;
     private int rpm;
     private int run_time;
-    private int attachment_nbr_status; //[String, Blade, Edger, Tiller, Blower, Pole Saw]
+    private int attachment_nbr_status; //[Blade, Blower, Edger, Pole Saw, Tiller, String]
     private int trim_mode_status;   //0 = normal, lite = 1
     private int stop_status; //0 = Stop Button NOT pressed, 1 = Stop Button Pressed
-    private int tps_status; // 0= NOT at idle, 1 = at idle position, 2 = WOT
+    private int tps_status; // 0= Part Throttle, 1 = at idle position, 2 = WOT
     private int error_code; //0=Success, 1=Not following starting procedure,
     private int oil_life_cntr;
     private int total_run_time;

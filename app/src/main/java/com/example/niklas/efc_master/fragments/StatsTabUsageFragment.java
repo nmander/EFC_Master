@@ -22,9 +22,6 @@ import java.util.List;
 
 public class StatsTabUsageFragment extends Fragment {
 
-	public MainActivity mainActivity;
-
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -51,16 +48,13 @@ public class StatsTabUsageFragment extends Fragment {
 	}
 
 	private BarData getData() {
+		float[] usageData = getUsageData();
 		List<BarEntry> entries = new ArrayList<>();
-		entries.add(new BarEntry(1, 5));
-		entries.add(new BarEntry(3, 7));
-		entries.add(new BarEntry(5, 4));
-		entries.add(new BarEntry(9, 3));
-		entries.add(new BarEntry(11, 7));
-		entries.add(new BarEntry(13, 9));
-		entries.add(new BarEntry(15, 7));
-		entries.add(new BarEntry(17, 6));
-		entries.add(new BarEntry(25, 3));
+		for (int i=0; i<20; i++)
+		{
+			if (usageData[i] != 0)
+				entries.add(new BarEntry((1f+2*i), usageData[i]));
+		}
 
 		BarDataSet set = new BarDataSet(entries, "Life time run-times");
 		set.setColor(Color.rgb(13,173,90));
@@ -72,6 +66,14 @@ public class StatsTabUsageFragment extends Fragment {
 		data.setValueFormatter(new myYvaluesFormatter());
 
 		return data;
+	}
 
+	public static float[] getUsageData() {
+		float[] mArray = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};  //20 possible ranges of 2min bins
+
+		for (int i=0; i<18; i++)
+			mArray[i] = (float)(MainActivity.array_usage[i]);  //Number of starts at certain temperature range
+
+		return mArray;
 	}
 }
