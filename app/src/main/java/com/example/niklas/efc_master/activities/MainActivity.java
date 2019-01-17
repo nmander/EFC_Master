@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private static String device_address;
 	public static final String EXTRA_DEVICE_ADDRESS = "mAddress";
-	public static final int STRING_MAX_SPEED = 8000;
-	public int startingCreepRPM = STRING_MAX_SPEED;
+	public static final int STRING_MAX_SPEED = 9300;
+	public static final int STRING_DEBUMP_SPEED = 9100;
 	public String bumpStringImg;
 	public static int[] array_last_run = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	public static int[] array_total_run = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -143,11 +143,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		start_fragment_loaded = true;
 		dashboard_fragment_loaded = false;
 
+		//writeToIgnitionModule(protocol.BTN_TOOL_SELECT, protocol.TOOL_STRING);
+
 		bumpStringImg = "string";  // default
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		if (null != sensorManager) {
 			accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		}
+		startAccelerometer();
 	}
 
 	@Override
@@ -375,8 +378,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				//if engine not running
 				if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
 				{
+                    stopAccelerometer();
 					engine_running = false;
-					stopAccelerometer();
 					live_data.setTemperature(data[2]);
 					live_data.setAttachment_nbr_status(data[3]);
 					//live_data.setTps_status(data[4]);
@@ -428,6 +431,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				//if engine running
 				else if (data[0] == live_data.ENGINE_RUNNING && data.length == data[1])
 				{
+				    startAccelerometer();
 					engine_running = true;
 					live_data.setRpm((data[3]<< 8)&0x0000ff00|(data[2]&0x000000ff));
 					live_data.setRun_time((data[5]<< 8)&0x0000ff00|(data[4]&0x000000ff));
@@ -627,26 +631,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		// Simply Do noting!
 	}
 
-	public void listenForBUMP()
-	{
-		mShaker = new ShakeListener(getApplicationContext());
-		mShaker.setOnShakeListener(new ShakeListener.OnShakeListener () {
-			public void onShake()
-			{
-				if (live_data.getTps_status() == protocol.TPS_WOT && bumpStringImg.equals("string") && detected_accelerometer_bump) {
-					start_bump_notif = false;
-					did_we_clear_bump = true;
-					Toast.makeText(getApplicationContext(), "BUMPED STRING", Toast.LENGTH_SHORT).show();
-					stopAccelerometer();
-					detected_accelerometer_bump = false;
-					startingCreepRPM = STRING_MAX_SPEED;
-					dashboardFragment.myBUMP.clearAnimation();
-					dashboardFragment.updateSpeedometer(live_data.getRpm());
-				}
-			}
-		});
-	}
-
 	public void getLastRunDateTime()
 	{
 		String date;
@@ -715,56 +699,51 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			@Override
 			public void run() {
 				//if selected nav item is Dash:
-				if (!start_rpm_creep)
-					dashboardFragment.updateSpeedometer(live_data.getRpm());
+				dashboardFragment.updateSpeedometer(live_data.getRpm());
 				dashboardFragment.updateRunTimer(live_data.getRun_time());
 
 				dashboardFragment.updateOilLife(live_data.getOil_life_cntr());
 
-				if (engine_running && live_data.getTps_status() != 1)
+				if (engine_running && live_data.getTps_status() != protocol.TPS_IDLE)
 				{
 					navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
 					navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
 
-//					if (live_data.getRpm() > STRING_MAX_SPEED && live_data.getAttachment_nbr_status() == 0) //string
-//					{
-//						start_rpm_creep = true;
-//						startingCreepRPM += 13;
-//						dashboardFragment.updateSpeedometer(startingCreepRPM);
-//
-//						if (startingCreepRPM >= 9000 && !start_bump_notif)
-//						{
-//							start_bump_notif = true;
-//							did_we_clear_bump = false;
-//							startAccelerometer();
-//							dashboardFragment.flashBUMP();
-//							listenForBUMP();
-//						}
-//						else if (startingCreepRPM >= 9500)
-//						{
-//							dashboardFragment.updateSpeedometer(9500);
-//						}
-//					}
-//					else
-//					{
-//						start_rpm_creep = false;
-//						startingCreepRPM = STRING_MAX_SPEED;
-//					}
+					if (live_data.getRpm() > STRING_MAX_SPEED && live_data.getAttachment_nbr_status() == protocol.TOOL_STRING && !start_bump_notif) //string
+					{
+							start_bump_notif = true;
+							did_we_clear_bump = false;
+							dashboardFragment.flashBUMP();
+					}
+					else if (live_data.getRpm() <= STRING_DEBUMP_SPEED && live_data.getAttachment_nbr_status() == protocol.TOOL_STRING && start_bump_notif) //string
+					{
+						start_bump_notif = false;
+						did_we_clear_bump = true;
+						Toast.makeText(getApplicationContext(), "BUMPED STRING", Toast.LENGTH_SHORT).show();
+						dashboardFragment.myBUMP.clearAnimation();
+					}
 				}
 				else
 				{
-					start_rpm_creep = false;
-					if (live_data.getAttachment_nbr_status() == protocol.TOOL_STRING)
+					if (live_data.getAttachment_nbr_status() == protocol.TOOL_STRING) //live_data.getAttachment_nbr_status() == protocol.TOOL_STRING)
 						navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
 					else
 						navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
 					navigation.findViewById(R.id.navigation_tool).setVisibility(View.VISIBLE);
 
-					if (start_bump_notif && !bumpStringImg.equals("string"))
+					if (start_bump_notif && !did_we_clear_bump && live_data.getAttachment_nbr_status() != protocol.TOOL_STRING)
 					{
 						start_bump_notif = false;
+						did_we_clear_bump = true;
 						dashboardFragment.myBUMP.clearAnimation();
 					}
+					else if (start_bump_notif && !did_we_clear_bump && live_data.getAttachment_nbr_status() == protocol.TOOL_STRING)
+					{
+						start_bump_notif = true;
+						did_we_clear_bump = false;
+						dashboardFragment.flashBUMP();
+					}
+
 				}
 			}
 		});
