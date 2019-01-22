@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.bluetooth.BluetoothAdapter;
@@ -26,7 +27,9 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 import com.example.niklas.efc_master.fragments.DashboardFragment;
 //import com.example.niklas.efc_master.fragments.StatsTabDetailsFragment;
@@ -38,6 +41,7 @@ import com.example.niklas.efc_master.listeners.ShakeListener;
 import com.example.niklas.efc_master.fragments.StartFragment;
 import com.example.niklas.efc_master.fragments.StatsTabsFragment;
 import com.example.niklas.efc_master.fragments.StartHighTempFragment;
+import com.example.niklas.efc_master.profiles.Speedometer;
 import com.example.niklas.efc_master.profiles.protocol;
 
 import java.text.DateFormat;
@@ -59,7 +63,15 @@ import static com.example.niklas.efc_master.profiles.NordicProfile.SERVICE_UUID;
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
 	private SensorManager sensorManager;
-	Sensor accelerometer;
+	//Sensors
+	Sensor gyroscope;
+	Sensor mSensorAccelerometer;
+	Sensor mSensorGravity;
+	// Very small values for the accelerometer (on all three axes) should
+	// be interpreted as 0. This value is the amount of acceptable
+	// non-zero drift.
+	private static final float VALUE_DRIFT = 0.05f;
+
 	SharedPreferences sharedPreferences;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -90,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public boolean start_fragment_loaded = false;
 	public boolean stats_fragment_loaded = false;
 	private boolean start_high_temp_fragment_loaded = false;
-	private boolean lite_trim_on = false;
+	public boolean lite_trim_on = false;
 	private boolean hide_running_features = false;
 	private boolean hide_starting_features = false;
 	private boolean start_rpm_creep = false;
@@ -140,7 +152,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		bumpStringImg = "string";  // default
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		if (null != sensorManager) {
-			accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+			mSensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			//mSensorGravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 		}
 	}
 
@@ -153,36 +167,48 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	@Override
 	public void onSensorChanged(SensorEvent sensorEvent)
 	{
-		float myX = sensorEvent.values[1];
-		float myY = sensorEvent.values[1];
-		float myZ = sensorEvent.values[2];
 		DecimalFormat df = new DecimalFormat("#0.000");
+		// The sensor type (as defined in the Sensor class).
+		int sensorType = sensorEvent.sensor.getType();
 
-		if(myX > 2 && myY > 2 && myZ < 5)
-		{
-			oldX = -50;
-			oldY = -50;
-			oldZ = -50;
-		}
+		switch (sensorType) {
+			case Sensor.TYPE_ACCELEROMETER:
+				//mAccelerometerData = sensorEvent.values.clone();
+				float roll = sensorEvent.values[1];
+				float pitch = sensorEvent.values[2];
+				float azimuth = sensorEvent.values[0];
 
-		//and tps ==2
-		if (myX+2 < oldX && myX > -17  & myY > -17 && myY+2 <oldY && myZ >oldZ+5 && live_data.getTps_status() == 2)
-		{
-			detected_accelerometer_bump = true;
-			Log.i(TAG, "DETECTED BUMP: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
+				// Fill in the string placeholders and set the textview text.
+				//Log.i(TAG, "Roll: " + df.format(roll) + "   PITCH: " + df.format(pitch) + "   AZIMUTH: " + df.format(azimuth));
+                if (roll < 0 && azimuth < 0)
+                {
+                    Log.i(TAG, "DETECTED BUMP!!! --- Roll: " + df.format(roll) + "   PITCH: " + df.format(pitch) + "   AZIMUTH: " + df.format(azimuth));
+                    detected_accelerometer_bump = true;
+                }
 
-			oldX = -50;
-			oldY = -50;
-			oldZ = -50;
-		}
-		else
-		{
-			oldX = myX;
-			oldY = myY;
-			oldZ = myZ;
-			Log.i(TAG, "AXIS POS: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
+                dashboardFragment.updateBubbleLevel(roll, pitch);
+				break;
+//			case Sensor.TYPE_GRAVITY:
+//				float height = sensorEvent.values[0];
+//                Log.i(TAG, "HEIGHT: " + df.format(height));
+//				break;
+			//gyro
+			case Sensor.TYPE_GYROSCOPE:
+				float myX = sensorEvent.values[0];
+				float myY = sensorEvent.values[1];
+				float myZ = sensorEvent.values[2];
+				if (live_data.getTps_status() == 2 && live_data.getRpm() > 4500) {
+
+					if (myX < -0.4 || myX > 0.4 || myY < -0.4 || myY > 0.4 || myZ < -2 || myZ > 2) {
+						if ((myX < -0.7 || myX > 0.7 || myY < -0.6 || myY > 0.6) && (myZ < -0.4 || myZ > 0.4)) {
+							Log.i(TAG, "CAREFUL!: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
+						}
+					}
+				}
+                break;
 		}
 	}
+
 	private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
 			= new BottomNavigationView.OnNavigationItemSelectedListener()
 	{
@@ -216,11 +242,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					if (lite_trim_on) {
 						writeToIgnitionModule(protocol.BTN_TRIM_MODE, protocol.LITE_TRIM);
 						setCheckable(navigation, true);
+						dashboardFragment.hideSpeedometerDisplay();
+						dashboardFragment.showBubbleLevelDisplay();
+						startAccelerometer();
+						//startGravity();
 					}
 					else
 					{
 						writeToIgnitionModule(protocol.BTN_TRIM_MODE, protocol.NORMAL_TRIM);
 						setCheckable(navigation, false);
+						dashboardFragment.showSpeedometerDisplay();
+						dashboardFragment.hideBubbleLevelDisplay();
+						dashboardFragment.blnCENTERED = false;
+						stopAccelerometer();
+						//stopGravity();
 					}
 					return true;
 
@@ -438,7 +473,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
 				{
 					engine_running = false;
+					stopGyroscope();
 					stopAccelerometer();
+					//stopGravity();
 					live_data.setTemperature(data[2]);
 					live_data.setAttachment_nbr_status(data[3]);
 					live_data.setTps_status(data[4]);
@@ -482,7 +519,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 					}
 
-					Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + live_data.getTps_status());
+					//Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + live_data.getTps_status());
 				}
 
 				//if engine running
@@ -695,14 +732,34 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		}
 	}
 
+	public void startGyroscope()
+	{
+		sensorManager.registerListener(MainActivity.this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);//gyro
+	}
+
+	public void stopGyroscope()
+	{
+		sensorManager.unregisterListener(this, gyroscope);
+	}
+
 	public void startAccelerometer()
 	{
-		sensorManager.registerListener(MainActivity.this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager.registerListener(MainActivity.this, mSensorAccelerometer, 0);//accelerometer
 	}
 
 	public void stopAccelerometer()
 	{
-		sensorManager.unregisterListener(this);
+		sensorManager.unregisterListener(this, mSensorAccelerometer);
+	}
+
+	public void startGravity()
+	{
+		sensorManager.registerListener(MainActivity.this, mSensorGravity, 0);//compass
+	}
+
+	public void stopGravity()
+	{
+		sensorManager.unregisterListener(this, mSensorGravity);
 	}
 
 	public void updateStartingScreen()
@@ -749,6 +806,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 				if (engine_running && live_data.getTps_status() != 1)
 				{
+					startGyroscope();
 					navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
 					navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
 

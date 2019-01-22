@@ -3,6 +3,7 @@ package com.example.niklas.efc_master.fragments;
 import android.app.job.JobInfo;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Trace;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,12 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.niklas.efc_master.R;
+import com.example.niklas.efc_master.profiles.BubbleLevel;
 import com.example.niklas.efc_master.profiles.Speedometer;
 import com.example.niklas.efc_master.activities.MainActivity;
 import com.example.niklas.efc_master.profiles.protocol;
@@ -26,12 +29,17 @@ import static android.content.ContentValues.TAG;
 public class DashboardFragment extends Fragment
 {
 	public MainActivity mainActivity;
+	public boolean blnCENTERED = false;
 	public static Speedometer mySpeedometer;
+	public static BubbleLevel myBubbleLevel;
 	public TextView myRunTimer;
 	public TextView myBUMP;
 	public ImageView myToolSelection;
 	public TextView myOilLife;
 	public int myRPM;
+
+	public float centerX;
+	public float centerY;
 
 	@Nullable
 	@Override
@@ -43,6 +51,9 @@ public class DashboardFragment extends Fragment
 		myRPM = mainActivity.live_data.getRpm();
 		mySpeedometer = rootView.findViewById(R.id.Speedometer);
 		updateSpeedometer(myRPM);
+
+		myBubbleLevel = rootView.findViewById(R.id.BubbleLevel);
+		myBubbleLevel.setVisibility(View.INVISIBLE);
 
 		//myRUNTIME = mainActivity.live_data.getRun_time();
 		myRunTimer = rootView.findViewById(R.id.runtime_clock);
@@ -75,6 +86,28 @@ public class DashboardFragment extends Fragment
 		if(!mainActivity.did_we_clear_change)
 			flashCHANGE();
 
+		ImageButton myButton = (ImageButton) rootView.findViewById(R.id.leveler);
+		myButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				if (mainActivity.lite_trim_on && !blnCENTERED)
+				{
+					Toast.makeText(getContext(), "CENTERED", Toast.LENGTH_SHORT).show();
+					centerX = myBubbleLevel.getCurrentRoll();
+					centerY = myBubbleLevel.getCurrentPitch();
+					Log.i(TAG, "CENTER X: " + centerX + "   CENTER Y: " + centerY);
+					myBubbleLevel.setCurrentLevel(0, 0);
+					myBubbleLevel.onLevelChanged(0, 0);
+					blnCENTERED = true;
+				}
+				else if (mainActivity.lite_trim_on && blnCENTERED)
+				{
+
+				}
+			}
+		});
 		return rootView;
 	}
 
@@ -83,6 +116,47 @@ public class DashboardFragment extends Fragment
 		mySpeedometer.setCurrentSpeed(rpm);
 		mySpeedometer.onSpeedChanged(rpm);
 	}
+
+	public void updateBubbleLevel(float x, float y)
+    {
+    	if (!blnCENTERED)
+		{
+			myBubbleLevel.setCurrentLevel(x , y);
+			myBubbleLevel.onLevelChanged(x, y);
+		}
+		else
+			centerBubbleLevel(x, y);
+    }
+
+    public void centerBubbleLevel(float x, float y)
+	{
+		//if (x >  centerX)
+		x = x - centerX;
+		y = y - centerY;
+
+		myBubbleLevel.setCurrentLevel(x, y);
+		myBubbleLevel.onLevelChanged(x, y);
+	}
+
+	public void hideSpeedometerDisplay()
+	{
+		mySpeedometer.hideSpeed();
+	}
+
+	public void showSpeedometerDisplay()
+	{
+		mySpeedometer.showSpeed();
+	}
+
+	public void hideBubbleLevelDisplay()
+    {
+		myBubbleLevel.setVisibility(View.INVISIBLE);
+    }
+
+    public void showBubbleLevelDisplay()
+    {
+        myBubbleLevel.setVisibility(View.VISIBLE);
+    }
 
 	public void updateRunTimer(int time)
 	{

@@ -23,4 +23,16 @@
 
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="BubbleLevel">
+        <attr name="currentAzimuth" format="float">
+
+        </attr>
+        <attr name="currentPitch" format="float">
+
+        </attr>
+        <attr name="currentRoll" format="float">
+
+        </attr>
+    </declare-styleable>
 </resources>

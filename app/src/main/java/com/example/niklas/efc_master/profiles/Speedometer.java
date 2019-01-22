@@ -249,4 +249,14 @@ public class Speedometer extends View implements SpeedChangeListener {
 		this.setCurrentSpeed(newSpeedValue);
 		this.invalidate();
 	}
+
+	public void hideSpeed()
+	{
+		this.readingPaint.setColor(getResources().getColor(R.color.colorMaterialLight));
+	}
+
+	public void showSpeed()
+	{
+		this.readingPaint.setColor(getResources().getColor(R.color.colorBlack));
+	}
 }
