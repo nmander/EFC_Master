@@ -198,11 +198,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				float myY = sensorEvent.values[1];
 				float myZ = sensorEvent.values[2];
 				if (live_data.getTps_status() == 2 && live_data.getRpm() > 4500) {
-
-					if (myX < -0.4 || myX > 0.4 || myY < -0.4 || myY > 0.4 || myZ < -2 || myZ > 2) {
+                    //Log.i(TAG, "X:" + df.format(myX) + " Y:" + df.format(myY) + " Z:" + df.format(myZ));
+                    if ((myX < -0.8 || myX > 1) && (myY < -0.7 || myY > 0.7) && (myZ < -2.2 || myZ > 2)) {
+                            Log.i(TAG, "CAREFUL!: X:" + df.format(myX) + " Y:" + df.format(myY) + " Z:" + df.format(myZ));
+/*					if (myX < -0.4 || myX > 0.4 || myY < -0.4 || myY > 0.4 || myZ < -2 || myZ > 2) {
 						if ((myX < -0.7 || myX > 0.7 || myY < -0.6 || myY > 0.6) && (myZ < -0.4 || myZ > 0.4)) {
-							Log.i(TAG, "CAREFUL!: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
-						}
+							Log.i(TAG, "CAREFUL!: X:" + df.format(myX) + " Y:" + df.format(myY) + " Z:" + df.format(myZ));*/
 					}
 				}
                 break;
