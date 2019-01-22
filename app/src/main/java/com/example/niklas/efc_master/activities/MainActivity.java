@@ -60,7 +60,8 @@ import static com.example.niklas.efc_master.profiles.NordicProfile.SERVICE_UUID;
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
 	private SensorManager sensorManager;
-	Sensor accelerometer;
+	Sensor mSensorGyroscope;
+	Sensor mSensorAccelerometer;
 	SharedPreferences sharedPreferences;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -107,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public static boolean epoch_lastRun_sent = false;
 	public static boolean first_connection = false;
 
-
 	private BottomNavigationView navigation;
 	private StartFragment startFragment = new StartFragment();
 	private StartHighTempFragment startHighTempFragment = new StartHighTempFragment();
@@ -148,9 +148,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		bumpStringImg = "string";  // default
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		if (null != sensorManager) {
-			accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			mSensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			mSensorGyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 		}
-		startAccelerometer();
+		//startAccelerometer();
 	}
 
 	@Override
@@ -162,7 +163,43 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	@Override
 	public void onSensorChanged(SensorEvent sensorEvent)
 	{
-		float myX = sensorEvent.values[1];
+        DecimalFormat df = new DecimalFormat("#0.000");
+        // The sensor type (as defined in the Sensor class).
+        int sensorType = sensorEvent.sensor.getType();
+
+        switch (sensorType) {
+            case Sensor.TYPE_ACCELEROMETER:
+                float roll = sensorEvent.values[1];
+                float pitch = sensorEvent.values[2];
+                float azimuth = sensorEvent.values[0];
+
+                // Fill in the string placeholders and set the textview text.
+                //Log.i(TAG, "Roll: " + df.format(roll) + "   PITCH: " + df.format(pitch) + "   AZIMUTH: " + df.format(azimuth));
+/*                if (roll < 0 && azimuth < 0)
+                {
+                    Log.i(TAG, "DETECTED BUMP!!! --- Roll: " + df.format(roll) + "   PITCH: " + df.format(pitch) + "   AZIMUTH: " + df.format(azimuth));
+                    detected_accelerometer_bump = true;
+                }*/
+
+                //dashboardFragment.updateBubbleLevel(roll, pitch);
+                break;
+            case Sensor.TYPE_GYROSCOPE:
+                float myX = sensorEvent.values[0];
+                float myY = sensorEvent.values[1];
+                float myZ = sensorEvent.values[2];
+                if (live_data.getTps_status() != protocol.TPS_IDLE && live_data.getRpm() > 4500) {
+                    if (myX < -0.4 || myX > 0.4 || myY < -0.4 || myY > 0.4 || myZ < -2 || myZ > 2) {
+                        if ((myX < -0.7 || myX > 0.7 || myY < -0.6 || myY > 0.6) && (myZ < -0.4 || myZ > 0.4)) {
+                            Log.i(TAG, "CAREFUL!: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
+                            writeToIgnitionModule(protocol.BTN_SAFETY, protocol.SAFETY_ON);
+
+                            //RETARD SPEED HERE....
+                        }
+                    }
+                }
+                break;
+        }
+/*		float myX = sensorEvent.values[1];
 		float myY = sensorEvent.values[1];
 		float myZ = sensorEvent.values[2];
 		DecimalFormat df = new DecimalFormat("#0.000");
@@ -190,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			oldY = myY;
 			oldZ = myZ;
 			Log.i(TAG, "AXIS POS: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
-		}
+		}*/
 	}
 	private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
 			= new BottomNavigationView.OnNavigationItemSelectedListener()
@@ -378,7 +415,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				//if engine not running
 				if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
 				{
-                    stopAccelerometer();
+                    stopGyroscope();
 					engine_running = false;
 					live_data.setTemperature(data[2]);
 					live_data.setAttachment_nbr_status(data[3]);
@@ -422,16 +459,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 							stats_fragment_loaded = false;
 							writeToIgnitionModule(protocol.BTN_CLEAR_CODE, protocol.RESET_CODE);
 						}
-
 					}
-
 					Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + ", " + live_data.getTps_status());
 				}
 
 				//if engine running
 				else if (data[0] == live_data.ENGINE_RUNNING && data.length == data[1])
 				{
-				    startAccelerometer();
 					engine_running = true;
 					live_data.setRpm((data[3]<< 8)&0x0000ff00|(data[2]&0x000000ff));
 					live_data.setRun_time((data[5]<< 8)&0x0000ff00|(data[4]&0x000000ff));
@@ -655,13 +689,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	public void startAccelerometer()
 	{
-		sensorManager.registerListener(MainActivity.this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager.registerListener(MainActivity.this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
 	public void stopAccelerometer()
 	{
 		sensorManager.unregisterListener(this);
 	}
+
+    public void startGyroscope()
+    {
+        sensorManager.registerListener(MainActivity.this, mSensorGyroscope, SensorManager.SENSOR_DELAY_NORMAL);//gyro
+    }
+
+    public void stopGyroscope()
+    {
+        sensorManager.unregisterListener(this, mSensorGyroscope);
+    }
 
 	public void updateStartingScreen()
 	{
@@ -701,11 +745,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				//if selected nav item is Dash:
 				dashboardFragment.updateSpeedometer(live_data.getRpm());
 				dashboardFragment.updateRunTimer(live_data.getRun_time());
-
 				dashboardFragment.updateOilLife(live_data.getOil_life_cntr());
 
 				if (engine_running && live_data.getTps_status() != protocol.TPS_IDLE)
 				{
+				    startGyroscope();
 					navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
 					navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
 

@@ -22,8 +22,10 @@ public class protocol
     public static byte RESET_CODE = 1;
     public static byte BTN_STATS_REQUEST = 5;
     public static byte REQUEST_STATS = 1;
-     public static byte BTN_RESET_OIL = 6;
+    public static byte BTN_RESET_OIL = 6;
     public static byte RESET_OIL_COUNTER = 1;
+    public static byte BTN_SAFETY = 7;
+    public static byte SAFETY_ON = 1;
     public static byte TPS_PART_THROTTLE = 0;
     public static byte TPS_IDLE = 1;
     public static byte TPS_WOT = 2;
