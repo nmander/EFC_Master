@@ -70,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	// Very small values for the accelerometer (on all three axes) should
 	// be interpreted as 0. This value is the amount of acceptable
 	// non-zero drift.
-	private static final float VALUE_DRIFT = 0.05f;
+	private static final float BUBBLE_TOLERANCE_POS = 0.05f;
+	private static final float BUBBLE_TOLERANCE_NEG = -0.05f;
 
 	SharedPreferences sharedPreferences;
 
@@ -180,6 +181,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 				// Fill in the string placeholders and set the textview text.
 				//Log.i(TAG, "Roll: " + df.format(roll) + "   PITCH: " + df.format(pitch) + "   AZIMUTH: " + df.format(azimuth));
+
+                if ((Math.abs(pitch) < BUBBLE_TOLERANCE_POS) && (Math.abs(pitch) > BUBBLE_TOLERANCE_NEG)) {
+                    pitch = 0;
+                }
+                if ((Math.abs(roll) < BUBBLE_TOLERANCE_POS) && (Math.abs(roll) > BUBBLE_TOLERANCE_NEG)) {
+                    roll = 0;
+                }
                 if (roll < 0 && azimuth < 0)
                 {
                     Log.i(TAG, "DETECTED BUMP!!! --- Roll: " + df.format(roll) + "   PITCH: " + df.format(pitch) + "   AZIMUTH: " + df.format(azimuth));
@@ -198,8 +206,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				float myY = sensorEvent.values[1];
 				float myZ = sensorEvent.values[2];
 				if (live_data.getTps_status() == 2 && live_data.getRpm() > 4500) {
-                    //Log.i(TAG, "X:" + df.format(myX) + " Y:" + df.format(myY) + " Z:" + df.format(myZ));
-                    if ((myX < -0.8 || myX > 1) && (myY < -0.7 || myY > 0.7) && (myZ < -2.2 || myZ > 2)) {
+                    Log.i(TAG, "X:" + df.format(myX) + " Y:" + df.format(myY) + " Z:" + df.format(myZ));
+                    if (myY < -1.8 && myZ > 1) {//myX < -0.8 || myX > 1) && (myY < -0.7 || myY > 0.7) && (myZ < -2.2 || myZ > 2)) {
                             Log.i(TAG, "CAREFUL!: X:" + df.format(myX) + " Y:" + df.format(myY) + " Z:" + df.format(myZ));
 /*					if (myX < -0.4 || myX > 0.4 || myY < -0.4 || myY > 0.4 || myZ < -2 || myZ > 2) {
 						if ((myX < -0.7 || myX > 0.7 || myY < -0.6 || myY > 0.6) && (myZ < -0.4 || myZ > 0.4)) {
