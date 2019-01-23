@@ -741,6 +741,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				if (live_data.getAttachment_nbr_status() == protocol.TOOL_BLADE)
+					dashboardFragment.updateToolView(0);
+				if (live_data.getAttachment_nbr_status() == protocol.TOOL_BLOWER)
+					dashboardFragment.updateToolView(1);
+				if (live_data.getAttachment_nbr_status() == protocol.TOOL_EDGER)
+					dashboardFragment.updateToolView(2);
+				if (live_data.getAttachment_nbr_status() == protocol.TOOL_POLE_SAW)
+					dashboardFragment.updateToolView(3);
+				if (live_data.getAttachment_nbr_status() == protocol.TOOL_TILLER)
+					dashboardFragment.updateToolView(4);
+				if (live_data.getAttachment_nbr_status() == protocol.TOOL_STRING)
+					dashboardFragment.updateToolView(5);
+
 				//if selected nav item is Dash:
 				dashboardFragment.updateSpeedometer(live_data.getRpm());
 				dashboardFragment.updateRunTimer(live_data.getRun_time());
@@ -786,7 +799,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						did_we_clear_bump = false;
 						dashboardFragment.flashBUMP();
 					}
-
 				}
 			}
 		});
