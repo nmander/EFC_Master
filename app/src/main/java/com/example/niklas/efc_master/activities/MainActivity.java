@@ -366,14 +366,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				if (!did_we_clear_bump && dashboard_fragment_loaded) {
 					dashboardFragment.flashBUMP();
 					listenForBUMP();
-
 				}
 				Bundle bundle = new Bundle();
 				bundle.putInt("TOOL", myTool);
 				dashboardFragment.setArguments(bundle);
 				Toast.makeText(getApplicationContext(), "STRING ATTACHMENT", Toast.LENGTH_SHORT).show();
 				bumpStringImg = "string";
-
 			}
 		}
 	}
