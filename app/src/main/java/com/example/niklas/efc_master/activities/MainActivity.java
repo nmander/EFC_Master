@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	// Very small values for the accelerometer (on all three axes) should
 	// be interpreted as 0. This value is the amount of acceptable
 	// non-zero drift.
-	private static final float BUBBLE_TOLERANCE_POS = 0.05f;
-	private static final float BUBBLE_TOLERANCE_NEG = -0.05f;
+	private static final float BUBBLE_TOLERANCE_POS = 0.5f;
+	private static final float BUBBLE_TOLERANCE_NEG = -0.5f;
 
 	SharedPreferences sharedPreferences;
 
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				float azimuth = sensorEvent.values[0];
 
 				// Fill in the string placeholders and set the textview text.
-				//Log.i(TAG, "Roll: " + df.format(roll) + "   PITCH: " + df.format(pitch) + "   AZIMUTH: " + df.format(azimuth));
+				Log.i(TAG, "Roll: " + df.format(roll) + "   PITCH: " + df.format(pitch) + "   AZIMUTH: " + df.format(azimuth));
 
                 if ((Math.abs(pitch) < BUBBLE_TOLERANCE_POS) && (Math.abs(pitch) > BUBBLE_TOLERANCE_NEG)) {
                     pitch = 0;
@@ -208,7 +208,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				if (live_data.getTps_status() == 2 && live_data.getRpm() > 4500) {
                     Log.i(TAG, "X:" + df.format(myX) + " Y:" + df.format(myY) + " Z:" + df.format(myZ));
                     if (myY < -1.8 && myZ > 1) {//myX < -0.8 || myX > 1) && (myY < -0.7 || myY > 0.7) && (myZ < -2.2 || myZ > 2)) {
-                            Log.i(TAG, "CAREFUL!: X:" + df.format(myX) + " Y:" + df.format(myY) + " Z:" + df.format(myZ));
+						{
+							Log.i(TAG, "CAREFUL!: X:" + df.format(myX) + " Y:" + df.format(myY) + " Z:" + df.format(myZ));
+							stopGyroscope();
+						}
 /*					if (myX < -0.4 || myX > 0.4 || myY < -0.4 || myY > 0.4 || myZ < -2 || myZ > 2) {
 						if ((myX < -0.7 || myX > 0.7 || myY < -0.6 || myY > 0.6) && (myZ < -0.4 || myZ > 0.4)) {
 							Log.i(TAG, "CAREFUL!: X:" + df.format(myX) + " Y:" + df.format(myY) + " Z:" + df.format(myZ));*/
@@ -523,9 +526,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 							stats_fragment_loaded = false;
 							writeToIgnitionModule(protocol.BTN_CLEAR_CODE, protocol.RESET_CODE);
 						}
-
 					}
-
 					//Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + live_data.getTps_status());
 				}
 
@@ -741,7 +742,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	public void startGyroscope()
 	{
-		sensorManager.registerListener(MainActivity.this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);//gyro
+		sensorManager.registerListener(MainActivity.this, gyroscope, 0);//gyro
 	}
 
 	public void stopGyroscope()
@@ -757,16 +758,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public void stopAccelerometer()
 	{
 		sensorManager.unregisterListener(this, mSensorAccelerometer);
-	}
-
-	public void startGravity()
-	{
-		sensorManager.registerListener(MainActivity.this, mSensorGravity, 0);//compass
-	}
-
-	public void stopGravity()
-	{
-		sensorManager.unregisterListener(this, mSensorGravity);
 	}
 
 	public void updateStartingScreen()

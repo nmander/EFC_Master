@@ -20,6 +20,7 @@ public class BubbleLevel extends View implements LevelChangeListener
     public float roll;
     public static final float ROLL_SENS = 35;
     public static final float PITCH_SENS = 100;
+    public static final int BUBBLE_RADIUS = 75;
 
 
     private void init() {
@@ -50,23 +51,23 @@ public class BubbleLevel extends View implements LevelChangeListener
     public void DrawBubble(Canvas canvas)
     {
         if (pitch > 0 && roll > 0)
-            canvas.drawCircle(300 + (roll*ROLL_SENS), 250 + (pitch*PITCH_SENS), 50, paintBubble);
+            canvas.drawCircle(300 + (roll*ROLL_SENS), 250 + (pitch*PITCH_SENS), BUBBLE_RADIUS, paintBubble);
         if (pitch > 0 && roll < 0)
-            canvas.drawCircle(300 - (roll*-ROLL_SENS), 250 + (pitch*PITCH_SENS), 50, paintBubble);
+            canvas.drawCircle(300 - (roll*-ROLL_SENS), 250 + (pitch*PITCH_SENS), BUBBLE_RADIUS, paintBubble);
         if (pitch < 0 && roll < 0)
-            canvas.drawCircle(300 - (roll*-ROLL_SENS), 250 - (pitch*-PITCH_SENS), 50, paintBubble);
+            canvas.drawCircle(300 - (roll*-ROLL_SENS), 250 - (pitch*-PITCH_SENS), BUBBLE_RADIUS, paintBubble);
         if (pitch < 0 && roll > 0)
-            canvas.drawCircle(300 + (roll*ROLL_SENS), 250 - (pitch*-PITCH_SENS), 50, paintBubble);
+            canvas.drawCircle(300 + (roll*ROLL_SENS), 250 - (pitch*-PITCH_SENS), BUBBLE_RADIUS, paintBubble);
         if (pitch == 0 && roll > 0)
-            canvas.drawCircle(300 + (roll*ROLL_SENS), 250, 50, paintBubble);
+            canvas.drawCircle(300 + (roll*ROLL_SENS), 250, BUBBLE_RADIUS, paintBubble);
         if (pitch == 0 && roll < 0)
-            canvas.drawCircle(300 - (roll*-ROLL_SENS), 250, 50, paintBubble);
+            canvas.drawCircle(300 - (roll*-ROLL_SENS), 250, BUBBLE_RADIUS, paintBubble);
         if (pitch > 0 && roll == 0)
-            canvas.drawCircle(300, 250 + (pitch*PITCH_SENS), 50, paintBubble);
+            canvas.drawCircle(300, 250 + (pitch*PITCH_SENS), BUBBLE_RADIUS, paintBubble);
         if (pitch < 0 && roll == 0)
-            canvas.drawCircle(300, 250 - (pitch-PITCH_SENS), 50, paintBubble);
+            canvas.drawCircle(300, 250 - (pitch-PITCH_SENS), BUBBLE_RADIUS, paintBubble);
         if (pitch == 0 && roll == 0)
-            canvas.drawCircle(300 , 250, 50, paintBubble);
+            canvas.drawCircle(300 , 250, BUBBLE_RADIUS, paintBubble);
     }
 
     @Override
