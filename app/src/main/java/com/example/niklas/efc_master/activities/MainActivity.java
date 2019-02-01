@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	private static final float BUBBLE_TOLERANCE_POS = 0.5f;
 	private static final float BUBBLE_TOLERANCE_NEG = -0.5f;
 
+	private static final float ALPHA = 0.25f;
+
 	SharedPreferences sharedPreferences;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -171,23 +173,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		DecimalFormat df = new DecimalFormat("#0.000");
 		// The sensor type (as defined in the Sensor class).
 		int sensorType = sensorEvent.sensor.getType();
+		float[] accelData = {0,0,0};
 
 		switch (sensorType) {
 			case Sensor.TYPE_ACCELEROMETER:
 				//mAccelerometerData = sensorEvent.values.clone();
-				float roll = sensorEvent.values[1];
-				float pitch = sensorEvent.values[2];
-				float azimuth = sensorEvent.values[0];
+				accelData = lowPass(sensorEvent.values, accelData);
+				float roll = accelData[1];
+				float pitch = accelData[2];
+				float azimuth = accelData[0];
 
 				// Fill in the string placeholders and set the textview text.
 				Log.i(TAG, "Roll: " + df.format(roll) + "   PITCH: " + df.format(pitch) + "   AZIMUTH: " + df.format(azimuth));
 
-                if ((Math.abs(pitch) < BUBBLE_TOLERANCE_POS) && (Math.abs(pitch) > BUBBLE_TOLERANCE_NEG)) {
-                    pitch = 0;
-                }
-                if ((Math.abs(roll) < BUBBLE_TOLERANCE_POS) && (Math.abs(roll) > BUBBLE_TOLERANCE_NEG)) {
-                    roll = 0;
-                }
+//                if ((Math.abs(pitch) < BUBBLE_TOLERANCE_POS) && (Math.abs(pitch) > BUBBLE_TOLERANCE_NEG)) {
+//                    pitch = 0;
+//                }
+//                if ((Math.abs(roll) < BUBBLE_TOLERANCE_POS) && (Math.abs(roll) > BUBBLE_TOLERANCE_NEG)) {
+//                    roll = 0;
+//                }
                 if (roll < 0 && azimuth < 0)
                 {
                     Log.i(TAG, "DETECTED BUMP!!! --- Roll: " + df.format(roll) + "   PITCH: " + df.format(pitch) + "   AZIMUTH: " + df.format(azimuth));
@@ -219,6 +223,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				}
                 break;
 		}
+	}
+
+	protected float[] lowPass( float[] input, float[] output )
+	{
+		if ( output == null )
+			return input;
+		for (int ix = 0; ix < input.length; ix++ )
+		{
+			output[ix] = output[ix] + ALPHA * (input[ix] - output[ix]);
+		}
+		return output;
 	}
 
 	private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

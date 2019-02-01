@@ -66,6 +66,8 @@ public class ScanActivity extends AppCompatActivity
     AlertDialog dialog;
     ArrayAdapter<String> adapter;
 
+    private BluetoothAdapter mBluetoothAdapter;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
@@ -97,6 +99,8 @@ public class ScanActivity extends AppCompatActivity
         btnScan = findViewById(R.id.btn_scan);
         btnScan.setVisibility(View.INVISIBLE);
 
+        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
 
         btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,21 +176,20 @@ public class ScanActivity extends AppCompatActivity
 
         @Override
         public void onBatchScanResults(List<ScanResult> results) {
-            Log.i(TAG, "onBatchScanResults: " + results.toString());
-
+            Log.i(TAG, "onBatchScanResults: " + results.size());
             if (!results.isEmpty()) {
                 for (int i = 0; i < results.size(); i++) {
                     ScanResult result = results.get(i);
-                    String deviceName = result.getDevice().getName();
-                    Log.i(TAG, "found BLE: " + result.getDevice().getName());
+                    Log.i(TAG, "found BLE: " + result.getDevice().toString() + " Name: " + result.getScanRecord().getDeviceName());
+                    String deviceName = result.getScanRecord().getDeviceName();
                     if (deviceName != null && deviceName.contains("WEFC")) {
                         if (WBLE_Names != null && !WBLE_Names.contains(deviceName)) {
-                            WBLE_Names.add(result.getDevice().getName());
+                            WBLE_Names.add(result.getScanRecord().getDeviceName());
                             WBLE_Addresses.add(result.getDevice());
                         }
                     }
                 }
-                stopLeScan();
+                //stopLeScan();
                 if (WBLE_Names.size() > 1)
                     show_found_devices();
                 else if (WBLE_Names.size() == 1) {
@@ -248,7 +251,8 @@ public class ScanActivity extends AppCompatActivity
         }
     }
 
-    private void startLeScan() {
+    private void startLeScan()
+    {
         WBLE_Names.clear();
         WBLE_Addresses.clear();
         Log.w(TAG, "Starting Scan");
@@ -276,9 +280,7 @@ public class ScanActivity extends AppCompatActivity
         {
             scanning_wheel.setVisibility(View.VISIBLE);
             // Ensures Bluetooth is enabled on the device
-            BluetoothManager btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            BluetoothAdapter btAdapter = btManager.getAdapter();
-            if (btAdapter.isEnabled()) {
+            if (mBluetoothAdapter.isEnabled()) {
                 // Prompt for runtime permission
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     startLeScan();
