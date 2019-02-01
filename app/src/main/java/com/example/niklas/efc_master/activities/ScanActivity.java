@@ -177,11 +177,11 @@ public class ScanActivity extends AppCompatActivity
             if (!results.isEmpty()) {
                 for (int i = 0; i < results.size(); i++) {
                     ScanResult result = results.get(i);
-                    String deviceName = result.getDevice().getName();
-                    Log.i(TAG, "found BLE: " + result.getDevice().getName());
+                    Log.i(TAG, "found BLE: " + result.getDevice().toString() + " Name: " + result.getScanRecord().getDeviceName());
+                    String deviceName = result.getScanRecord().getDeviceName();
                     if (deviceName != null && deviceName.contains("WEFC")) {
                         if (WBLE_Names != null && !WBLE_Names.contains(deviceName)) {
-                            WBLE_Names.add(result.getDevice().getName());
+                            WBLE_Names.add(result.getScanRecord().getDeviceName());
                             WBLE_Addresses.add(result.getDevice());
                         }
                     }
@@ -195,11 +195,11 @@ public class ScanActivity extends AppCompatActivity
                     btnScan.setVisibility(View.INVISIBLE);
                     try {
                         if (result.getDevice().getName().contains("WEFC")) {
-                            Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Connected: " + result.getScanRecord().getDeviceName(), Toast.LENGTH_SHORT).show();
                             startMainActivity(result.getDevice());
                         }
                     } catch (Exception e) {
-                        Log.i(TAG, "Can't find device: " + result.getDevice().getName());
+                        Log.i(TAG, "Can't find device: " + result.getScanRecord().getDeviceName());
                         prepareForScan();
                     }
                 }
