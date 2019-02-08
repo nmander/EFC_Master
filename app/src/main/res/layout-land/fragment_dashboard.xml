@@ -25,18 +25,21 @@
                 custom:maxSpeed="12000" />
         </android.support.constraint.ConstraintLayout>
 
-        <!--    <LinearLayout
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <ImageButton
+                    android:id="@+id/leveler"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/walbro350"
+                    android:src="@drawable/walbro_logo_w"
+                    android:background="@null"
                     android:alpha="0.1"
                     android:layout_marginTop="110dp"
-                    android:layout_marginStart="230dp"/>
-            </LinearLayout>-->
+                    android:layout_marginStart="245dp"/>
+            </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
