@@ -334,14 +334,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		@Override
 		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
 			super.onConnectionStateChange(gatt, status, newState);
+			Log.i(TAG, "STATE CHANGE! GATT: " + gatt + " STATUS: " + status + " NEW STATE: " + newState);
 			if (status == BluetoothGatt.GATT_FAILURE) {
 				Log.i(TAG, "GATT_FAILURE, Disconnected from GATT client");
 				disconnectGattServer();
 				return;
 			} else if (status != BluetoothGatt.GATT_SUCCESS) {
 				Log.i(TAG, "!GATT_SUCCESS, Disconnected from GATT client");
-				disconnectGattServer();
-				// connectToGattServer();
+					disconnectGattServer();
 				return;
 			}
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
@@ -570,7 +570,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		//Now setup radio to communicate with WBLE using address found from scanning and passed as parameter to this class
 		GattClientCallback mGattCallback = new GattClientCallback();
 		BluetoothDevice bluetoothDevice = mBluetoothAdapter.getRemoteDevice(device_address);
-		mBluetoothGatt = bluetoothDevice.connectGatt(this, false, mGattCallback,2);
+
+		//Log.i(TAG, "UUIDS: " + bluetoothDevice.getUuids().length);
+		mBluetoothGatt = bluetoothDevice.connectGatt(this, false, mGattCallback, BluetoothDevice.TRANSPORT_LE);
 	}
 
 	public void disconnectGattServer()
