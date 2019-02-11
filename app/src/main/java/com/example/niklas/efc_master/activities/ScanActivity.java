@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ParcelUuid;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -29,14 +28,6 @@ import android.widget.Toast;
 import com.example.niklas.efc_master.R;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import no.nordicsemi.android.support.v18.scanner.BluetoothLeScannerCompat;
-import no.nordicsemi.android.support.v18.scanner.ScanCallback;
-import no.nordicsemi.android.support.v18.scanner.ScanFilter;
-import no.nordicsemi.android.support.v18.scanner.ScanResult;
-import no.nordicsemi.android.support.v18.scanner.ScanSettings;
-
 import static com.example.niklas.efc_master.profiles.NordicProfile.SERVICE_UUID;
 
 public class ScanActivity extends AppCompatActivity
@@ -45,15 +36,10 @@ public class ScanActivity extends AppCompatActivity
     private static final long SCAN_TIMEOUT_MS = 5_000;
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_PERMISSION_LOCATION = 1;
-    //public static final String EXTRA_DEVICE_ADDRESS = "mAddress";
     private boolean mScanning;
     private ProgressBar scanning_wheel;
     private Button btnScan;
     private Button btnConnect;
-    //private int temp = -999, rssi, index;
-
-    //private final BluetoothLeScannerCompat mScanner = BluetoothLeScannerCompat.getScanner();
-    //private final Handler mStopScanHandler = new Handler();
 
     ArrayList<String> WBLE_Names = new ArrayList<String>();
     ArrayList<BluetoothDevice> WBLE_Addresses = new ArrayList<BluetoothDevice>();
@@ -66,7 +52,6 @@ public class ScanActivity extends AppCompatActivity
     private BluetoothAdapter mBluetoothAdapter;
     private Handler mHandler;
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
@@ -76,15 +61,6 @@ public class ScanActivity extends AppCompatActivity
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-/*    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == REQUEST_PERMISSION_LOCATION && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "Permission accepted");
-        } else {
-            Toast.makeText(getApplicationContext(), "Enable Location", Toast.LENGTH_LONG).show();
-            finish();
-        }
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +69,6 @@ public class ScanActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         scanning_wheel = findViewById(R.id.scanning_wheel);
-        //scanning_wheel.setVisibility(View.INVISIBLE);
         mHandler = new Handler();
 
         btnScan = findViewById(R.id.btn_scan);
@@ -113,6 +88,34 @@ public class ScanActivity extends AppCompatActivity
             }
         });
         Toast.makeText(getApplicationContext(), "Scanning for WBLE Modules...", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean isBleSupported() {
+        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
+    }
+
+    private void prepareForScan() {
+        if (isBleSupported())
+        {
+            scanning_wheel.setVisibility(View.VISIBLE);
+            // Ensures Bluetooth is enabled on the device
+            if (mBluetoothAdapter.isEnabled()) {
+                // Prompt for runtime permission
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                {
+                    scanLeDevice(true);
+                    is_dialog_shown = false;
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_LOCATION);
+                }
+            } else {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
+        } else {
+            Toast.makeText(this, "BLE not supported", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     private void scanLeDevice(final boolean enable) {
@@ -177,22 +180,6 @@ public class ScanActivity extends AppCompatActivity
                                     show_found_devices();
                                 adapter.notifyDataSetChanged();
                             }
-
-                            /*if (WBLE_Names.size() == 1)
-                            {
-                                btnScan.setVisibility(View.INVISIBLE);
-                                try
-                                {
-                                    stopLeScan();
-                                    if (device.getName() != null)
-                                        Toast.makeText(getApplicationContext(), "Connected: " + device.getName(), Toast.LENGTH_SHORT).show();
-                                    startMainActivity(device);
-                                }
-                                catch (Exception e)
-                                {
-                                    Log.i(TAG, "Can't find device: " + device);
-                                }
-                            }*/
                         }
                     });
                 }
@@ -248,66 +235,6 @@ public class ScanActivity extends AppCompatActivity
         startMainActivity(WBLE_Addresses.get(selectedDevice));
     }
 
-/*    private final ScanCallback mScanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            // We scan with report delay > 0. This will never be called.
-            Log.i(TAG, "onScanResult: " + result.getDevice().getAddress());
-        }
-
-        @Override
-        public void onBatchScanResults(List<ScanResult> results) {
-            Log.i(TAG, "onBatchScanResults: " + results.size());
-            if (!results.isEmpty()) {
-                for (int i = 0; i < results.size(); i++) {
-                    ScanResult result = results.get(i);
-                    Log.i(TAG, "found BLE: " + result.getDevice().toString() + " Name: " + result.getScanRecord().getDeviceName());
-                    String deviceName = result.getScanRecord().getDeviceName();
-                    if (deviceName != null && deviceName.contains("WEFC")) {
-                        if (WBLE_Names != null && !WBLE_Names.contains(deviceName)) {
-                            WBLE_Names.add(result.getScanRecord().getDeviceName());
-                            WBLE_Addresses.add(result.getDevice());
-                        }
-                    }
-                }
-                //stopLeScan();
-                //if (WBLE_Names.size() > 1)
-                if (!is_dialog_shown)
-                    show_found_devices();
-                adapter.notifyDataSetChanged();
-*//*                else if (WBLE_Names.size() == 1) {
-                    ScanResult result = results.get(0);
-                    Log.i(TAG, "found BLE: " + results.toString());
-                    btnScan.setVisibility(View.INVISIBLE);
-                    try {
-                        if (result.getDevice().getName().contains("WEFC")) {
-                            Toast.makeText(getApplicationContext(), "Connected: " + result.getDevice().getName(), Toast.LENGTH_SHORT).show();
-                            startMainActivity(result.getDevice());
-                        }
-                    } catch (Exception e) {
-                        Log.i(TAG, "Can't find device: " + result.getDevice().getName());
-                        prepareForScan();
-                    }
-                }*//*
-            }
-        }
-
-        @Override
-        public void onScanFailed(int errorCode) {
-            Log.w(TAG, "Scan failed: " + errorCode);
-            stopLeScan();
-        }
-    };*/
-
-/*    private final Runnable mStopScanRunnable = new Runnable() {
-        @Override
-        public void run() {
-            //Toast.makeText(getApplicationContext(), "No compatible WBLE modules found", Toast.LENGTH_SHORT).show();
-            btnScan.setVisibility(View.VISIBLE);
-            stopLeScan();
-        }
-    };*/
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -316,81 +243,10 @@ public class ScanActivity extends AppCompatActivity
         prepareForScan();
     }
 
-/*    @Override
-    protected void onPause() {
-        super.onPause();
-        stopLeScan();
-    }*/
-
-/*    private void stopLeScan() {
-        if (mScanning) {
-            Log.w(TAG, "Stopping Scan");
-            mScanning = false;
-            scanning_wheel.setVisibility(View.INVISIBLE);
-            btnScan.setVisibility(View.VISIBLE);
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            scanning_wheel.setVisibility(View.INVISIBLE);
-            btnScan.setVisibility(View.VISIBLE);
-            invalidateOptionsMenu();
-        }
-    }*/
-
-/*    private void startLeScan()
-    {
-        WBLE_Names.clear();
-        WBLE_Addresses.clear();
-        Log.w(TAG, "Starting Scan");
-        mScanning = true;
-        ScanSettings settings = new ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                .setReportDelay(1000)
-                .build();
-        List<ScanFilter> filters = new ArrayList<>();
-        filters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(SERVICE_UUID)).build());
-
-        //mScanner.startScan(filters, settings, mScanCallback);
-        //mScanner.startScan(mScanCallback);
-
-        // Stops scanning after a pre-defined scan period.
-        //mStopScanHandler.postDelayed(mStopScanRunnable, SCAN_TIMEOUT_MS);
-        invalidateOptionsMenu();
-    }*/
-
-    private boolean isBleSupported() {
-        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
-    }
-
-    private void prepareForScan() {
-        if (isBleSupported())
-        {
-            scanning_wheel.setVisibility(View.VISIBLE);
-            // Ensures Bluetooth is enabled on the device
-            if (mBluetoothAdapter.isEnabled()) {
-                //startLeScan();
-                //scanLeDevice();
-                // Prompt for runtime permission
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    //startLeScan();
-                    scanLeDevice(true);
-                    is_dialog_shown = false;
-                } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_LOCATION);
-                }
-            } else {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            }
-        } else {
-            Toast.makeText(this, "BLE not supported", Toast.LENGTH_LONG).show();
-            finish();
-        }
-    }
-
     private void startMainActivity(BluetoothDevice device)
     {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(MainActivity.EXTRA_DEVICE_ADDRESS, device.getAddress());
-
         startActivity(intent);
         finish();
     }
