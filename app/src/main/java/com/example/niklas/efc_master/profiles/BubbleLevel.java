@@ -18,8 +18,8 @@ public class BubbleLevel extends View implements LevelChangeListener
 
     public float pitch;
     public float roll;
-    public static final float ROLL_SENS = 35;
-    public static final float PITCH_SENS = 100;
+    public static final float ROLL_SENS = 100;
+    public static final float PITCH_SENS = 150;
     public static final int BUBBLE_RADIUS = 75;
 
 
