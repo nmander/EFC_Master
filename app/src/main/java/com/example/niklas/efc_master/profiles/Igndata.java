@@ -24,6 +24,8 @@ public class Igndata extends BaseObservable
     private int error_code; //0=Success, 1=Not following starting procedure,
     private int oil_life_cntr;
     private int total_run_time;
+    private long total_run_date;
+
 
     public Igndata() {
         this.primerBulb = "PUSH PRIMER BULB N TIMES";
@@ -36,6 +38,7 @@ public class Igndata extends BaseObservable
         this.error_code = 0;
         this.oil_life_cntr = 0;
         this.total_run_time = 0;
+        this.total_run_date = 0;
     }
 
     public int getAttachment_nbr_status() {
@@ -106,9 +109,24 @@ public class Igndata extends BaseObservable
         this.error_code = error_code;
     }
 
-    public int getOil_life_cntr() { return oil_life_cntr;  }
-    public void setOil_life_cntr(int oil_life_cntr) { this.oil_life_cntr = oil_life_cntr; }
+    public int getOil_life_cntr() {
+        return oil_life_cntr;
+    }
+    public void setOil_life_cntr(int oil_life_cntr) {
+        this.oil_life_cntr = oil_life_cntr;
+    }
 
-    public int getTotal_run_time() { return total_run_time; }
-    public void setTotal_run_time(int total_run_time) { this.total_run_time = total_run_time; }
+    public int getTotal_run_time() {
+        return total_run_time;
+    }
+    public void setTotal_run_time(int total_run_time) {
+        this.total_run_time = total_run_time;
+    }
+
+    public long getTotal_run_date() {
+        return total_run_date;
+    }
+    public void setTotal_run_date(long total_run_date) {
+        this.total_run_date = total_run_date;
+    }
 }

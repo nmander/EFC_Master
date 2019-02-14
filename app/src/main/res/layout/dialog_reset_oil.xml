@@ -24,7 +24,7 @@
             android:padding="20dp"
             android:id="@+id/dialog_message"
             android:textStyle="bold"
-            android:text="Reset oil life?"
+            android:text="RESET OIL LIFE?"
             android:textAlignment="center"/>
 
         <Button

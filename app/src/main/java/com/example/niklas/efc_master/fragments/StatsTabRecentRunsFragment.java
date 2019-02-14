@@ -58,7 +58,7 @@ public class StatsTabRecentRunsFragment extends Fragment {
 				entries.add(new BarEntry((500+500*i), LastRunData[i]));
 		}
 
-		BarDataSet set = new BarDataSet(entries, "Last run speed profile.");
+		BarDataSet set = new BarDataSet(entries, "LAST RUN SPEED PROFILE");
 		set.setColor(Color.rgb(123,102,196));
 		set.setHighlightEnabled(false);
 
@@ -81,14 +81,14 @@ public class StatsTabRecentRunsFragment extends Fragment {
 				mArray[i] = 0;
 			else if (mArray[i] >= 60 && !over_60_sec )  //if over 60 seconds at any speed we will convert to minutes
 				over_60_sec = true;
-			y_axis_text.setText("time spent (seconds)");
+			y_axis_text.setText("TIME SPENT (SECONDS)");
 		}
 
 		if (over_60_sec) {                 //Convert to minutes
 			for (int i=4; i<22; i++) {
 				mArray[i] = mArray[i]/60;
 			}
-			y_axis_text.setText("time spent (minutes)");
+			y_axis_text.setText("TIME SPENT (MINUTES)");
 		}
 		return mArray;
 	}

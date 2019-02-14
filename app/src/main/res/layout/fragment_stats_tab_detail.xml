@@ -15,7 +15,6 @@
             android:id="@+id/table"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
         </TableRow>
 
         <ScrollView
@@ -181,7 +180,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/table_cell_shape"
                         android:padding="5sp"
-                        android:text="Oct 12, 2018 11:32:37 EDT"
+                        android:text="Oct 12, 2018 11:32:37 EST"
                         android:textSize="18sp"
                         android:textAppearance="?android:attr/textAppearanceMedium">
                     </TextView>

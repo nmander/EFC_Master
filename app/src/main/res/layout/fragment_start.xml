@@ -16,9 +16,9 @@
 
             <ImageView
                 android:layout_width="60sp"
-                android:layout_height="60sp"
+                android:layout_height="50sp"
                 android:layout_marginStart="28sp"
-                android:layout_marginTop="30sp"
+                android:layout_marginTop="40sp"
                 android:layout_marginEnd="10sp"
                 android:background="@drawable/ic_prime_bulb"
                 android:scaleType="fitXY"
@@ -71,6 +71,7 @@
                 android:layout_toStartOf="@id/instructions_pull_string"
                 android:layout_below="@id/instruction_squeeze_throttle"
                 android:layout_marginEnd="10sp"
+                android:layout_marginTop="10sp"
                 android:background="@drawable/ic_pull_cord"
                 android:scaleType="fitXY"
                 />

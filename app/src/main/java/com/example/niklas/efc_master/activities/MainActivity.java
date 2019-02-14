@@ -152,6 +152,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			mSensorGyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 		}
 		//startAccelerometer();
+/*		long epoch_time = Calendar.getInstance().getTimeInMillis();
+		Log.i(TAG, "MainActivity onCreate EPOCH_TIME: " + epoch_time);
+		Log.i(TAG, "MainActivity onCreate EPOCH_TIME: " + DateFormat.getDateTimeInstance().format(epoch_time));*/
+
 	}
 
 	@Override
@@ -422,8 +426,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					live_data.setTps_status(1);  //Removed sensing of tps by BLE module, interfering with ignition module when programming and startup
 					live_data.setError_code(data[5]); // flash if ==1
 					live_data.setOil_life_cntr(data[6]); //how about now?
-					if (!epoch_lastRun_sent)
+					if (!epoch_lastRun_sent) {
 						send_EPOCH_to_BLE_module(protocol.EPOCH_ID_LAST_RUN);
+						//live_data.setTotal_run_time(data[9]);
+					}
 					getLastRunDateTime();
 					//hide navigational features:
 					if (!hide_running_features)
@@ -499,6 +505,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				{
 					live_data.setTotal_run_time((data[2]&0xff) + ((data[3]&0xff)*256));
 					live_data.setRun_time((data[4]&0xff) + ((data[5]&0xff)*256));
+					live_data.setTotal_run_date((data[7]&0xff) + ((data[8]&0xff)*256) + ((data[9]&0xff)*256*256) + ((data[10]&0xff)*256*256*256));
+					Log.i(TAG, "DETAILS_STATE_PAGE: " + live_data.getTotal_run_date());
 				}
 				else if (data[0] == live_data.LAST_RUN_STATS_PAGE_1 && data.length == data[1])
 				{
@@ -808,7 +816,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	public void send_EPOCH_to_BLE_module(byte id)
 	{//Date
-		long epoch_time = Calendar.getInstance().getTimeInMillis()/1000;
+		long epoch_time = Calendar.getInstance().getTimeInMillis();//1000;
 		BluetoothGattCharacteristic interactor = mBluetoothGatt
 				.getService(SERVICE_UUID)
 				.getCharacteristic(CHARACTERISTIC_RX);
@@ -830,8 +838,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		sendBytes[6] = (byte)(epoch_time>>24);
 		interactor.setValue(sendBytes); //packet must go trough this xxx.setValue before being sent out
 		mBluetoothGatt.writeCharacteristic(interactor);
+		Log.i(TAG, "MainActivity EpochRunTimeDate: " + epoch_time);
 		epoch_lastRun_sent = true;
 	}
+
+/*	public String getLastEpochRunTime()
+	{
+		if (live_data.getTotal_run_date() != 0) {
+			long epoch_time_date = live_data.getTotal_run_date();
+			//long epoch_time = Calendar.getInstance().getTimeInMillis();
+			String str_epoch_time_date = DateFormat.getDateTimeInstance().format(epoch_time_date);
+			//long epoch_time = Calendar.getInstance().getTimeInMillis();
+			Log.i(TAG, "MainActivity getLastEpochRunTimeDate: " + epoch_time_date);
+			return str_epoch_time_date;
+		}
+		return null;
+	}*/
 
 	public void disable_lite_trim()
 	{

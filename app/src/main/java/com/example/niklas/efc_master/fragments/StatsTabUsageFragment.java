@@ -56,7 +56,7 @@ public class StatsTabUsageFragment extends Fragment {
 				entries.add(new BarEntry((1f+2*i), usageData[i]));
 		}
 
-		BarDataSet set = new BarDataSet(entries, "Life time run-times");
+		BarDataSet set = new BarDataSet(entries, "LIFE TIME RUN-TIMES");
 		set.setColor(Color.rgb(13,173,90));
 		set.setHighlightEnabled(false);
 

@@ -30,5 +30,11 @@
             android:id="@+id/name"
             android:layout_gravity="center_vertical" />
 
+<!--        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorAccent"
+            android:gravity="end"/>-->
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

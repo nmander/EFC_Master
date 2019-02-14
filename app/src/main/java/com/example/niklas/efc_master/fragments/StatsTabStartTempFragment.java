@@ -56,7 +56,7 @@ public class StatsTabStartTempFragment extends Fragment {
 				entries.add(new BarEntry((-7.5f+5*i), startTempData[i]));
 		}
 
-		BarDataSet set = new BarDataSet(entries, "Starts at different temperatures");
+		BarDataSet set = new BarDataSet(entries, "STARTS AT DIFFERENT TEMPERATURES");
 		set.setColor(Color.rgb(13,138,173));
 		set.setHighlightEnabled(false);
 

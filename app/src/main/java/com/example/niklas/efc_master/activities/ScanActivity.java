@@ -42,7 +42,7 @@ import static com.example.niklas.efc_master.profiles.NordicProfile.SERVICE_UUID;
 public class ScanActivity extends AppCompatActivity
 {
     private static final String TAG = ScanActivity.class.getSimpleName();
-    private static final long SCAN_TIMEOUT_MS = 5_000;
+    private static final long SCAN_TIMEOUT_MS = 3_000;
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_PERMISSION_LOCATION = 1;
     //public static final String EXTRA_DEVICE_ADDRESS = "mAddress";
@@ -109,10 +109,10 @@ public class ScanActivity extends AppCompatActivity
                 btnScan.setVisibility(View.INVISIBLE);
                 Log.w(TAG, "setOnClickListener");
                 prepareForScan();
-                Toast.makeText(getApplicationContext(), "Scanning for WBLE Modules...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Scanning for WBLE modules...", Toast.LENGTH_SHORT).show();
             }
         });
-        Toast.makeText(getApplicationContext(), "Scanning for WBLE Modules...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Scanning for WBLE modules...", Toast.LENGTH_SHORT).show();
     }
 
     private void scanLeDevice(final boolean enable) {
@@ -132,11 +132,11 @@ public class ScanActivity extends AppCompatActivity
                     }
                     else if(WBLE_Names.size() == 1)
                         {
-                        Toast.makeText(getApplicationContext(), "Connected: " + WBLE_Names.get(0), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Connected: " + WBLE_Names.get(0) + " - " + WBLE_Addresses.get(0), Toast.LENGTH_LONG).show();
                         startMainActivity(WBLE_Addresses.get(0));
                     }
                     else
-                        Toast.makeText(getApplicationContext(), "No compatible WBLE modules found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "No WBLE modules found", Toast.LENGTH_SHORT).show();
                 }
             }, SCAN_TIMEOUT_MS);
 
@@ -172,11 +172,11 @@ public class ScanActivity extends AppCompatActivity
                                 }
                             }
 
-                            if (WBLE_Names.size() > 1) {
+/*                            if (WBLE_Names.size() > 1) {
                                 if (!is_dialog_shown)
                                     show_found_devices();
                                 adapter.notifyDataSetChanged();
-                            }
+                            }*/
 
                             /*if (WBLE_Names.size() == 1)
                             {
@@ -243,7 +243,7 @@ public class ScanActivity extends AppCompatActivity
     public void Connect(View v)
     {
         Log.i(TAG, "YOU CLICKED CONNECT");
-        Toast.makeText(getApplicationContext(), "Connected: " + WBLE_Names.get(selectedDevice), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Connected: " + WBLE_Names.get(selectedDevice) + " - " +WBLE_Addresses.get(selectedDevice), Toast.LENGTH_SHORT).show();
         dialog.dismiss();
         startMainActivity(WBLE_Addresses.get(selectedDevice));
 //        WBLE_Names.clear();

@@ -29,6 +29,7 @@ public class StatsTabDetailsFragment extends Fragment
 	public Button btnYes;
 	public Button btnNo;
 	public String myLastRunTimeDate = "";
+	public String myEpochLastRunTimeDate = "";
 	private TextView mod_cell_device_name;
 	public String[] LastRun;
 	private DashboardFragment dashboardFragment = new DashboardFragment();
@@ -120,6 +121,8 @@ public class StatsTabDetailsFragment extends Fragment
 				});
 			}
 		});
+/*		if (mainActivity.getLastEpochRunTime() != null)
+			Toast.makeText(getContext(), mainActivity.getLastEpochRunTime(), Toast.LENGTH_SHORT).show();*/
  		return rootView;
 	}
 }
