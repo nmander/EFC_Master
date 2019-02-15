@@ -500,12 +500,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					//When first entering, check what attachment the ignition module have and set that as our selection
 					updateRunningScreen();
 					epoch_lastRun_sent = false;
+					Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getTemperature() + ", " + live_data.getTps_status());
 				}
 				else if (data[0] == live_data.DETAILS_STATS_PAGE && data.length == data[1])
 				{
 					live_data.setTotal_run_time((data[2]&0xff) + ((data[3]&0xff)*256));
 					live_data.setRun_time((data[4]&0xff) + ((data[5]&0xff)*256));
 					live_data.setTotal_run_date((data[7]&0xff) + ((data[8]&0xff)*256) + ((data[9]&0xff)*256*256) + ((data[10]&0xff)*256*256*256));
+
 					Log.i(TAG, "DETAILS_STATE_PAGE: " + live_data.getTotal_run_date());
 				}
 				else if (data[0] == live_data.LAST_RUN_STATS_PAGE_1 && data.length == data[1])
@@ -816,7 +818,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 	public void send_EPOCH_to_BLE_module(byte id)
 	{//Date
-		long epoch_time = Calendar.getInstance().getTimeInMillis();//1000;
+		long epoch_time = Calendar.getInstance().getTimeInMillis()/1000;//1000;
 		BluetoothGattCharacteristic interactor = mBluetoothGatt
 				.getService(SERVICE_UUID)
 				.getCharacteristic(CHARACTERISTIC_RX);
@@ -841,19 +843,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		Log.i(TAG, "MainActivity EpochRunTimeDate: " + epoch_time);
 		epoch_lastRun_sent = true;
 	}
-
-/*	public String getLastEpochRunTime()
-	{
-		if (live_data.getTotal_run_date() != 0) {
-			long epoch_time_date = live_data.getTotal_run_date();
-			//long epoch_time = Calendar.getInstance().getTimeInMillis();
-			String str_epoch_time_date = DateFormat.getDateTimeInstance().format(epoch_time_date);
-			//long epoch_time = Calendar.getInstance().getTimeInMillis();
-			Log.i(TAG, "MainActivity getLastEpochRunTimeDate: " + epoch_time_date);
-			return str_epoch_time_date;
-		}
-		return null;
-	}*/
 
 	public void disable_lite_trim()
 	{

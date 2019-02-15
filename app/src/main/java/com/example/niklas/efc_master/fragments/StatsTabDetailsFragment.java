@@ -19,12 +19,20 @@ import com.example.niklas.efc_master.R;
 import com.example.niklas.efc_master.activities.MainActivity;
 import com.example.niklas.efc_master.profiles.protocol;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import static android.content.ContentValues.TAG;
+
 public class StatsTabDetailsFragment extends Fragment
 {
 	public MainActivity mainActivity;
 	public TextView modLastRunTimerCell;
 	public TextView modTotalRunTimeCell;
 	public TextView txtOilLifeValue;
+	public TextView txtOilLifeChangedValue;
 	public Button btnResetOilLife;
 	public Button btnYes;
 	public Button btnNo;
@@ -44,9 +52,17 @@ public class StatsTabDetailsFragment extends Fragment
 		modLastRunTimerCell = rootView.findViewById(R.id.cell_last_runtime_stopwatch);
 		modTotalRunTimeCell = rootView.findViewById(R.id.cell_total_runtime);
 		mod_cell_device_name = rootView.findViewById(R.id.cell_device_name);
-		mod_cell_device_name.setText(mainActivity.mBluetoothGatt.getDevice().getName());
+		mod_cell_device_name.setText(mainActivity.mBluetoothGatt.getDevice().getName() + " - " + mainActivity.mBluetoothGatt.getDevice().getAddress());
 		txtOilLifeValue = rootView.findViewById(R.id.cell_oil_life_value);
+		txtOilLifeChangedValue = rootView.findViewById(R.id.cell_oil_life_last_changed_value);
 		btnResetOilLife = rootView.findViewById(R.id.btn_reset_oil);
+
+		Date epochLastRunTimeDate = new Date(mainActivity.live_data.getTotal_run_date() * 1000L);
+		//Date epochLastRunTimeDate = new Date(1550240667 * 1000L);
+		Log.i(TAG, "StatsTabDetailsFragment epochLastRunTimeDate: " + epochLastRunTimeDate);
+		DateFormat df = new SimpleDateFormat("MMM d, yyyy HH:mm:ss z");
+		String myEpochLastRunTimeDate = df.format(epochLastRunTimeDate);
+		Log.i(TAG, "StatsTabDetailsFragment myEpochLastRunTimeDate: " + myEpochLastRunTimeDate);
 
 		Bundle bundle = getArguments();
 		if (bundle != null || !mainActivity.RunTimeAndDate.isEmpty()) {
@@ -60,11 +76,11 @@ public class StatsTabDetailsFragment extends Fragment
 			if (myLastRunTimeDate != null) {
 				LastRun = myLastRunTimeDate.split("-");
 				if ((Integer.valueOf(LastRun[0]) < 60))
-					modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " sec" + "  |  " + LastRun[1]);
+					modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " sec" + "  |  " + myEpochLastRunTimeDate);
 				if ((Integer.valueOf(LastRun[0]) >= 60 && (Integer.valueOf(LastRun[0]) < 3600)))
-					modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " min" + "  |  " + LastRun[1]);
+					modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " min" + "  |  " + myEpochLastRunTimeDate);
 				if ((Integer.valueOf(LastRun[0]) >=3600 && (Integer.valueOf(LastRun[0]) < 36000)))
-					modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " hrs" + "  |  " + LastRun[1]);
+					modLastRunTimerCell.setText(dashboardFragment.getModuleRunTimeFormat(Integer.valueOf(LastRun[0])) + " hrs" + "  |  " + myEpochLastRunTimeDate); //LastRun[1]
 				else if ((Integer.valueOf(LastRun[0]) >= 360000))
 					modLastRunTimerCell.setText("100+ hrs");
 			}
@@ -109,6 +125,10 @@ public class StatsTabDetailsFragment extends Fragment
 						mainActivity.writeToIgnitionModule(protocol.BTN_RESET_OIL, protocol.RESET_OIL_COUNTER);
 						txtOilLifeValue.setText("100 %");
 						btnResetOilLife.setVisibility(View.INVISIBLE);
+						String date;
+						DateFormat df = new SimpleDateFormat("MMM d, yyyy HH:mm:ss z");
+						date = df.format(Calendar.getInstance().getTime());
+						txtOilLifeChangedValue.setText(date);
 						dialog.dismiss();
 					}
 				});
@@ -121,8 +141,6 @@ public class StatsTabDetailsFragment extends Fragment
 				});
 			}
 		});
-/*		if (mainActivity.getLastEpochRunTime() != null)
-			Toast.makeText(getContext(), mainActivity.getLastEpochRunTime(), Toast.LENGTH_SHORT).show();*/
  		return rootView;
 	}
 }
