@@ -74,6 +74,8 @@ public class DashboardFragment extends Fragment
 
 		if(!mainActivity.did_we_clear_change)
 			flashCHANGE();
+		if(mainActivity.did_we_clear_change)
+		    myOilLife.clearAnimation();
 
 		return rootView;
 	}

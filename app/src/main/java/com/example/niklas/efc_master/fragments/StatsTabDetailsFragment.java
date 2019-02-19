@@ -58,11 +58,11 @@ public class StatsTabDetailsFragment extends Fragment
 		btnResetOilLife = rootView.findViewById(R.id.btn_reset_oil);
 
 		Date epochLastRunTimeDate = new Date(mainActivity.live_data.getTotal_run_date() * 1000L);
-		//Date epochLastRunTimeDate = new Date(1550240667 * 1000L);
+		Date epochLastOilChangeDate = new Date(mainActivity.live_data.getOil_life_date() * 1000L);
 		Log.i(TAG, "StatsTabDetailsFragment epochLastRunTimeDate: " + epochLastRunTimeDate);
 		DateFormat df = new SimpleDateFormat("MMM d, yyyy HH:mm:ss z");
 		String myEpochLastRunTimeDate = df.format(epochLastRunTimeDate);
-		Log.i(TAG, "StatsTabDetailsFragment myEpochLastRunTimeDate: " + myEpochLastRunTimeDate);
+		String myEpochLastOilChangeDate = df.format(epochLastOilChangeDate);
 
 		Bundle bundle = getArguments();
 		if (bundle != null || !mainActivity.RunTimeAndDate.isEmpty()) {
@@ -97,12 +97,13 @@ public class StatsTabDetailsFragment extends Fragment
 		}
 		int myPercent;
 		myPercent = 100 - mainActivity.live_data.getOil_life_cntr();
+		txtOilLifeChangedValue.setText(myEpochLastOilChangeDate);
 		if (myPercent <= 0)
 		{
 			myPercent = 0;
 		}
-		else if (myPercent <= 99)
-			btnResetOilLife.setVisibility(View.VISIBLE);
+		//else if (myPercent <= 99)
+			//btnResetOilLife.setVisibility(View.VISIBLE);
 		txtOilLifeValue.setText(String.valueOf(myPercent) + "%");
 
 		btnResetOilLife.setOnClickListener(new View.OnClickListener() {
@@ -124,11 +125,14 @@ public class StatsTabDetailsFragment extends Fragment
 					public void onClick(View v) {
 						mainActivity.writeToIgnitionModule(protocol.BTN_RESET_OIL, protocol.RESET_OIL_COUNTER);
 						txtOilLifeValue.setText("100 %");
-						btnResetOilLife.setVisibility(View.INVISIBLE);
+						//btnResetOilLife.setVisibility(View.INVISIBLE);
 						String date;
 						DateFormat df = new SimpleDateFormat("MMM d, yyyy HH:mm:ss z");
 						date = df.format(Calendar.getInstance().getTime());
 						txtOilLifeChangedValue.setText(date);
+						mainActivity.send_EPOCH_to_BLE_module(protocol.EPOCH_ID_OIL_CHANGE);
+						mainActivity.did_we_clear_change = true;
+						mainActivity.start_change_notif = false;
 						dialog.dismiss();
 					}
 				});

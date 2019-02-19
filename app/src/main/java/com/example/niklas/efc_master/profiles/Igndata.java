@@ -23,6 +23,7 @@ public class Igndata extends BaseObservable
     private int tps_status; // 0= Part Throttle, 1 = at idle position, 2 = WOT
     private int error_code; //0=Success, 1=Not following starting procedure,
     private int oil_life_cntr;
+    public long oil_life_date;
     private int total_run_time;
     private long total_run_date;
 
@@ -37,6 +38,7 @@ public class Igndata extends BaseObservable
         this.tps_status = 0;
         this.error_code = 0;
         this.oil_life_cntr = 0;
+        this.oil_life_date = 0;
         this.total_run_time = 0;
         this.total_run_date = 0;
     }
@@ -116,6 +118,12 @@ public class Igndata extends BaseObservable
         this.oil_life_cntr = oil_life_cntr;
     }
 
+    public long getOil_life_date() {
+        return oil_life_date;
+    }
+    public void setOil_life_date(long oil_life_date) {
+        this.oil_life_date = oil_life_date;
+    }
     public int getTotal_run_time() {
         return total_run_time;
     }

@@ -506,7 +506,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				{
 					live_data.setTotal_run_time((data[2]&0xff) + ((data[3]&0xff)*256));
 					live_data.setRun_time((data[4]&0xff) + ((data[5]&0xff)*256));
-					live_data.setTotal_run_date((data[7]&0xff) + ((data[8]&0xff)*256) + ((data[9]&0xff)*256*256) + ((data[10]&0xff)*256*256*256));
+					live_data.setTotal_run_date((data[6]&0xff) + ((data[7]&0xff)*256) + ((data[8]&0xff)*256*256) + ((data[9]&0xff)*256*256*256));
+                    live_data.setOil_life_date((data[10]&0xff) + ((data[11]&0xff)*256) + ((data[12]&0xff)*256*256) + ((data[13]&0xff)*256*256*256));
 
 					Log.i(TAG, "DETAILS_STATE_PAGE: " + live_data.getTotal_run_date());
 				}
@@ -805,11 +806,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						did_we_clear_bump = true;
 						dashboardFragment.myBUMP.clearAnimation();
 					}
-					else if (start_bump_notif && !did_we_clear_bump && live_data.getAttachment_nbr_status() == protocol.TOOL_STRING)
+/*					else if (start_bump_notif && !did_we_clear_bump && live_data.getAttachment_nbr_status() == protocol.TOOL_STRING)
 					{
 						start_bump_notif = true;
 						did_we_clear_bump = false;
 						dashboardFragment.flashBUMP();
+					}*/
+					else if (start_bump_notif && live_data.getRpm() <= STRING_DEBUMP_SPEED && live_data.getAttachment_nbr_status() == protocol.TOOL_STRING)
+					{
+						start_bump_notif = false;
+						did_we_clear_bump = true;
+						Toast.makeText(getApplicationContext(), "BUMPED STRING", Toast.LENGTH_SHORT).show();
+						dashboardFragment.myBUMP.clearAnimation();
 					}
 				}
 			}

@@ -152,7 +152,6 @@
                         android:layout_gravity="center"
                         android:padding="0dp"
                         android:textSize="18sp"
-                        android:visibility="invisible"
                         android:background="#f4f4f4">
                     </Button>
                 </TableRow>
