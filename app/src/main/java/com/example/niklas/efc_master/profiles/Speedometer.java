@@ -76,7 +76,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 
 		//changes increment indicater length/size
 		onMarkPaint.setStrokeWidth(80f);
-		onMarkPaint.setShadowLayer(5f, 0f, 0f, ON_COLOR);
+		onMarkPaint.setShadowLayer(7f, 0f, 0f, ON_COLOR);
 		onMarkPaint.setAntiAlias(true);
 
 		offMarkPaint = new Paint(onMarkPaint);
@@ -202,7 +202,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 		for(int i = -205; i < ((mCurrentSpeed/mMaxSpeed)*230 - 203); i+=4)
 		{
 			//adjusts current speed tick thickness
-			onPath.addArc(oval, i, 2f);
+			onPath.addArc(oval, i, 2.2f);
 		}
 		canvas.drawPath(onPath, onMarkPaint);
 	}

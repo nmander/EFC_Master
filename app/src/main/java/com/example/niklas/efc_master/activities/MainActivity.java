@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	public boolean did_we_recieve_last_run_date = false;
 	public static boolean epoch_lastRun_sent = false;
 	public static boolean first_connection = false;
+	private boolean start_gyroscope = false;
 
 	private BottomNavigationView navigation;
 	private StartFragment startFragment = new StartFragment();
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.i(TAG, "MainActivity onCreate: " + device_address);
+		Log.i(TAG, "MainActivity_onCreate: " + device_address);
 		//Try to connect to Gatt Server
 		device_address = getIntent().getStringExtra(EXTRA_DEVICE_ADDRESS);
 		connectToGattServer();
@@ -152,10 +153,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			mSensorGyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 		}
 		//startAccelerometer();
-/*		long epoch_time = Calendar.getInstance().getTimeInMillis();
-		Log.i(TAG, "MainActivity onCreate EPOCH_TIME: " + epoch_time);
-		Log.i(TAG, "MainActivity onCreate EPOCH_TIME: " + DateFormat.getDateTimeInstance().format(epoch_time));*/
-
 	}
 
 	@Override
@@ -202,35 +199,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
                 break;
         }
-/*		float myX = sensorEvent.values[1];
-		float myY = sensorEvent.values[1];
-		float myZ = sensorEvent.values[2];
-		DecimalFormat df = new DecimalFormat("#0.000");
-
-		if(myX > 2 && myY > 2 && myZ < 5)
-		{
-			oldX = -50;
-			oldY = -50;
-			oldZ = -50;
-		}
-
-		//and tps ==2
-		if (myX+2 < oldX && myX > -17  & myY > -17 && myY+2 <oldY && myZ >oldZ+5 && live_data.getTps_status() == 2)
-		{
-			detected_accelerometer_bump = true;
-			Log.i(TAG, "DETECTED BUMP: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
-
-			oldX = -50;
-			oldY = -50;
-			oldZ = -50;
-		}
-		else
-		{
-			oldX = myX;
-			oldY = myY;
-			oldZ = myZ;
-			Log.i(TAG, "AXIS POS: X:" + df.format(myX) + "   Y:" + df.format(myY) + "   Z:" + df.format(myZ));
-		}*/
 	}
 	private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
 			= new BottomNavigationView.OnNavigationItemSelectedListener()
@@ -241,12 +209,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			switch (item.getItemId())
 			{
 				case R.id.navigation_start_instructions:
+                    Log.i(TAG, "MainActivity_nav_start_instructions " + "CLICKED!");
 					setConditionalStartingFragment();
 					hideRunningFeatures();
 					stats_fragment_loaded = false;
 					return true;
 
 				case R.id.navigation_stats:
+                    Log.i(TAG, "MainActivity_nav_stats " + "CLICKED!");
 					writeToIgnitionModule(protocol.BTN_STATS_REQUEST,protocol.REQUEST_STATS); //Ask for last run_time stats from module
 					try {//We need a delay here so the BLE module has time to send the stats pages needed for last_run in stats tab
 						Thread.sleep(250);
@@ -261,21 +231,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					return true;
 
 				case R.id.navigation_light_trim:
+                    Log.i(TAG, "MainActivity_nav_start_light_trim " + "CLICKED!");
 					hideStartingFeatures();
 					stats_fragment_loaded = false;
 					lite_trim_on = !lite_trim_on; //change state of lite trim mode
 					if (lite_trim_on) {
+                        Log.i(TAG, "MainActivity_nav_start_instructions " + "LITE TRIM ON");
 						writeToIgnitionModule(protocol.BTN_TRIM_MODE, protocol.LITE_TRIM);
 						setCheckable(navigation, true);
 					}
 					else
 					{
+                        Log.i(TAG, "MainActivity_nav_start_instructions " + "LITE TIRM OFF");
 						writeToIgnitionModule(protocol.BTN_TRIM_MODE, protocol.NORMAL_TRIM);
 						setCheckable(navigation, false);
 					}
 					return true;
 
 				case R.id.navigation_kill:
+                    Log.i(TAG, "MainActivity_nav_kill " + "CLICKED!");
 					stats_fragment_loaded = false;
 					hideStartingFeatures();
 					writeToIgnitionModule(protocol.BTN_STOP, protocol.STOP_ON);
@@ -284,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 				case R.id.navigation_tool:
 					if (!lite_trim_on) {
+                        Log.i(TAG, "MainActivity_nav_tool " + "CLICKED!");
 						stats_fragment_loaded = false;
 						final Intent intent = new Intent(getApplicationContext(), ToolSelectionActivity.class);
 						startActivityForResult(intent, 1);
@@ -305,12 +280,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			Toast.makeText(getApplicationContext(),protocol.TOOL_STR[myTool], Toast.LENGTH_SHORT).show();
 			if (dashboard_fragment_loaded)
 				dashboardFragment.updateToolView(myTool);
-			if (!did_we_clear_bump && dashboard_fragment_loaded)
-				dashboardFragment.flashBUMP();
+/*			if (!did_we_clear_bump && dashboard_fragment_loaded)
+				dashboardFragment.flashBUMP();*/
 			Bundle bundle = new Bundle();
 			bundle.putInt("TOOL", myTool);
 			dashboardFragment.setArguments(bundle);
 			bumpStringImg = "string";
+            Log.i(TAG, "MainActivity_OnActivityResult " + "TOOL: " + myTool);
 		}
 	}
 
@@ -338,21 +314,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		@Override
 		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
 			super.onConnectionStateChange(gatt, status, newState);
-			Log.i(TAG, "STATE CHANGE! GATT: " + gatt + " STATUS: " + status + " NEW STATE: " + newState);
+			Log.i(TAG, "MainActivity_GattClientCallBack STATE CHANGE! GATT: " + gatt + " STATUS: " + status + " NEW STATE: " + newState);
 			if (status == BluetoothGatt.GATT_FAILURE) {
-				Log.i(TAG, "GATT_FAILURE, Disconnected from GATT client");
+				Log.i(TAG, "MainActivity_GattClientCallBack GATT_FAILURE, Disconnected from GATT client");
 				disconnectGattServer();
 				return;
 			} else if (status != BluetoothGatt.GATT_SUCCESS) {
-				Log.i(TAG, "!GATT_SUCCESS, Disconnected from GATT client");
+				Log.i(TAG, "MainActivity_GattClientCallBack !GATT_SUCCESS, Disconnected from GATT client");
 					disconnectGattServer();
 				return;
 			}
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
-				Log.i(TAG, "STATE_CONNECTED, discover services");
+				Log.i(TAG, "MainActivity_GattClientCallBack STATE_CONNECTED, discover services");
 				gatt.discoverServices();
 			} else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-				Log.i(TAG, "STATE_DISCONNECTED, Disconnected from GATT client");
+				Log.i(TAG, "MainActivity_GattClientCallBack STATE_DISCONNECTED, Disconnected from GATT client");
 				disconnectGattServer();
 			}
 		}
@@ -376,14 +352,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						{
 							descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
 							boolean connected = gatt.writeDescriptor(descriptor);
-							Log.w(TAG, "Trying to subscribe to notifications: " + connected);
+							Log.w(TAG, "MainActivity_OnServicesDiscovered Trying to subscribe to notifications: " + connected);
 						}
 					}
 				}
 			}
 			else
 			{
-				Log.w(TAG, "onServicesDiscovered NO GATT_SUCCESS: " + status);
+				Log.w(TAG, "MainActivity_onServicesDiscovered NO GATT_SUCCESS: " + status);
 			}
 		}
 
@@ -418,7 +394,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				//if engine not running
 				if (data[0] == live_data.ENGINE_NOT_RUNNING && data.length == data[1])
 				{
-                    stopGyroscope();
+					if (start_gyroscope) {
+						stopGyroscope();
+						start_gyroscope = false;
+					}
 					engine_running = false;
 					live_data.setTemperature(data[2]);
 					live_data.setAttachment_nbr_status(data[3]);
@@ -428,8 +407,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					live_data.setOil_life_cntr(data[6]); //how about now?
 					if (!epoch_lastRun_sent) {
 						send_EPOCH_to_BLE_module(protocol.EPOCH_ID_LAST_RUN);
-						//live_data.setTotal_run_time(data[9]);
+                        Log.i(TAG, "MainActivity_readCounterCharacteristic " + "EPOCH LAST RUN SENT!");
 					}
+					Log.i(TAG, "ENGINE_NOT_RUNNING!: " + "TEMP: " + live_data.getTemperature() + ", TOOL: " + live_data.getAttachment_nbr_status() + ", TPS: " + live_data.getTps_status() +
+					 														", OIL: " + live_data.getOil_life_cntr() +", RUNTIME: " + live_data.getRun_time());
 					getLastRunDateTime();
 					//hide navigational features:
 					if (!hide_running_features)
@@ -449,7 +430,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 						start_fragment_loaded = false;
 						navigation.findViewById(R.id.navigation_stats).setEnabled(false);
 					}
-					else navigation.findViewById(R.id.navigation_stats).setEnabled(true);
+					else
+					    navigation.findViewById(R.id.navigation_stats).setEnabled(true);
 
 /*					if (live_data.getTps_status() == protocol.TPS_IDLE)
 						navigation.findViewById(R.id.navigation_stats).setEnabled(true);*/
@@ -465,7 +447,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 							writeToIgnitionModule(protocol.BTN_CLEAR_CODE, protocol.RESET_CODE);
 						}
 					}
-					Log.i(TAG, "ENGINE_NOT_RUNNING!: " + live_data.getTemperature() + ", " + live_data.getTps_status());
+					//Log.i(TAG, "MainActivity_readCounterCharacteristic ENGINE_NOT_RUNNING!: " + "TEMP: " + live_data.getTemperature() + ", TPS: " + live_data.getTps_status());
 				}
 
 				//if engine running
@@ -500,7 +482,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					//When first entering, check what attachment the ignition module have and set that as our selection
 					updateRunningScreen();
 					epoch_lastRun_sent = false;
-					Log.i(TAG, "ENGINE_RUNNING!: " + live_data.getTemperature() + ", " + live_data.getTps_status());
+					Log.i(TAG, "MainActivity_readCounterCharacteristic ENGINE_RUNNING!: " + "TEMP: " + live_data.getTemperature() + ", TPS: " + live_data.getTps_status());
 				}
 				else if (data[0] == live_data.DETAILS_STATS_PAGE && data.length == data[1])
 				{
@@ -509,7 +491,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 					live_data.setTotal_run_date((data[6]&0xff) + ((data[7]&0xff)*256) + ((data[8]&0xff)*256*256) + ((data[9]&0xff)*256*256*256));
                     live_data.setOil_life_date((data[10]&0xff) + ((data[11]&0xff)*256) + ((data[12]&0xff)*256*256) + ((data[13]&0xff)*256*256*256));
 
-					Log.i(TAG, "DETAILS_STATE_PAGE: " + live_data.getTotal_run_date());
+					Log.i(TAG, "MainActivity_readCounterCharacteristic DETAILS_STATE_PAGE: " + live_data.getTotal_run_date());
 				}
 				else if (data[0] == live_data.LAST_RUN_STATS_PAGE_1 && data.length == data[1])
 				{
@@ -549,7 +531,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				}
 				else
 				{
-					Log.i(TAG, "Garbage Data!");
+					Log.i(TAG, "MainActivity_Garbage Data!");
 				}
 			}
 		}
@@ -771,10 +753,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				dashboardFragment.updateSpeedometer(live_data.getRpm());
 				dashboardFragment.updateRunTimer(live_data.getRun_time());
 				dashboardFragment.updateOilLife(live_data.getOil_life_cntr());
+				dashboardFragment.updateThermometer(live_data.getTemperature());
 
 				if (engine_running && live_data.getTps_status() != protocol.TPS_IDLE)
 				{
-				    startGyroscope();
+					if (!start_gyroscope) {
+						startGyroscope();
+						start_gyroscope = true;
+					}
 					navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.GONE);
 					navigation.findViewById(R.id.navigation_tool).setVisibility(View.GONE);
 
@@ -794,6 +780,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 				}
 				else
 				{
+					if (start_gyroscope) {
+						stopGyroscope();
+						start_gyroscope = false;
+					}
 					if (live_data.getAttachment_nbr_status() == protocol.TOOL_STRING) //live_data.getAttachment_nbr_status() == protocol.TOOL_STRING)
 						navigation.findViewById(R.id.navigation_light_trim).setVisibility(View.VISIBLE);
 					else
@@ -848,7 +838,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 		sendBytes[6] = (byte)(epoch_time>>24);
 		interactor.setValue(sendBytes); //packet must go trough this xxx.setValue before being sent out
 		mBluetoothGatt.writeCharacteristic(interactor);
-		Log.i(TAG, "MainActivity EpochRunTimeDate: " + epoch_time);
 		epoch_lastRun_sent = true;
 	}
 

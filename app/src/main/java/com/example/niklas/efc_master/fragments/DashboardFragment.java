@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.niklas.efc_master.R;
 import com.example.niklas.efc_master.profiles.Speedometer;
 import com.example.niklas.efc_master.activities.MainActivity;
+import com.example.niklas.efc_master.profiles.Thermometer;
 import com.example.niklas.efc_master.profiles.protocol;
 
 import static android.content.ContentValues.TAG;
@@ -27,6 +28,7 @@ public class DashboardFragment extends Fragment
 {
 	public MainActivity mainActivity;
 	public static Speedometer mySpeedometer;
+	public static Thermometer myThermometer;
 	public TextView myRunTimer;
 	public TextView myBUMP;
 	public ImageView myToolSelection;
@@ -43,6 +45,8 @@ public class DashboardFragment extends Fragment
 		myRPM = mainActivity.live_data.getRpm();
 		mySpeedometer = rootView.findViewById(R.id.Speedometer);
 		updateSpeedometer(myRPM);
+
+		myThermometer = rootView.findViewById(R.id.Thermometer);
 
 		//myRUNTIME = mainActivity.live_data.getRun_time();
 		myRunTimer = rootView.findViewById(R.id.runtime_clock);
@@ -84,6 +88,12 @@ public class DashboardFragment extends Fragment
 	{
 		mySpeedometer.setCurrentSpeed(rpm);
 		mySpeedometer.onSpeedChanged(rpm);
+	}
+
+	public void updateThermometer(int temp)
+	{
+		myThermometer.setCurrentTemp(temp);
+		myThermometer.onTempChanged(temp);
 	}
 
 	public void updateRunTimer(int time)

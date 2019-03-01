@@ -10,6 +10,21 @@
         android:layout_height="match_parent"
         android:gravity="center">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/leveler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/walbro_logo_w"
+                android:background="@null"
+                android:alpha="0.1"
+                android:layout_marginTop="110dp"
+                android:layout_marginStart="250dp"/>
+        </LinearLayout>
+
         <android.support.constraint.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,26 +35,38 @@
                 android:id="@+id/Speedometer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/colorMaterialLight"
+                android:background="@null"
                 custom:currentSpeed="0"
                 custom:maxSpeed="12000" />
         </android.support.constraint.ConstraintLayout>
 
-
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.example.niklas.efc_master.profiles.Thermometer
+                android:id="@+id/Thermometer"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="130dp"
+                android:layout_marginStart="220dp"
+                android:background="@null" />
+        </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/leveler"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/walbro_logo_w"
-                    android:background="@null"
-                    android:alpha="0.1"
-                    android:layout_marginTop="110dp"
-                    android:layout_marginStart="245dp"/>
-            </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/dashboard_thermometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_thermometer"
+                android:layout_marginTop="230sp"
+                android:layout_marginStart="306sp"
+                android:background="@null"/>
+        </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -23,4 +23,11 @@
 
         </attr>
     </declare-styleable>
+
+
+    <declare-styleable name="Thermometer">
+        <attr name="currentTemp" format="integer">
+
+        </attr>
+    </declare-styleable>
 </resources>
