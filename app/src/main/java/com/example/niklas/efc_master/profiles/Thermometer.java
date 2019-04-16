@@ -26,19 +26,14 @@ public class Thermometer extends View implements TempChangeListener {
 	public static final int MAX_TEMP = 90;
 	public static final int MIN_TEMP = 0;
 
-	private int LINE_COLOR = Color.argb(255,0x3e,0x3e,0x3e);
-
 	private int[] getTempLineColors() {
 		return new int[] {
 				Color.rgb(0,0, 130),
 				getResources().getColor(R.color.colorSelectedNav),
 				Color.rgb(0, 143, 0),
 				Color.rgb(55, 180, 0),
-				//Color.rgb(150, 255, 0),
 				Color.rgb(255, 200, 0),
-				//Color.rgb(255, 100, 0),
 				Color.rgb(130, 0, 0)};
-				//Color.rgb(100, 0, 0)};
 		}
 
 	private void init() {
@@ -48,14 +43,11 @@ public class Thermometer extends View implements TempChangeListener {
 		matrix.setRotate(90);
 		shader.setLocalMatrix(matrix);
 		paint.setStyle(Paint.Style.STROKE);
-		//paint.setColor(LINE_COLOR);
 		paint.setStrokeWidth(30f);
 		paint.setShader(shader);
-		paint.setShadowLayer(200f, 0, 0, LINE_COLOR);
-		//paint.setAntiAlias(true);
 
 		paintTemp.setColor(Color.BLACK);
-		paintTemp.setStyle(Paint.Style.FILL_AND_STROKE);
+		paintTemp.setStyle(Paint.Style.STROKE);
 		paintTemp.setStrokeWidth((20f));
 
 		paintOutline.setStyle(Paint.Style.STROKE);
@@ -89,9 +81,10 @@ public class Thermometer extends View implements TempChangeListener {
 		}
 		if (temp <= MIN_TEMP)
 		{
-            //canvas.drawLine(10, 220, 10, 280, paintTemp);
+            canvas.drawLine(10, 220, 10, 280, paintTemp);
 		}
-        canvas.drawLine((temp*6.6f), 220, (temp*6.6f), 280, paintTemp);
+		else
+			canvas.drawLine((temp*6.6f), 220, (temp*6.6f), 280, paintTemp);
 	}
 
 	@Override
