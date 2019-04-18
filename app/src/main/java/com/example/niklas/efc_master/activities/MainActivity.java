@@ -27,6 +27,7 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 import com.example.niklas.efc_master.fragments.DashboardFragment;
 //import com.example.niklas.efc_master.fragments.StatsTabDetailsFragment;
@@ -152,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 			mSensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 			mSensorGyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 		}
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		//startAccelerometer();
 	}
 
